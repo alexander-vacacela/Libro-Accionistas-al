@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyf7cdc7b192f54-staging-195641-authRole",
+      "UnauthRoleArn": "arn:aws:iam::413681662563:role/amplify-amplifyf7cdc7b192f54-staging-195641-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::413681662563:role/amplify-amplifyf7cdc7b192f54-staging-195641-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-amplifyf7cdc7b192f54-staging-195641-deployment",
+      "UnauthRoleName": "amplify-amplifyf7cdc7b192f54-staging-195641-unauthRole",
+      "StackName": "amplify-amplifyf7cdc7b192f54-staging-195641",
+      "StackId": "arn:aws:cloudformation:us-east-2:413681662563:stack/amplify-amplifyf7cdc7b192f54-staging-195641/e4e2a800-0c27-11ec-a36c-0a1cd4820818",
+      "AmplifyAppId": "d1uap272r7bnzf"
+    },
+    "categories": {
+      "auth": {
+        "libroaccionistasdbe6011c": {}
+      }
+    }
+  }
+}
