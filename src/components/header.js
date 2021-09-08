@@ -12,7 +12,7 @@ import {AmplifySignOut } from '@aws-amplify/ui-react';
 const useStyles = makeStyles(() => ({
     header: {
       backgroundColor: "#B00020",
-      paddingRight: "79px",
+      paddingRight: "20px",
       paddingLeft: "20px",
     },
     logo: {
@@ -62,11 +62,11 @@ export default function Header() {
         },
         {
           label: "Accionistas",
-          href: "/deposits",
+          href: "/accionistas",
         },
         {
-          label: "Operaciones",
-          href: "/orders",
+          label: "Blotter",
+          href: "/transferencias",
         },
         {
           label: "Asambleas",
@@ -87,9 +87,13 @@ export default function Header() {
 
     const displayDesktop = () => {
       return <Toolbar className={toolbar}>
-          {libroAccionistasLogo}
-           <div>{getMenuButtons()}</div>
-            
+            {/* Logo */}
+            {libroAccionistasLogo}
+
+            {/* Menu */}
+            <div>{getMenuButtons()}</div>
+
+            {/* Perfil Usuario */}
           <div>
               <IconButton
                 aria-label="account of current user"
@@ -116,6 +120,8 @@ export default function Header() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Mi Perfil</MenuItem>
+                <MenuItem onClick={handleClose}>Parametría</MenuItem>
+                <MenuItem onClick={handleClose}>Seguridades</MenuItem>
                 <AmplifySignOut/>
               </Menu>
             </div>

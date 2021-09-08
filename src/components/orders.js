@@ -22,16 +22,16 @@ const rows = [
 ];
 */
 
-function createData(id, operacion, estado, cedente, cesionario, cantidad) {
-    return { id, operacion, estado, cedente, cesionario, cantidad };
+function createData(id, operacion, fecha, cedente, cesionario, cantidad) {
+    return { id, operacion, fecha, cedente, cesionario, cantidad };
   }
   
   const rows = [
-    createData(0, 'Cesión', 'Pendiente', 'Carlos Arosemena', 'Inversiones Imbabura', 312),
-    createData(1, 'Cesión', 'Rechazada', 'Beatriz Monts', 'Inversiones Imbabura', 866),
-    createData(2, 'Posición Efectiva', 'Pendiente', 'Esteban Palacios', 'Luis Palacios', 100),
-    createData(3, 'Donación', 'Rechazada', 'Vanessa Paez', 'Gilberto Perez', 654),
-    createData(4, 'Bloqueo', 'Pendiente', 'Roberto Marticorena', '', 212),
+    createData(0, 'Cesión', '06/09/21', 'Carlos Arosemena', 'Inversiones Imbabura', 312),
+    createData(1, 'Cesión', '06/09/21', 'Beatriz Monts', 'Inversiones Imbabura', 866),
+    createData(2, 'Posición Efectiva', '06/09/21', 'Esteban Palacios', 'Luis Palacios', 100),
+    createData(3, 'Donación', '06/09/21', 'Vanessa Paez', 'Gilberto Perez', 654),
+    createData(4, 'Bloqueo', '06/09/21', 'Roberto Marticorena', '', 212),
   ];
   
 
@@ -54,7 +54,7 @@ export default function Orders() {
         <TableHead>
           <TableRow>
             <TableCell>Transferencia</TableCell>
-            <TableCell>Estado</TableCell>
+            <TableCell>Fecha</TableCell>
             <TableCell>Cedente</TableCell>
             <TableCell>Cesionario</TableCell>
             <TableCell align="right">Cantidad</TableCell>
@@ -64,7 +64,7 @@ export default function Orders() {
           {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.operacion}</TableCell>
-              <TableCell>{row.estado}</TableCell>
+              <TableCell>{row.fecha}</TableCell>
               <TableCell>{row.cedente}</TableCell>
               <TableCell>{row.cesionario}</TableCell>
               <TableCell align="right">{row.cantidad}</TableCell>
@@ -72,11 +72,6 @@ export default function Orders() {
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
-        </Link>
-      </div>
     </React.Fragment>
   );
 }

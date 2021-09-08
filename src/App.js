@@ -8,9 +8,10 @@ import logo from './images/logoUNACEMmedMarco.jpg';
 import { Switch, Route, Link } from "react-router-dom";
 
 import Orders from "./components/orders";
-import Deposits from "./components/deposits";
 import Dashboard from "./components/dashboard";
-
+import Accionistas from './components/accionistas';
+import Cesion from './components/cesion'
+import Transferencias from './components/transferencias'
 
 function App() {
 
@@ -33,9 +34,16 @@ function App() {
               <Route path="/orders">
                 <Orders/>
               </Route>
-              <Route path="/deposits">
-                <Deposits />
+              <Route path="/accionistas">
+                <Accionistas />
               </Route>
+              <Route path="/cesion">
+                <Cesion />
+              </Route>
+              <Route path="/transferencias">
+                <Transferencias/>
+              </Route>
+
               <Route path="/">
                 <Dashboard />
               </Route>

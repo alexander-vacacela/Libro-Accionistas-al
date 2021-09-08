@@ -1,6 +1,105 @@
-type Note @model {
+type EstadoCatalogo @model {
   id: ID!
-  name: String!
-  description: String
-  image: String
+  nombre: String!
+  nombreCorto: String!
+}
+
+type TipoPersona @model {
+  id: ID!
+  nombre: String!
+  nombreCorto: String!
+  estado: String!
+}
+
+type TipoIdentificacion @model {
+  id: ID!
+  nombre: String!
+  nombreCorto: String!
+  estado: String!
+  tipoPersona: String!
+}
+
+type EstadoCivil @model {
+  id: ID!
+  nombre: String!
+  estado: String!
+}
+
+type Pais @model {
+  id: ID!
+  nombre: String!
+  nombreCorto: String!
+  nacionalidad: String!
+  codigoTelefono: String
+  estado: String!
+}
+
+type Provincia @model {
+  id: ID!
+  nombre: String!
+  Pais: String!
+  estado: String!
+}
+
+type Ciudad @model {
+  id: ID!
+  nombre: String!
+  Provincia: String!
+  estado: String!
+}
+
+type TipoMedioContacto @model {
+  id: ID!
+  nombre: String!
+  estado: String!
+}
+
+type CuentaBancaria @model {
+  id: ID!
+  nombre: String!
+  nombreCorto: String!
+  estado: String!
+}
+
+type EstadoAccionista @model {
+  id: ID!
+  nombre: String!
+  nombreCorto: String!
+  descripcion: String
+  estado: String!
+}
+
+type Accionista @model @searchable{
+  id: ID!
+  tipoIdentificacion:  String!
+  identificacion: String!
+  nombre: String!
+  direccionPais: String
+  direccionProvincia: String
+  direccionCiudad: String
+  direccionCalle: String
+  direccionNumero: String
+  bancoPais: String
+  nombreBanco: String
+  tipoCuenta: String
+  cuentaBancaria: String  
+  paisNacionalidad: String
+  cantidadAcciones: Int
+  tipoAcciones: String
+  estado: String
+  tipoPersona: String!
+  pn_primerNombre: String
+  pn_segundoNombre: String
+  pn_apellidoPaterno: String
+  pn_apellidoMaterno: String
+  pn_estadoCivil: String
+  conyugue_tipoIdentificacion: String
+  conyugue_identificacion: String
+  conyugue_nombre: String
+  conyugue_nacionalidad: String
+  conyugue_observaciones: String
+  repLegal_tipoIdentificacion: String
+  repLegal_identificacion: String
+  repLegal_nombre: String
+  repLegal_nacionalidad: String  
 }
