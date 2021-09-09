@@ -572,6 +572,17 @@ export const onCreateOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -599,6 +610,17 @@ export const onUpdateOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -626,6 +648,17 @@ export const onDeleteOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -635,6 +668,42 @@ export const onDeleteOperaciones = /* GraphQL */ `
       imagen7
       imagen8
       imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTituloPorOperacion = /* GraphQL */ `
+  subscription OnCreateTituloPorOperacion {
+    onCreateTituloPorOperacion {
+      id
+      operacionID
+      titulo
+      acciones
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTituloPorOperacion = /* GraphQL */ `
+  subscription OnUpdateTituloPorOperacion {
+    onUpdateTituloPorOperacion {
+      id
+      operacionID
+      titulo
+      acciones
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTituloPorOperacion = /* GraphQL */ `
+  subscription OnDeleteTituloPorOperacion {
+    onDeleteTituloPorOperacion {
+      id
+      operacionID
+      titulo
+      acciones
       createdAt
       updatedAt
     }

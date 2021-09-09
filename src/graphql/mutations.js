@@ -683,6 +683,17 @@ export const createOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -713,6 +724,17 @@ export const updateOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -743,6 +765,17 @@ export const deleteOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -752,6 +785,51 @@ export const deleteOperaciones = /* GraphQL */ `
       imagen7
       imagen8
       imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTituloPorOperacion = /* GraphQL */ `
+  mutation CreateTituloPorOperacion(
+    $input: CreateTituloPorOperacionInput!
+    $condition: ModelTituloPorOperacionConditionInput
+  ) {
+    createTituloPorOperacion(input: $input, condition: $condition) {
+      id
+      operacionID
+      titulo
+      acciones
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTituloPorOperacion = /* GraphQL */ `
+  mutation UpdateTituloPorOperacion(
+    $input: UpdateTituloPorOperacionInput!
+    $condition: ModelTituloPorOperacionConditionInput
+  ) {
+    updateTituloPorOperacion(input: $input, condition: $condition) {
+      id
+      operacionID
+      titulo
+      acciones
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTituloPorOperacion = /* GraphQL */ `
+  mutation DeleteTituloPorOperacion(
+    $input: DeleteTituloPorOperacionInput!
+    $condition: ModelTituloPorOperacionConditionInput
+  ) {
+    deleteTituloPorOperacion(input: $input, condition: $condition) {
+      id
+      operacionID
+      titulo
+      acciones
       createdAt
       updatedAt
     }

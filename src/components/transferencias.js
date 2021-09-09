@@ -18,11 +18,16 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { useLocation} from "react-router-dom";
+import { useLocation, useHistory} from "react-router-dom";
 //import { queryGetAccionista as getAccionista } from '../graphql/queries';
 import { getAccionista as queryGetAccionista } from '../graphql/queries';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
 import { listAccionistas } from './../graphql/queries';
+import {createOperaciones} from './../graphql/mutations';
+
+import Fab from '@material-ui/core/Fab';
+import SaveIcon from '@material-ui/icons/Save';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
   },
   operacion: {
     color:'#717AB4',
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -86,6 +94,7 @@ export default function Transferencias() {
   const [rows, setRows] = useState([]);
   const [count, setCount] = useState(0);
 
+  const history = useHistory();
 
   const location = useLocation()
   //const { accionistaId } = location.state
@@ -95,6 +104,22 @@ export default function Transferencias() {
   const [selected, setSelected] = useState([]);
   const [total, setTotal] = useState(0);
 
+
+  //const [operaciones, setOperaciones] = useState([]);
+  const [formState, setFormState] = useState({ fecha: '2021-09-09', operacion: 'Cesión', cedente: '', titulo: '111' , acciones: 111, cesionario: 'JY', estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', });
+
+  const addOperacion = async () => {
+    try {
+        if (!formState.cedente || !formState.cesionario) return
+        const operacion = { ...formState }
+        //setOperaciones([...operaciones, operacion])
+        setFormState({ fecha: '2021-09-09', operacion: 'Cesión', cedente: '', titulo: '111' , acciones: 111, cesionario: 'JY', estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', })
+        await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
+        history.goBack();
+    } catch (err) {
+        console.log('error creating transaction:', err)
+    }
+}
   /*
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -161,6 +186,8 @@ export default function Transferencias() {
     
     setTitulosApi(oneAccionista.data.getAccionista.titulos.items);
 
+    setFormState({ ...formState, 'cedente': oneAccionista.data.getAccionista.nombre })
+    
   }
 
   async function fetchAccionistas() {
@@ -175,8 +202,9 @@ export default function Transferencias() {
       setCount(1);
       setRows(apiData.data.listAccionistas.items);
       }
-
   }
+
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -272,7 +300,18 @@ export default function Transferencias() {
               </TableContainer>
 
               <h6 className={classes.h6}>Total acciones a recibir: {total}</h6>
-              
+
+              <Fab variant="extended" color='primary' style = {{
+                  margin: 0,
+                  top: 'auto',
+                  right: 20,
+                  bottom: 20,
+                  left: 'auto',
+                  position: 'fixed',
+              }} onClick={addOperacion}>
+        <SaveIcon className={classes.extendedIcon} />
+        Registrar
+      </Fab>              
               </FormControl>
           </Paper>
         </Grid>

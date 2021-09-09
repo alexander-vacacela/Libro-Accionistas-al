@@ -473,6 +473,17 @@ export const getOperaciones = /* GraphQL */ `
       estado
       usuarioIngreso
       usuarioAprobador
+      titulos {
+        items {
+          id
+          operacionID
+          titulo
+          acciones
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       imagen1
       imagen2
       imagen3
@@ -505,6 +516,9 @@ export const listOperaciones = /* GraphQL */ `
         estado
         usuarioIngreso
         usuarioAprobador
+        titulos {
+          nextToken
+        }
         imagen1
         imagen2
         imagen3
@@ -521,62 +535,38 @@ export const listOperaciones = /* GraphQL */ `
     }
   }
 `;
-export const searchAccionistas = /* GraphQL */ `
-  query SearchAccionistas(
-    $filter: SearchableAccionistaFilterInput
-    $sort: SearchableAccionistaSortInput
+export const getTituloPorOperacion = /* GraphQL */ `
+  query GetTituloPorOperacion($id: ID!) {
+    getTituloPorOperacion(id: $id) {
+      id
+      operacionID
+      titulo
+      acciones
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTituloPorOperacions = /* GraphQL */ `
+  query ListTituloPorOperacions(
+    $filter: ModelTituloPorOperacionFilterInput
     $limit: Int
     $nextToken: String
-    $from: Int
   ) {
-    searchAccionistas(
+    listTituloPorOperacions(
       filter: $filter
-      sort: $sort
       limit: $limit
       nextToken: $nextToken
-      from: $from
     ) {
       items {
         id
-        tipoIdentificacion
-        identificacion
-        nombre
-        direccionPais
-        direccionProvincia
-        direccionCiudad
-        direccionCalle
-        direccionNumero
-        bancoPais
-        nombreBanco
-        tipoCuenta
-        cuentaBancaria
-        paisNacionalidad
-        cantidadAcciones
-        tipoAcciones
-        estado
-        tipoPersona
-        pn_primerNombre
-        pn_segundoNombre
-        pn_apellidoPaterno
-        pn_apellidoMaterno
-        pn_estadoCivil
-        conyugue_tipoIdentificacion
-        conyugue_identificacion
-        conyugue_nombre
-        conyugue_nacionalidad
-        conyugue_observaciones
-        repLegal_tipoIdentificacion
-        repLegal_identificacion
-        repLegal_nombre
-        repLegal_nacionalidad
-        titulos {
-          nextToken
-        }
+        operacionID
+        titulo
+        acciones
         createdAt
         updatedAt
       }
       nextToken
-      total
     }
   }
 `;

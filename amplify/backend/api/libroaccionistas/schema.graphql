@@ -69,7 +69,7 @@ type EstadoAccionista @model {
   estado: String!
 }
 
-type Accionista @model @searchable{
+type Accionista @model {
   id: ID!
   tipoIdentificacion:  String!
   identificacion: String!
@@ -115,15 +115,16 @@ type Titulo @model @key(name: "byAccionista", fields: ["accionistaID", "titulo"]
 
 type Operaciones @model {  
   id: ID!
-  fecha:  AWSDate!
+  fecha:  String!
   operacion: String!
   cedente: String!
   titulo: String!
   acciones: Int!
   cesionario: String!
   estado: String!
-  usuarioIngreso: String!
-  usuarioAprobador: String!
+  usuarioIngreso: String
+  usuarioAprobador: String
+  titulos : [TituloPorOperacion] @connection(keyName: "PorOperacion", fields: ["id"])
   imagen1: String
   imagen2: String
   imagen3: String
@@ -133,5 +134,12 @@ type Operaciones @model {
   imagen7: String
   imagen8: String
   imagen9: String
+  
 }
 
+type TituloPorOperacion @model @key(name: "PorOperacion", fields: ["operacionID", "titulo"]) {
+  id: ID!
+  operacionID: ID!
+  titulo : String!
+  acciones: Int!
+}
