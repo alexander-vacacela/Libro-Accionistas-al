@@ -399,6 +399,18 @@ export const onCreateAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -439,6 +451,18 @@ export const onUpdateAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -479,6 +503,138 @@ export const onDeleteAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTitulo = /* GraphQL */ `
+  subscription OnCreateTitulo {
+    onCreateTitulo {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTitulo = /* GraphQL */ `
+  subscription OnUpdateTitulo {
+    onUpdateTitulo {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTitulo = /* GraphQL */ `
+  subscription OnDeleteTitulo {
+    onDeleteTitulo {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateOperaciones = /* GraphQL */ `
+  subscription OnCreateOperaciones {
+    onCreateOperaciones {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateOperaciones = /* GraphQL */ `
+  subscription OnUpdateOperaciones {
+    onUpdateOperaciones {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteOperaciones = /* GraphQL */ `
+  subscription OnDeleteOperaciones {
+    onDeleteOperaciones {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
       createdAt
       updatedAt
     }

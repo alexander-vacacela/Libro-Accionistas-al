@@ -53,7 +53,13 @@ const columns = [
         field: "Operaciones",
         width: 180,
         renderCell: (cellValues) => {
-          return <Link to='/transferencias' >Cesión</Link>;
+          return <Link to={{
+            pathname: "/transferencias",
+            state: {
+              accionistaId: cellValues.row.id,
+            },
+          }} >Cesión</Link>;
+          //return <Link to='/transferencias' >Cesión</Link>;
           //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
         }
       },

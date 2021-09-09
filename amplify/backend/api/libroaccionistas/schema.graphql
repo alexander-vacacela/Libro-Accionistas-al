@@ -102,4 +102,36 @@ type Accionista @model @searchable{
   repLegal_identificacion: String
   repLegal_nombre: String
   repLegal_nacionalidad: String  
+  titulos : [Titulo] @connection(keyName: "byAccionista", fields: ["id"])
 }
+
+type Titulo @model @key(name: "byAccionista", fields: ["accionistaID", "titulo"]) {
+  id: ID!
+  accionistaID: ID!
+  titulo : String!
+  acciones: Int!
+  fechaCompra: String
+}
+
+type Operaciones @model {  
+  id: ID!
+  fecha:  AWSDate!
+  operacion: String!
+  cedente: String!
+  titulo: String!
+  acciones: Int!
+  cesionario: String!
+  estado: String!
+  usuarioIngreso: String!
+  usuarioAprobador: String!
+  imagen1: String
+  imagen2: String
+  imagen3: String
+  imagen4: String
+  imagen5: String
+  imagen6: String
+  imagen7: String
+  imagen8: String
+  imagen9: String
+}
+

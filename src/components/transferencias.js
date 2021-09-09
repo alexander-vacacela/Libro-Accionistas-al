@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -17,6 +17,12 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Checkbox from '@material-ui/core/Checkbox';
+
+import { useLocation} from "react-router-dom";
+//import { queryGetAccionista as getAccionista } from '../graphql/queries';
+import { getAccionista as queryGetAccionista } from '../graphql/queries';
+import { API, Storage, graphqlOperation } from 'aws-amplify';
+import { listAccionistas } from './../graphql/queries';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
 function createData(titulo, acciones, fecha) {
   return { titulo, acciones, fecha};
 }
@@ -60,7 +67,7 @@ const rows = [
   createData(305,820, '07/03/21'),
   createData(356,100, '11/07/21'),
 ];
-
+*/
 // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
@@ -72,11 +79,23 @@ const top100Films = [
 ];
 
 export default function Transferencias() {
+
+  const [accionistaApi, setAccionistaApi] = useState([]);
+  const [titulosApi, setTitulosApi] = useState([]);
+  const [accionistas, setAccionistas] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [count, setCount] = useState(0);
+
+
+  const location = useLocation()
+  //const { accionistaId } = location.state
+
   const classes = useStyles();
   
   const [selected, setSelected] = useState([]);
   const [total, setTotal] = useState(0);
 
+  /*
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.name);
@@ -85,7 +104,7 @@ export default function Transferencias() {
     }
     setSelected([]);
   };
-
+*/
   const handleClick = (event, row) => {
     
     //const selectedIndex = selected.indexOf(row.titulo);
@@ -117,8 +136,47 @@ export default function Transferencias() {
     }, 0);
     setTotal(sum);
 
+    //console.log('API', accionistaApi.titulos.items);
+
   }
 
+  async function onChange(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    return
+   // setFormData({ ...formData, image: file.name });
+   // await Storage.put(file.name, file);
+   // fetchNotes();
+  }
+
+  useEffect(() => {
+    getAccionista(location.state.accionistaId);
+    fetchAccionistas();
+  }, [])
+
+  async function getAccionista( idParam ) {
+
+    const oneAccionista = await API.graphql({ query: queryGetAccionista, variables: { id: idParam  }});
+    setAccionistaApi(oneAccionista.data.getAccionista);
+    
+    setTitulosApi(oneAccionista.data.getAccionista.titulos.items);
+
+  }
+
+  async function fetchAccionistas() {
+    const apiData = await API.graphql({ query: listAccionistas });
+    const accionistasFromAPI = apiData.data.listAccionistas.items;
+    await Promise.all(accionistasFromAPI.map(async accionista => {
+    return accionista;
+    }))
+    setAccionistas(apiData.data.listAccionistas.items);
+    if(count == 0)
+      {      
+      setCount(1);
+      setRows(apiData.data.listAccionistas.items);
+      }
+
+  }
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -128,9 +186,9 @@ export default function Transferencias() {
             <Divider/>
             <h4>Datos Cedente</h4>            
             <h6 className={classes.h6}>Nombre</h6>
-            <text>Karla María Esteban Sastri</text>
+            <p>{accionistaApi.nombre}</p>
             <h6 className={classes.h6}>Cedula</h6>
-            <text>1065466541</text>  
+            <p>{accionistaApi.identificacion}</p>  
             
             <h4><br/>Títulos disponibles</h4>
             <h6 className={classes.h6}>Marcar los títulos a transferir</h6>        
@@ -150,7 +208,7 @@ export default function Transferencias() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {titulosApi.map((row) => (
                       <TableRow key={row.titulo}
                       hover
                       onClick={(event) => handleClick(event, row)}
@@ -158,14 +216,14 @@ export default function Transferencias() {
                       tabIndex={-1}
                       >
 
-<TableCell padding="checkbox">
+                      <TableCell padding="checkbox">
                         <Checkbox 
                           //checked={isItemSelected}
                           //inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
 
-                        <TableCell align="center" className={classes.textoTable}>{row.fecha}</TableCell>
+                        <TableCell align="center" className={classes.textoTable}>{row.fechaCompra}</TableCell>
                         <TableCell align="center" className={classes.textoTable}>{row.titulo}</TableCell>
                         <TableCell align="center" className={classes.textoTable}>{row.acciones}</TableCell>
                       </TableRow>
@@ -184,8 +242,8 @@ export default function Transferencias() {
           <FormControl className={classes.formControl}>      
                 <Autocomplete
                   id="combo-box-demo"
-                  options={top100Films}
-                  getOptionLabel={(option) => option.title}
+                  options={accionistas}
+                  getOptionLabel={(option) => option.nombre}
                   style={{ width: 'calc(100%)' }}
                   renderInput={(params) => <TextField {...params} label="Nombre" margin="normal" />}
                 />
@@ -223,6 +281,21 @@ export default function Transferencias() {
           <Paper className={classes.paper}>
           <h3 className={classes.operacion}>Documentación Requerida</h3>
             <Divider/>
+            <h6 className={classes.h6}>Cédula</h6>
+            <input type="file" onChange={onChange}/>
+            <h6 className={classes.h6}>Certificado Bancario</h6>
+            <input type="file" onChange={onChange}/>
+            <h6 className={classes.h6}>Carta de Cesión</h6>
+            <input type="file" onChange={onChange}/>
+            <h6 className={classes.h6}>Carta de Gerente</h6>
+            <input type="file" onChange={onChange}/>
+            <h6 className={classes.h6}>Carta de Instrucciones</h6>
+            <input type="file" onChange={onChange}/>
+            <h6 className={classes.h6}>Escritura</h6>
+            <input type="file" onChange={onChange}/>
+            <h6 className={classes.h6}>Poder</h6>
+            <input type="file" onChange={onChange}/>
+
           </Paper>
         </Grid>
 

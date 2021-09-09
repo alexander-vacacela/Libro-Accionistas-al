@@ -492,6 +492,18 @@ export const createAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -535,6 +547,18 @@ export const updateAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -578,6 +602,156 @@ export const deleteAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTitulo = /* GraphQL */ `
+  mutation CreateTitulo(
+    $input: CreateTituloInput!
+    $condition: ModelTituloConditionInput
+  ) {
+    createTitulo(input: $input, condition: $condition) {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTitulo = /* GraphQL */ `
+  mutation UpdateTitulo(
+    $input: UpdateTituloInput!
+    $condition: ModelTituloConditionInput
+  ) {
+    updateTitulo(input: $input, condition: $condition) {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTitulo = /* GraphQL */ `
+  mutation DeleteTitulo(
+    $input: DeleteTituloInput!
+    $condition: ModelTituloConditionInput
+  ) {
+    deleteTitulo(input: $input, condition: $condition) {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createOperaciones = /* GraphQL */ `
+  mutation CreateOperaciones(
+    $input: CreateOperacionesInput!
+    $condition: ModelOperacionesConditionInput
+  ) {
+    createOperaciones(input: $input, condition: $condition) {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateOperaciones = /* GraphQL */ `
+  mutation UpdateOperaciones(
+    $input: UpdateOperacionesInput!
+    $condition: ModelOperacionesConditionInput
+  ) {
+    updateOperaciones(input: $input, condition: $condition) {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteOperaciones = /* GraphQL */ `
+  mutation DeleteOperaciones(
+    $input: DeleteOperacionesInput!
+    $condition: ModelOperacionesConditionInput
+  ) {
+    deleteOperaciones(input: $input, condition: $condition) {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
       createdAt
       updatedAt
     }

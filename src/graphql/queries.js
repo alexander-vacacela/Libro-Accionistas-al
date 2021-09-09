@@ -360,6 +360,18 @@ export const getAccionista = /* GraphQL */ `
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      titulos {
+        items {
+          id
+          accionistaID
+          titulo
+          acciones
+          fechaCompra
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -405,6 +417,103 @@ export const listAccionistas = /* GraphQL */ `
         repLegal_identificacion
         repLegal_nombre
         repLegal_nacionalidad
+        titulos {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getTitulo = /* GraphQL */ `
+  query GetTitulo($id: ID!) {
+    getTitulo(id: $id) {
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTitulos = /* GraphQL */ `
+  query ListTitulos(
+    $filter: ModelTituloFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTitulos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        accionistaID
+        titulo
+        acciones
+        fechaCompra
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getOperaciones = /* GraphQL */ `
+  query GetOperaciones($id: ID!) {
+    getOperaciones(id: $id) {
+      id
+      fecha
+      operacion
+      cedente
+      titulo
+      acciones
+      cesionario
+      estado
+      usuarioIngreso
+      usuarioAprobador
+      imagen1
+      imagen2
+      imagen3
+      imagen4
+      imagen5
+      imagen6
+      imagen7
+      imagen8
+      imagen9
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listOperaciones = /* GraphQL */ `
+  query ListOperaciones(
+    $filter: ModelOperacionesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOperaciones(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        fecha
+        operacion
+        cedente
+        titulo
+        acciones
+        cesionario
+        estado
+        usuarioIngreso
+        usuarioAprobador
+        imagen1
+        imagen2
+        imagen3
+        imagen4
+        imagen5
+        imagen6
+        imagen7
+        imagen8
+        imagen9
         createdAt
         updatedAt
       }
@@ -460,6 +569,9 @@ export const searchAccionistas = /* GraphQL */ `
         repLegal_identificacion
         repLegal_nombre
         repLegal_nacionalidad
+        titulos {
+          nextToken
+        }
         createdAt
         updatedAt
       }
