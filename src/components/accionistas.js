@@ -1,51 +1,149 @@
 import React, { useState, useEffect } from 'react';
 import { API } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import { listAccionistas } from './../graphql/queries';
-import Container from '@material-ui/core/Container';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import { DataGrid } from '@mui/x-data-grid';
+
+import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 
+import ClearIcon from '@material-ui/icons/Clear';
+import SearchIcon from '@material-ui/icons/Search';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import Button from '@material-ui/core/Button';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
+const columns = [
+    { field: 'id', headerName: 'Nro', width: 80, type: 'number',},
+    {
+      field: 'identificacion',
+      headerName: 'Identificacion',
+      width: 150,
+    },
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 180,
+    },
+    {
+      field: 'paisNacionalidad',
+      headerName: 'Nacionalidad',
+      width: 150,
+    },
+    {
+        field: 'cantidadAcciones',
+        headerName: 'Acciones',
+        type: 'number',
+        width: 120,
+      },
+      {
+        field: 'tipoAcciones',
+        headerName: 'Tipo',
+        width: 90,
+      },      
+      {
+        field: 'estado',
+        headerName: 'Estado',
+        width: 110,
+      },      
+      {
+        field: "Operaciones",
+        width: 180,
+        renderCell: (cellValues) => {
+          return <Link to='/transferencias' >Cesión</Link>;
+          //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
+        }
+      },
+  ];
+  
+  const handleClick = (event, cellValues) => {
+    console.log(cellValues.row);
+  };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    paddingTop: theme.spacing(10),
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',   
-  },
+  const defaultTheme = createTheme();
+  const useStyles = makeStyles(
+    (theme) => ({
+      root: {
+        padding: theme.spacing(0.5, 0.5, 0),
+        justifyContent: 'space-between',
+        display: 'flex',
+        alignItems: 'flex-start',
+        flexWrap: 'wrap',
+      },
+      textField: {
+        [theme.breakpoints.down('xs')]: {
+          width: '100%',
+        },
+        margin: theme.spacing(1, 0.5, 1.5),
+        '& .MuiSvgIcon-root': {
+          marginRight: theme.spacing(0.5),
+        },
+        '& .MuiInput-underline:before': {
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        },
+      },
+    }),
+    { defaultTheme },
+  );
+  
 
-}));
+function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
 
-export default function Accionistas() {
+function QuickSearchToolbar(props) {
+    const classes = useStyles();
+  
+    return (
+      <div className={classes.root}>
+        <TextField
+          variant="standard"
+          value={props.value}
+          onChange={props.onChange}
+          placeholder="Buscar accionista…"
+          className={classes.textField}
+          InputProps={{
+            startAdornment: <SearchIcon fontSize="small" />,
+            endAdornment: (
+              <IconButton
+                title="Clear"
+                aria-label="Clear"
+                size="small"
+                style={{ visibility: props.value ? 'visible' : 'hidden' }}
+                onClick={props.clearSearch}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            ),
+          }}
+        />
+      </div>
+    );
+  }
+  
+  QuickSearchToolbar.propTypes = {
+    clearSearch: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.string.isRequired,
+  };
+  
+
+  export default function Accionistas() {
 
     const [accionistas, setAccionistas] = useState([]);
-  
+    const [searchText, setSearchText] = useState('');
+    const [rows, setRows] = useState([]);
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
+        
       fetchAccionistas();
-    }, []);
-  
+    }, [accionistas]);
+   
+    
     async function fetchAccionistas() {
       const apiData = await API.graphql({ query: listAccionistas });
       const accionistasFromAPI = apiData.data.listAccionistas.items;
@@ -53,111 +151,49 @@ export default function Accionistas() {
       return accionista;
       }))
       setAccionistas(apiData.data.listAccionistas.items);
+      if(count == 0)
+        {      
+        setCount(1);
+        setRows(apiData.data.listAccionistas.items);
+        }
+
     }
 
+    const requestSearch = (searchValue) => {
+        setSearchText(searchValue);
+        const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+        const filteredRows = accionistas.filter((row) => {
+          return Object.keys(row).some((field) => {
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-
-    const handleMenu = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+            if (row[field] != null) {
+            return searchRegex.test(row[field].toString());
+            }
+          });
+        });
+        setRows(filteredRows);
+      };
 
 
-  const handleClick = (id) => {
-    console.log("cell clicked", id)
-}
 
-const handleActionClose = (id, event) => {
-  //let { anchorEls } = this.state;
-  setAnchorEl(null);
-  //anchorEls[id] = null;
-  //this.setState({ anchorEls });
-  console.log("cell clicked", id)
-}
 
   const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Nro</TableCell>
-            <TableCell>Identificación</TableCell>
-            <TableCell>Nombre</TableCell>
-            <TableCell>Nacionalidad</TableCell>
-            <TableCell align="right">Acciones</TableCell>
-            <TableCell>Tipo</TableCell>
-            <TableCell align="right">Capital USD</TableCell>
-            <TableCell align="right">Participación %</TableCell>
-            <TableCell>Estado</TableCell>
-            <TableCell>Operación</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {accionistas.map((accionista) => (
-            <TableRow key={accionista.id}>
-              <TableCell>{accionista.id}</TableCell>
-              <TableCell>{accionista.identificacion}</TableCell>
-              <TableCell>{accionista.nombre}</TableCell>
-              <TableCell>{accionista.paisNacionalidad}</TableCell>
-              <TableCell align="right">{accionista.cantidadAcciones}</TableCell>
-              <TableCell>{accionista.tipoAcciones}</TableCell>
-              <TableCell align="right">{((parseFloat(accionista.cantidadAcciones) * 2.15) / 0.18).toFixed(2)}</TableCell>
-              <TableCell align="right">{(parseFloat(accionista.cantidadAcciones) / 17000.00).toFixed(10)}</TableCell>
-              <TableCell>{accionista.estado}</TableCell>
-              <TableCell>
-              <div>
-                <IconButton
-                  aria-label="acciones"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  id={accionista.id}
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose}>                    
-                    <Link to={{ pathname: "/cesion",
-                                state:  {
-                                  cedenteId: true,
-                                        },
-                              }}>
-                      Cesión
-                      </Link>
-                    </MenuItem>
-                  <MenuItem onClick={handleClose}>Posesión Efectiva</MenuItem>
-                  <MenuItem onClick={handleClose}>Partición</MenuItem>
-                  <MenuItem onClick={handleClose}>Testamento</MenuItem>
-                  <MenuItem onClick={handleClose}>Donación</MenuItem>
-                  <MenuItem onClick={e => handleActionClose(accionista.id, e)}>Bloqueo</MenuItem>
-                </Menu>
-              </div>
-
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div style={{ marginTop:80, height: 530, width: '90%' }}>
+      <DataGrid
+        disableColumnMenu 
+        components={{ Toolbar: QuickSearchToolbar }}
+        rows={rows}
+        columns={columns}
+        pageSize={20}
+        rowsPerPageOptions={[20]}
+        componentsProps={{
+            toolbar: {
+              value: searchText,
+              onChange: (event) => requestSearch(event.target.value),
+              clearSearch: () => requestSearch(''),
+            },
+          }}
+      />
     </div>
 
   );

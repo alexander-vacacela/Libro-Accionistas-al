@@ -1,190 +1,233 @@
-import React, { useState, useEffect } from 'react';
-import { API } from 'aws-amplify';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { createTheme } from '@material-ui/core/styles';
-import { Link } from "react-router-dom";
-import { listAccionistas } from './../graphql/queries';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { Divider } from '@material-ui/core';
 
-import { DataGrid } from '@mui/x-data-grid';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import FormControl from '@material-ui/core/FormControl';
 
-import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import ClearIcon from '@material-ui/icons/Clear';
-import SearchIcon from '@material-ui/icons/Search';
+import Checkbox from '@material-ui/core/Checkbox';
 
-const columns = [
-    { field: 'id', headerName: 'Nro', width: 100 },
-    {
-      field: 'identificacion',
-      headerName: 'Identificacion',
-      width: 180,
-    },
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 180,
-    },
-    {
-      field: 'paisNacionalidad',
-      headerName: 'Nacionalidad',
-      width: 180,
-    },
-    {
-        field: 'cantidadAcciones',
-        headerName: 'Acciones',
-        type: 'number',
-        width: 150,
-      },
-      {
-        field: 'tipoAcciones',
-        headerName: 'Tipo',
-        width: 100,
-      },      
-      {
-        field: 'estado',
-        headerName: 'Estado',
-        width: 115,
-      },      
-  ];
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    marginTop:80,
+    marginLeft:20,
+    marginRight:20,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
+  h6: {
+    marginBottom: '0px',
+  },
+  table: {
+    align: 'center',
+  },
+  textoTable: {
+    fontSize: 10,
+  },
+  formControl: {
+    //margin: theme.spacing(2),
+    //minWidth: 300,
+    minWidth: 'calc(100%)',
+  },
+  operacion: {
+    color:'#717AB4',
+  },
+}));
+
+function createData(titulo, acciones, fecha) {
+  return { titulo, acciones, fecha};
+}
+
+const rows = [
+  createData(159,250, '15/08/20'),
+  createData(237,760, '22/12/20'),
+  createData(262,300, '05/01/21'),
+  createData(305,820, '07/03/21'),
+  createData(356,100, '11/07/21'),
+];
+
+// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
+const top100Films = [
+  { title: 'The Shawshank Redemption', year: 1994 },
+  { title: 'The Godfather', year: 1972 },
+  { title: 'The Godfather: Part II', year: 1974 },
+  { title: 'The Dark Knight', year: 2008 },
+  { title: '12 Angry Men', year: 1957 },
+  { title: "Schindler's List", year: 1993 },
+];
+
+export default function Transferencias() {
+  const classes = useStyles();
   
+  const [selected, setSelected] = useState([]);
+  const [total, setTotal] = useState(0);
 
-  const defaultTheme = createTheme();
-  const useStyles = makeStyles(
-    (theme) => ({
-      root: {
-        padding: theme.spacing(0.5, 0.5, 0),
-        justifyContent: 'space-between',
-        display: 'flex',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-      },
-      textField: {
-        [theme.breakpoints.down('xs')]: {
-          width: '100%',
-        },
-        margin: theme.spacing(1, 0.5, 1.5),
-        '& .MuiSvgIcon-root': {
-          marginRight: theme.spacing(0.5),
-        },
-        '& .MuiInput-underline:before': {
-          borderBottom: `1px solid ${theme.palette.divider}`,
-        },
-      },
-    }),
-    { defaultTheme },
-  );
-  
-
-function escapeRegExp(value) {
-    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-  }
-
-function QuickSearchToolbar(props) {
-    const classes = useStyles();
-  
-    return (
-      <div className={classes.root}>
-        <TextField
-          variant="standard"
-          value={props.value}
-          onChange={props.onChange}
-          placeholder="Buscar accionista…"
-          className={classes.textField}
-          InputProps={{
-            startAdornment: <SearchIcon fontSize="small" />,
-            endAdornment: (
-              <IconButton
-                title="Clear"
-                aria-label="Clear"
-                size="small"
-                style={{ visibility: props.value ? 'visible' : 'hidden' }}
-                onClick={props.clearSearch}
-              >
-                <ClearIcon fontSize="small" />
-              </IconButton>
-            ),
-          }}
-        />
-      </div>
-    );
-  }
-  
-  QuickSearchToolbar.propTypes = {
-    clearSearch: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
   };
-  
 
-  export default function Transferencias() {
-
-    const [accionistas, setAccionistas] = useState([]);
-    const [searchText, setSearchText] = useState('');
-    const [rows, setRows] = useState([]);
-    const [count, setCount] = useState(0);
-
-    useEffect(() => {
-        
-      fetchAccionistas();
-    }, [accionistas]);
-   
+  const handleClick = (event, row) => {
     
-    async function fetchAccionistas() {
-      const apiData = await API.graphql({ query: listAccionistas });
-      const accionistasFromAPI = apiData.data.listAccionistas.items;
-      await Promise.all(accionistasFromAPI.map(async accionista => {
-      return accionista;
-      }))
-      setAccionistas(apiData.data.listAccionistas.items);
-      if(count == 0)
-        {      
-        setCount(1);
-        setRows(apiData.data.listAccionistas.items);
-        }
+    //const selectedIndex = selected.indexOf(row.titulo);
 
+    const selectedIndex = selected.map(function(e) {
+      return e.titulo;
+  }).indexOf(row.titulo);
+
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, row);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
     }
 
-    const requestSearch = (searchValue) => {
-        setSearchText(searchValue);
-        const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = accionistas.filter((row) => {
-          return Object.keys(row).some((field) => {
 
-            if (row[field] != null) {
-            return searchRegex.test(row[field].toString());
-            }
-          });
-        });
-        setRows(filteredRows);
-      };
+    setSelected(newSelected);
 
+    const sum = newSelected.reduce(function(prev, current) {
+      return prev + +current.acciones
+    }, 0);
+    setTotal(sum);
 
+  }
 
-
-  const classes = useStyles();
   return (
-    <div style={{ marginTop:80, height: 530, width: '90%' }}>
-      <DataGrid
-        components={{ Toolbar: QuickSearchToolbar }}
-        rows={rows}
-        columns={columns}
-        pageSize={20}
-        rowsPerPageOptions={[20]}
-        componentsProps={{
-            toolbar: {
-              value: searchText,
-              onChange: (event) => requestSearch(event.target.value),
-              clearSearch: () => requestSearch(''),
-            },
-          }}
-      />
-    </div>
+    <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={4} >
+          <Paper className={classes.paper}>
+            <h3 className={classes.operacion}>Cesión</h3>
+            <Divider/>
+            <h4>Datos Cedente</h4>            
+            <h6 className={classes.h6}>Nombre</h6>
+            <text>Karla María Esteban Sastri</text>
+            <h6 className={classes.h6}>Cedula</h6>
+            <text>1065466541</text>  
+            
+            <h4><br/>Títulos disponibles</h4>
+            <h6 className={classes.h6}>Marcar los títulos a transferir</h6>        
 
+            <TableContainer >
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+
+                    <TableCell padding="checkbox">
+
+                    </TableCell>
+
+                      <TableCell align="center" className={classes.textoTable} >Compra</TableCell>
+                      <TableCell align="center" className={classes.textoTable} >Título</TableCell>
+                      <TableCell align="center" className={classes.textoTable} >Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow key={row.titulo}
+                      hover
+                      onClick={(event) => handleClick(event, row)}
+                      role="checkbox"
+                      tabIndex={-1}
+                      >
+
+<TableCell padding="checkbox">
+                        <Checkbox 
+                          //checked={isItemSelected}
+                          //inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </TableCell>
+
+                        <TableCell align="center" className={classes.textoTable}>{row.fecha}</TableCell>
+                        <TableCell align="center" className={classes.textoTable}>{row.titulo}</TableCell>
+                        <TableCell align="center" className={classes.textoTable}>{row.acciones}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper className={classes.paper}>
+          <h3 className={classes.operacion}>Cesionario</h3>
+            <Divider/>
+          <FormControl className={classes.formControl}>      
+                <Autocomplete
+                  id="combo-box-demo"
+                  options={top100Films}
+                  getOptionLabel={(option) => option.title}
+                  style={{ width: 'calc(100%)' }}
+                  renderInput={(params) => <TextField {...params} label="Nombre" margin="normal" />}
+                />
+
+
+<a style={{textAlign:'right', fontSize:10}} href={''}>Crear accionista</a>
+
+<h4>Títulos a recibir</h4>
+              <TableContainer >
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" className={classes.textoTable} >Título</TableCell>
+                      <TableCell align="center" className={classes.textoTable} >Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {selected.map((row) => (
+                      <TableRow key={row.titulo}>
+                        <TableCell align="center" className={classes.textoTable}>{row.titulo}</TableCell>
+                        <TableCell align="center" className={classes.textoTable}>{row.acciones}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <h6 className={classes.h6}>Total acciones a recibir: {total}</h6>
+              
+              </FormControl>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Paper className={classes.paper}>
+          <h3 className={classes.operacion}>Documentación Requerida</h3>
+            <Divider/>
+          </Paper>
+        </Grid>
+
+        
+     </Grid>
+    </div>
   );
 }

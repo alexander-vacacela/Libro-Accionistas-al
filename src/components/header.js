@@ -11,14 +11,14 @@ import {AmplifySignOut } from '@aws-amplify/ui-react';
 
 const useStyles = makeStyles(() => ({
     header: {
-      backgroundColor: "#B00020",
+      backgroundColor: "#4C4F55",
       paddingRight: "20px",
       paddingLeft: "20px",
     },
     logo: {
       fontFamily: "Work Sans, sans-serif",
       fontWeight: 600,
-      color: "#FFC107",
+      color: "#AC9163",
       textAlign: "left",
       
     },
@@ -132,7 +132,7 @@ export default function Header() {
   
     const libroAccionistasLogo = (
       <Typography variant="h6" component="h1" className={logo}>
-        Libro de Accionistas
+        Libro Societario
       </Typography>
     );
   
