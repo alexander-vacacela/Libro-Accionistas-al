@@ -1,57 +1,102 @@
 import { AppBar, Toolbar, Typography, makeStyles,Button } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
-
+import clsx from 'clsx';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 
+
+
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import Badge from '@material-ui/core/Badge';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { mainListItems, secondaryListItems } from './listitems';
+
+
+
 import {AmplifySignOut } from '@aws-amplify/ui-react';
 
-const useStyles = makeStyles(() => ({
-    header: {
-      backgroundColor: "#4C4F55",
-      paddingRight: "20px",
-      paddingLeft: "20px",
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) => ({
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      //background: 'transparent', boxShadow: 'none',
     },
-    logo: {
-      fontFamily: "Work Sans, sans-serif",
-      fontWeight: 600,
-      color: "#AC9163",
-      textAlign: "left",
-      
+    appBarShift: {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    toolbar: {
+      paddingRight: 24, // keep right padding when drawer closed
+    },
+    toolbarIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: '0 8px',
+      ...theme.mixins.toolbar,
     },
     menuButton: {
-        fontFamily: "Open Sans, sans-serif",
-        fontWeight: 400,
-        size: "14px",
-        marginLeft: "18px",
-     },
-     toolbar: {
-        display: "flex",
-        justifyContent: "space-between",
+      marginRight: 36,
+    },
+    menuButtonHidden: {
+      display: 'none',
+    },
+    drawerPaper: {
+      position: 'relative',
+      whiteSpace: 'nowrap',
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerPaperClose: {
+      overflowX: 'hidden',
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      width: theme.spacing(7),
+      [theme.breakpoints.up('sm')]: {
+        width: theme.spacing(9),
       },
+    },
+    title: {
+      flexGrow: 1,
+    },
+    fixedHeight: {
+      height: 240,
+    },
   }));
   
 
 export default function Header() {
 
+  const classes = useStyles();
     
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-  /*
-    const handleChange = (event) => {
-      setAuth(event.target.checked);
-    };
-  */
-    const handleMenu = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+  const [open, setOpen] = React.useState(true);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
 
 
@@ -66,7 +111,7 @@ export default function Header() {
         },
         {
           label: "Blotter",
-          href: "/transferencias",
+          href: "/blotter",
         },
         {
           label: "Asambleas",
@@ -83,80 +128,55 @@ export default function Header() {
 
     ];
 
-    const { header, logo, menuButton, toolbar } = useStyles();
-
-    const displayDesktop = () => {
-      return <Toolbar className={toolbar}>
-            {/* Logo */}
-            {libroAccionistasLogo}
-
-            {/* Menu */}
-            <div>{getMenuButtons()}</div>
-
-            {/* Perfil Usuario */}
-          <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Mi Perfil</MenuItem>
-                <MenuItem onClick={handleClose}>Parametría</MenuItem>
-                <MenuItem onClick={handleClose}>Seguridades</MenuItem>
-                <AmplifySignOut/>
-              </Menu>
-            </div>
-
-
-          </Toolbar>;
-    };
-  
-    const libroAccionistasLogo = (
-      <Typography variant="h6" component="h1" className={logo}>
-        Libro Societario
-      </Typography>
-    );
-  
-    const getMenuButtons = () => {
-        return headersData.map(({ label, href }) => {
-          return (
-            <Button
-              {...{
-                key: label,
-                color: "inherit",
-                to: href,
-                component: Link,
-                className: menuButton
-              }}
-            >
-              {label}
-            </Button>
-          );
-        });
-      };
 
     return (
       <header>
-        <AppBar className={header}>{displayDesktop()}</AppBar>
+        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            Dashboard
+          </Typography>
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+
+
+
+
+        </Toolbar>
+      </AppBar>
+
+
+        <Drawer
+        variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        }}
+        open={open}
+      >
+        <div className={classes.toolbarIcon}>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>{mainListItems}</List>
+        <Divider />
+        <List>{secondaryListItems}</List>
+      </Drawer>
+
+
       </header>
     );
   }

@@ -9,6 +9,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 export const mainListItems = (
   <div>
@@ -55,24 +56,24 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Reportes recurrentes</ListSubheader>
+    <ListSubheader inset>Dashboards</ListSubheader>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <DashboardIcon color='black'/>
       </ListItemIcon>
-      <ListItemText primary="Current month" />
+      <ListItemText primary="Resumen" />
     </ListItem>
+  </div>
+);
+
+export const reportListItems = (
+  <div>
+    <ListSubheader inset>Reportes</ListSubheader>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <DescriptionIcon color='black'/>
       </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
+      <ListItemText primary="Reportes" />
     </ListItem>
   </div>
 );

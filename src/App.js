@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 //import './App.css';
 import {AmplifyAuthContainer, AmplifyAuthenticator, AmplifySignOut,AmplifySignIn } from '@aws-amplify/ui-react';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import Header from './components/header';
 import logo from './images/logoUNACEMmedMarco.jpg';
 
 import { Switch, Route, Link } from "react-router-dom";
@@ -12,6 +11,9 @@ import Dashboard from "./components/dashboard";
 import Accionistas from './components/accionistas';
 import Cesion from './components/cesion'
 import Transferencias from './components/transferencias'
+import Blotter from './components/blotter'
+import Operaciones from './views/blotter';
+import Layout from './components/layout';
 
 function App() {
 
@@ -27,28 +29,31 @@ function App() {
     
 
     return authState === AuthState.SignedIn && user ? (
-        <div className="App">        
-            <Header/>
+        <div>            
 
-            <Switch>
-              <Route path="/orders">
-                <Orders/>
-              </Route>
-              <Route path="/accionistas">
-                <Accionistas />
-              </Route>
-              <Route path="/cesion">
-                <Cesion />
-              </Route>
-              <Route path="/transferencias">
-                <Transferencias/>
-              </Route>
+            <Layout>
+              <Switch>
+                <Route path="/orders">
+                  <Orders/>
+                </Route>
+                <Route path="/accionistas">
+                  <Accionistas />
+                </Route>
+                <Route path="/cesion">
+                  <Cesion />
+                </Route>
+                <Route path="/transferencias">
+                  <Transferencias/>
+                </Route>
+                <Route path="/blotter">
+                  <Blotter/>
+                </Route>
 
-              <Route path="/">
-                <Dashboard />
-              </Route>
-            </Switch>
-
+                <Route path="/">
+                  <Operaciones/>
+                </Route>
+              </Switch>
+              </Layout>
         </div>
     ) : (
       <div style={{backgroundColor:"white",  backgroundImage: `url(${logo})`, backgroundRepeat: "no-repeat"}}>         

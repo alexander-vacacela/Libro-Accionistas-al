@@ -5,12 +5,11 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Chart from './chart';
-import Deposits from './deposits';
 import Orders from './orders';
 import Title from './title'
 import ChartAcciones from './chartacciones';
 import ChartParticipacion from './chartparticipacion';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +56,9 @@ export default function Dashboard() {
               <Paper className={fixedHeightPaper}>
 
               <React.Fragment>
+                <Button variant="contained" color='primary' >
+                  Prueba
+                  </Button>
                 <Title>Accionistas</Title>
                 <Typography component="p" variant="h4">
                     405

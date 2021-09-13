@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   h6: {
     marginBottom: '0px',
   },
+  etiqueta: {
+    marginTop: '0px',
+  },
   table: {
     align: 'center',
   },
@@ -130,6 +133,11 @@ export default function Transferencias() {
     setSelected([]);
   };
 */
+const handleClickAuto = (option, value) => {
+  setFormState({ ...formState, 'cesionario': option })
+
+}
+
   const handleClick = (event, row) => {
     
     //const selectedIndex = selected.indexOf(row.titulo);
@@ -214,9 +222,9 @@ export default function Transferencias() {
             <Divider/>
             <h4>Datos Cedente</h4>            
             <h6 className={classes.h6}>Nombre</h6>
-            <p>{accionistaApi.nombre}</p>
+            <p className={classes.etiqueta}>{accionistaApi.nombre}</p>
             <h6 className={classes.h6}>Cedula</h6>
-            <p>{accionistaApi.identificacion}</p>  
+            <p className={classes.etiqueta}>{accionistaApi.identificacion}</p>  
             
             <h4><br/>Títulos disponibles</h4>
             <h6 className={classes.h6}>Marcar los títulos a transferir</h6>        
@@ -230,7 +238,7 @@ export default function Transferencias() {
 
                     </TableCell>
 
-                      <TableCell align="center" className={classes.textoTable} >Compra</TableCell>
+                      <TableCell align="center" className={classes.textoTable} >F.Compra</TableCell>
                       <TableCell align="center" className={classes.textoTable} >Título</TableCell>
                       <TableCell align="center" className={classes.textoTable} >Acciones</TableCell>
                     </TableRow>
@@ -274,6 +282,7 @@ export default function Transferencias() {
                   getOptionLabel={(option) => option.nombre}
                   style={{ width: 'calc(100%)' }}
                   renderInput={(params) => <TextField {...params} label="Nombre" margin="normal" />}
+                  //onChange={(option, value) => handleClickAuto(option, value)}
                 />
 
 
