@@ -3,7 +3,7 @@ import { API } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-import { listOperaciones } from './../graphql/queries';
+import { listAccionistas } from '../graphql/queries';
 
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -13,51 +13,55 @@ import TextField from '@material-ui/core/TextField';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
-
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import Grid from '@material-ui/core/Grid';
-
 
 const columns = [
     { field: 'id', headerName: 'Nro', width: 80, type: 'number',},
     {
-      field: 'fecha',
-      headerName: 'Fecha',
+      field: 'identificacion',
+      headerName: 'Identificacion',
       width: 150,
     },
     {
-      field: 'operacion',
-      headerName: 'Operación',
+      field: 'nombre',
+      headerName: 'Nombre',
       width: 180,
+      flex: 1 ,
     },
     {
-      field: 'cedente',
-      headerName: 'Cedente',
-      width: 180,
+      field: 'paisNacionalidad',
+      headerName: 'Nacionalidad',
+      width: 150,
     },
     {
-        field: 'acciones',
+        field: 'cantidadAcciones',
         headerName: 'Acciones',
         type: 'number',
-        width: 150,
+        width: 120,
       },
       {
-        field: 'cesionario',
-        headerName: 'Cesionario',
-        width: 180,
+        field: 'tipoAcciones',
+        headerName: 'Tipo',
+        width: 90,
       },      
       {
-        field: "Opciones",
+        field: 'estado',
+        headerName: 'Estado',
+        width: 110,
+      },      
+      {
+        field: "Operaciones",
         width: 180,
         renderCell: (cellValues) => {
           return <Link to={{
-            pathname: "/",
+            pathname: "/transferencias",
             state: {
               accionistaId: cellValues.row.id,
             },
-          }} >Revisar</Link>;
+          }} >Cesión</Link>;
           //return <Link to='/transferencias' >Cesión</Link>;
           //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
         }
@@ -91,16 +95,11 @@ const columns = [
         },
       },
       appBarSpacer: {
-        //display: 'flex',
-        //alignItems: 'center',
-        //justifyContent: 'flex-end',
-        //padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
         ...theme.mixins.toolbar,
       },
       content: {
         flexGrow: 1,
-        //padding: theme.spacing(0),
+        padding: theme.spacing(2),        
       },
     }),
     { defaultTheme },
@@ -120,7 +119,7 @@ function QuickSearchToolbar(props) {
           variant="standard"
           value={props.value}
           onChange={props.onChange}
-          placeholder="Buscar operacion..."
+          placeholder="Buscar accionista…"
           className={classes.textField}
           InputProps={{
             startAdornment: <SearchIcon fontSize="small" />,
@@ -148,30 +147,30 @@ function QuickSearchToolbar(props) {
   };
   
 
-  export default function Blotter() {
+  export default function Accionistas() {
 
-    const [operaciones, setOperaciones] = useState([]);
+    const [accionistas, setAccionistas] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [rows, setRows] = useState([]);
     const [count, setCount] = useState(0);
 
     useEffect(() => {
         
-      fetchOperaciones();
-    }, [operaciones]);
+      fetchAccionistas();
+    }, [accionistas]);
    
     
-    async function fetchOperaciones() {
-      const apiData = await API.graphql({ query: listOperaciones });
-      const operacionesFromAPI = apiData.data.listOperaciones.items;
-      await Promise.all(operacionesFromAPI.map(async accionista => {
+    async function fetchAccionistas() {
+      const apiData = await API.graphql({ query: listAccionistas });
+      const accionistasFromAPI = apiData.data.listAccionistas.items;
+      await Promise.all(accionistasFromAPI.map(async accionista => {
       return accionista;
       }))
-      setOperaciones(apiData.data.listOperaciones.items);
+      setAccionistas(apiData.data.listAccionistas.items);
       if(count == 0)
         {      
         setCount(1);
-        setRows(apiData.data.listOperaciones.items);
+        setRows(apiData.data.listAccionistas.items);
         }
 
     }
@@ -179,7 +178,7 @@ function QuickSearchToolbar(props) {
     const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = operaciones.filter((row) => {
+        const filteredRows = accionistas.filter((row) => {
           return Object.keys(row).some((field) => {
 
             if (row[field] != null) {
@@ -197,17 +196,14 @@ function QuickSearchToolbar(props) {
   return (
     <main className={classes.content}>
     <div className={classes.appBarSpacer} />
-      <Grid container spacing={0}>
 
-        <Grid item xs={12} md={8} lg={9}>
-      <ButtonGroup size="small" aria-label="small outlined button group" style={{paddingBottom: 10}}>
-        <Button color="secondary" variant="contained">Pendientes</Button>
-        <Button>Rechazadas</Button>
-        <Button>Aprobadas</Button>
-        <Button>Anuladas</Button>
-        </ButtonGroup>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
       <DataGrid
-        //disableColumnMenu 
+                          density="compact"             
+                          autoHeight='true'
+                          autoPageSize='true'
+        disableColumnMenu 
         components={{ Toolbar: QuickSearchToolbar }}
         rows={rows}
         columns={columns}
@@ -221,7 +217,7 @@ function QuickSearchToolbar(props) {
             },
           }}
       />
-           </Grid>
+                </Grid>
          </Grid>
 
       </main>

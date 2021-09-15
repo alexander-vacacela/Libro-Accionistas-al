@@ -21,13 +21,19 @@ const myTheme = createTheme({
       main: cyan[500],
       contrastText: '#fff',
     },
+    
     secondary: {
-      main: orange[500],
-    },
+      main: orange[300],
+    }, 
     background: {
       default: '#f9f9f9',
 
     }
+  },
+  typography: {
+    // In Chinese and Japanese the characters are usually larger,
+    // so a smaller fontsize may be appropriate.
+    fontSize: 12,
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {  AppBar, Toolbar, Typography, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -9,11 +9,8 @@ import { reportListItems, secondaryListItems } from './listitems';
 import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
 
-import DashboardIcon from '@material-ui/icons/Dashboard';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import PeopleIcon from '@material-ui/icons/People';
-import ViewListIcon from '@material-ui/icons/ViewList';
-import DescriptionIcon from '@material-ui/icons/Description';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import { useHistory, useLocation } from 'react-router';
@@ -26,6 +23,8 @@ import logo from '../images/Unacem.png';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
 
 const drawerWidth = 240;
 
@@ -34,8 +33,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     page : {
-        //width: '100%',
-        display: 'flex',
+        width: '100%',
     },
     drawer: {
         width: drawerWidth,
@@ -69,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
       },
       
       active: {
-          background: '#FFBF69'
+          background: '#f4f4f4'
       },
 //close
       appBar: {
@@ -108,6 +106,14 @@ export default function Layout({children}){
     const handleDrawerClose = () => {
       setOpen(false);
     };
+
+    const handleMenu = (event) => {
+        setAnchorElPerfil(event.currentTarget);
+      };
+    
+      const handleClose = () => {
+        setAnchorElPerfil(null);
+      };
 
     const history = useHistory()
     const location = useLocation()
@@ -152,6 +158,10 @@ export default function Layout({children}){
       setAnchorEl(null);
     };
 
+    const [anchorElPerfil, setAnchorElPerfil] = useState(null);
+    const openPerfil = Boolean(anchorElPerfil);
+
+
     return(
         <div className={classes.root}>
 
@@ -172,12 +182,13 @@ export default function Layout({children}){
                     Libro de accionistas{location.pathname.replace('/', ' > ') }
                 </Typography>
 
-                <Button
+                <Button                
                     variant="contained"
                     color="primary"
                     className={classes.button}
                     startIcon={<AddIcon/>}                    
                     size='small'
+                    onClick={()=>history.push('/cesion')}
                 >
                     Cesión
                 </Button>
@@ -200,6 +211,37 @@ export default function Layout({children}){
                     <MenuItem onClick={handleCloseOperaciones}>Canje</MenuItem>
                     <MenuItem onClick={handleCloseOperaciones}>Bloqueo</MenuItem>
                 </Menu>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;
+
+                <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                //color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElPerfil}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={openPerfil}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+              </Menu>
+
 
                 </Toolbar>
             </AppBar>
@@ -248,9 +290,12 @@ export default function Layout({children}){
                     <List>{reportListItems}</List>
             </Drawer>
 
+
             <div className={classes.page}>
                 {children}
             </div>
-        </div>
+
+            
+          </div>
     )
 }

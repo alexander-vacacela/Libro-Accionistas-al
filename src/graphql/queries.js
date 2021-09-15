@@ -418,6 +418,15 @@ export const listAccionistas = /* GraphQL */ `
         repLegal_nombre
         repLegal_nacionalidad
         titulos {
+          items {
+            id
+            accionistaID
+            titulo
+            acciones
+            fechaCompra
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt

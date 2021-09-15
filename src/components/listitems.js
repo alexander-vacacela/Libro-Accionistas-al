@@ -56,7 +56,6 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Dashboards</ListSubheader>
     <ListItem button>
       <ListItemIcon>
         <DashboardIcon color='black'/>
@@ -68,7 +67,6 @@ export const secondaryListItems = (
 
 export const reportListItems = (
   <div>
-    <ListSubheader inset>Reportes</ListSubheader>
     <ListItem button>
       <ListItemIcon>
         <DescriptionIcon color='black'/>

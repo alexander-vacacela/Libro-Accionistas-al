@@ -4,14 +4,13 @@ import {AmplifyAuthContainer, AmplifyAuthenticator, AmplifySignOut,AmplifySignIn
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import logo from './images/logoUNACEMmedMarco.jpg';
 
-import { Switch, Route, Link } from "react-router-dom";
+import { Switch, Route, Link, Redirect } from "react-router-dom";
 
 import Orders from "./components/orders";
 import Dashboard from "./components/dashboard";
-import Accionistas from './components/accionistas';
-import Cesion from './components/cesion'
+import Accionistas from './views/accionistas';
+import Cesion from './views/cesion'
 import Transferencias from './components/transferencias'
-import Blotter from './components/blotter'
 import Operaciones from './views/blotter';
 import Layout from './components/layout';
 
@@ -21,7 +20,9 @@ function App() {
     const [user, setUser] = React.useState();
   
     React.useEffect(() => {
+
         return onAuthUIStateChange((nextAuthState, authData) => {
+
             setAuthState(nextAuthState);
             setUser(authData)
         });
@@ -46,11 +47,11 @@ function App() {
                   <Transferencias/>
                 </Route>
                 <Route path="/blotter">
-                  <Blotter/>
+                  <Operaciones/>
                 </Route>
 
                 <Route path="/">
-                  <Operaciones/>
+                  <Redirect to="/blotter" />
                 </Route>
               </Switch>
               </Layout>
