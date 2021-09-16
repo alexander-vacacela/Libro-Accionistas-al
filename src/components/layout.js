@@ -238,8 +238,8 @@ export default function Layout({children}){
                 open={openPerfil}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>Mi perfil</MenuItem>
+                <MenuItem onClick={handleClose}>Salir</MenuItem>
               </Menu>
 
 

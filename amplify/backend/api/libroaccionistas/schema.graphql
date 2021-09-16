@@ -105,36 +105,38 @@ type Accionista @model {
   titulos : [Titulo] @connection(keyName: "byAccionista", fields: ["id"])
 }
 
-type Titulo @model @key(name: "byAccionista", fields: ["accionistaID", "titulo","acciones","fechaCompra"]) {
+type Titulo @model @key(name: "byAccionista", fields: ["accionistaID", "titulo"]) {
   id: ID!
   accionistaID: ID!
   titulo : String!
   acciones: Int!
   fechaCompra: String
-  accionista: Accionista @connection(fields: ["accionistaID"])
+
 }
 
 type Operaciones @model {  
   id: ID!
   fecha:  String!
   operacion: String!
+  idCedente:String!
   cedente: String!
   titulo: String!
   acciones: Int!
+  idCesionario: String!
   cesionario: String!
   estado: String!
   usuarioIngreso: String
   usuarioAprobador: String
   titulos : [TituloPorOperacion] @connection(keyName: "PorOperacion", fields: ["id"])
-  imagen1: String
-  imagen2: String
-  imagen3: String
-  imagen4: String
-  imagen5: String
-  imagen6: String
-  imagen7: String
-  imagen8: String
-  imagen9: String
+  cs: String
+  cg: String
+  ci: String
+  es: String
+  cp: String
+  ced: String
+  cb: String
+  nom: String
+
   
 }
 

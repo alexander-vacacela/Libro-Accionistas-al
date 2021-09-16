@@ -676,9 +676,11 @@ export const createOperaciones = /* GraphQL */ `
       id
       fecha
       operacion
+      idCedente
       cedente
       titulo
       acciones
+      idCesionario
       cesionario
       estado
       usuarioIngreso
@@ -694,15 +696,14 @@ export const createOperaciones = /* GraphQL */ `
         }
         nextToken
       }
-      imagen1
-      imagen2
-      imagen3
-      imagen4
-      imagen5
-      imagen6
-      imagen7
-      imagen8
-      imagen9
+      cs
+      cg
+      ci
+      es
+      cp
+      ced
+      cb
+      nom
       createdAt
       updatedAt
     }
@@ -717,9 +718,11 @@ export const updateOperaciones = /* GraphQL */ `
       id
       fecha
       operacion
+      idCedente
       cedente
       titulo
       acciones
+      idCesionario
       cesionario
       estado
       usuarioIngreso
@@ -735,15 +738,14 @@ export const updateOperaciones = /* GraphQL */ `
         }
         nextToken
       }
-      imagen1
-      imagen2
-      imagen3
-      imagen4
-      imagen5
-      imagen6
-      imagen7
-      imagen8
-      imagen9
+      cs
+      cg
+      ci
+      es
+      cp
+      ced
+      cb
+      nom
       createdAt
       updatedAt
     }
@@ -758,9 +760,11 @@ export const deleteOperaciones = /* GraphQL */ `
       id
       fecha
       operacion
+      idCedente
       cedente
       titulo
       acciones
+      idCesionario
       cesionario
       estado
       usuarioIngreso
@@ -776,15 +780,14 @@ export const deleteOperaciones = /* GraphQL */ `
         }
         nextToken
       }
-      imagen1
-      imagen2
-      imagen3
-      imagen4
-      imagen5
-      imagen6
-      imagen7
-      imagen8
-      imagen9
+      cs
+      cg
+      ci
+      es
+      cp
+      ced
+      cb
+      nom
       createdAt
       updatedAt
     }

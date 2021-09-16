@@ -4790,6 +4790,21 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "idCedente",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "cedente",
           "description" : null,
           "args" : [ ],
@@ -4829,6 +4844,21 @@
             "ofType" : {
               "kind" : "SCALAR",
               "name" : "Int",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "idCesionario",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
               "ofType" : null
             }
           },
@@ -4943,7 +4973,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen1",
+          "name" : "cs",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4954,7 +4984,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen2",
+          "name" : "cg",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4965,7 +4995,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen3",
+          "name" : "ci",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4976,7 +5006,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen4",
+          "name" : "es",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4987,7 +5017,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen5",
+          "name" : "cp",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -4998,7 +5028,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen6",
+          "name" : "ced",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -5009,7 +5039,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen7",
+          "name" : "cb",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -5020,18 +5050,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "imagen8",
-          "description" : null,
-          "args" : [ ],
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "imagen9",
+          "name" : "nom",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -5358,6 +5377,15 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "idCedente",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "cedente",
           "description" : null,
           "type" : {
@@ -5381,6 +5409,15 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "idCesionario",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -5421,7 +5458,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen1",
+          "name" : "cs",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5430,7 +5467,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen2",
+          "name" : "cg",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5439,7 +5476,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen3",
+          "name" : "ci",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5448,7 +5485,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen4",
+          "name" : "es",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5457,7 +5494,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen5",
+          "name" : "cp",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5466,7 +5503,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen6",
+          "name" : "ced",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5475,7 +5512,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen7",
+          "name" : "cb",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5484,16 +5521,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen8",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelStringInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "imagen9",
+          "name" : "nom",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10174,6 +10202,19 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "idCedente",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "cedente",
           "description" : null,
           "type" : {
@@ -10213,6 +10254,19 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "idCesionario",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "cesionario",
           "description" : null,
           "type" : {
@@ -10257,7 +10311,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen1",
+          "name" : "cs",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10266,7 +10320,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen2",
+          "name" : "cg",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10275,7 +10329,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen3",
+          "name" : "ci",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10284,7 +10338,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen4",
+          "name" : "es",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10293,7 +10347,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen5",
+          "name" : "cp",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10302,7 +10356,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen6",
+          "name" : "ced",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10311,7 +10365,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen7",
+          "name" : "cb",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10320,16 +10374,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen8",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "imagen9",
+          "name" : "nom",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10365,6 +10410,15 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "idCedente",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "cedente",
           "description" : null,
           "type" : {
@@ -10388,6 +10442,15 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelIntInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "idCesionario",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -10428,7 +10491,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen1",
+          "name" : "cs",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10437,7 +10500,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen2",
+          "name" : "cg",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10446,7 +10509,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen3",
+          "name" : "ci",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10455,7 +10518,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen4",
+          "name" : "es",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10464,7 +10527,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen5",
+          "name" : "cp",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10473,7 +10536,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen6",
+          "name" : "ced",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10482,7 +10545,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen7",
+          "name" : "cb",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10491,16 +10554,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen8",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelStringInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "imagen9",
+          "name" : "nom",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -10584,6 +10638,15 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "idCedente",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "cedente",
           "description" : null,
           "type" : {
@@ -10607,6 +10670,15 @@
           "type" : {
             "kind" : "SCALAR",
             "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "idCesionario",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
             "ofType" : null
           },
           "defaultValue" : null
@@ -10647,7 +10719,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen1",
+          "name" : "cs",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10656,7 +10728,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen2",
+          "name" : "cg",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10665,7 +10737,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen3",
+          "name" : "ci",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10674,7 +10746,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen4",
+          "name" : "es",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10683,7 +10755,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen5",
+          "name" : "cp",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10692,7 +10764,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen6",
+          "name" : "ced",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10701,7 +10773,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen7",
+          "name" : "cb",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -10710,16 +10782,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "imagen8",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "imagen9",
+          "name" : "nom",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -12355,23 +12418,6 @@
         "onFragment" : false,
         "onField" : true
       }, {
-        "name" : "deprecated",
-        "description" : null,
-        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
-        "args" : [ {
-          "name" : "reason",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : "\"No longer supported\""
-        } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
         "name" : "aws_subscribe",
         "description" : "Tells the service which mutation triggers this subscription.",
         "locations" : [ "FIELD_DEFINITION" ],
@@ -12483,6 +12529,23 @@
             }
           },
           "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "deprecated",
+        "description" : null,
+        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
+        "args" : [ {
+          "name" : "reason",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : "\"No longer supported\""
         } ],
         "onOperation" : false,
         "onFragment" : false,

@@ -418,15 +418,6 @@ export const listAccionistas = /* GraphQL */ `
         repLegal_nombre
         repLegal_nacionalidad
         titulos {
-          items {
-            id
-            accionistaID
-            titulo
-            acciones
-            fechaCompra
-            createdAt
-            updatedAt
-          }
           nextToken
         }
         createdAt
@@ -475,9 +466,11 @@ export const getOperaciones = /* GraphQL */ `
       id
       fecha
       operacion
+      idCedente
       cedente
       titulo
       acciones
+      idCesionario
       cesionario
       estado
       usuarioIngreso
@@ -493,15 +486,14 @@ export const getOperaciones = /* GraphQL */ `
         }
         nextToken
       }
-      imagen1
-      imagen2
-      imagen3
-      imagen4
-      imagen5
-      imagen6
-      imagen7
-      imagen8
-      imagen9
+      cs
+      cg
+      ci
+      es
+      cp
+      ced
+      cb
+      nom
       createdAt
       updatedAt
     }
@@ -518,9 +510,11 @@ export const listOperaciones = /* GraphQL */ `
         id
         fecha
         operacion
+        idCedente
         cedente
         titulo
         acciones
+        idCesionario
         cesionario
         estado
         usuarioIngreso
@@ -528,15 +522,14 @@ export const listOperaciones = /* GraphQL */ `
         titulos {
           nextToken
         }
-        imagen1
-        imagen2
-        imagen3
-        imagen4
-        imagen5
-        imagen6
-        imagen7
-        imagen8
-        imagen9
+        cs
+        cg
+        ci
+        es
+        cp
+        ced
+        cb
+        nom
         createdAt
         updatedAt
       }

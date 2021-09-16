@@ -23,6 +23,13 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 import Badge from '@material-ui/core/Badge';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Checkbox from '@material-ui/core/Checkbox';
+
 const useStyles = makeStyles((theme) => ({
     appBarSpacer: {
         //display: 'flex',
@@ -66,55 +73,6 @@ const useStyles = makeStyles((theme) => ({
   },  
 }));
 
-const columns = [
-    { field: 'id', headerName: 'Nro', width: 80, type: 'number' },
-    {
-      field: 'fecha',
-      headerName: 'Fecha',
-      width: 120,
-      //flex: 1 ,
-    },
-    {
-      field: 'operacion',
-      headerName: 'Operación',
-      width: 180,
-      flex: 1 ,
-    },
-    {
-      field: 'cedente',
-      headerName: 'Cedente',
-      width: 180,
-      flex: 1 ,
-    },
-    {
-        field: 'acciones',
-        headerName: 'Acciones',
-        type: 'number',
-        width: 150,
-        //flex: 1 ,
-      },
-      {
-        field: 'cesionario',
-        headerName: 'Cesionario',
-        width: 180,
-        flex: 1 ,
-      },      
-      {
-        field: "Opciones",
-        width: 180,
-        renderCell: (cellValues) => {
-          return <Link to={{
-            flex: 1 ,
-            pathname: "/",
-            state: {
-              accionistaId: cellValues.row.id,
-            },
-          }} >Revisar</Link>;
-          //return <Link to='/transferencias' >Cesión</Link>;
-          //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
-        }
-      },
-  ];
   
   function escapeRegExp(value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -157,6 +115,9 @@ function QuickSearchToolbar(props) {
   };
 
 
+
+  
+
 export default function Operaciones() {
   const classes = useStyles();
 
@@ -164,6 +125,73 @@ export default function Operaciones() {
   const [searchText, setSearchText] = useState('');
   const [rows, setRows] = useState([]);
   const [count, setCount] = useState(0);
+  const [openRevisar, setOpenRevisar] = useState(false);
+
+
+  const columns = [
+    { field: 'id', headerName: 'Nro', width: 80, type: 'number' },
+    {
+      field: 'fecha',
+      headerName: 'Fecha',
+      width: 120,
+      //flex: 1 ,
+    },
+    {
+      field: 'operacion',
+      headerName: 'Operación',
+      width: 180,
+      flex: 1 ,
+    },
+    {
+      field: 'cedente',
+      headerName: 'Cedente',
+      width: 180,
+      flex: 1 ,
+    },
+    {
+        field: 'acciones',
+        headerName: 'Acciones',
+        type: 'number',
+        width: 150,
+        //flex: 1 ,
+      },
+      {
+        field: 'cesionario',
+        headerName: 'Cesionario',
+        width: 180,
+        flex: 1 ,
+      },      
+      {
+        field: "Opciones",
+        width: 180,
+        renderCell: (cellValues) => {
+          return (
+            <Button
+              //variant="contained"
+              color="primary"
+              onClick={(event) => {
+                handleClickRevisar(event, cellValues);
+              }}
+            >
+              Revisar
+            </Button>
+          );
+        }
+        /*
+        renderCell: (cellValues) => {
+          return <Link to={{
+            flex: 1 ,
+            pathname: "/",
+            state: {
+              accionistaId: cellValues.row.id,
+            },
+          }} >Revisar</Link>; 
+          //return <Link to='/transferencias' >Cesión</Link>;
+          //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
+        }*/
+      },
+  ];
+
 
   useEffect(() => {
       
@@ -199,6 +227,20 @@ export default function Operaciones() {
       });
       setRows(filteredRows);
     };
+
+    const handleClickRevisar = () => {
+      setOpenRevisar(true);
+    };
+    
+    const handleRevisarOperacion = () => {
+    
+  
+      console.log('revisar...');
+      setOpenRevisar(false);
+    
+    
+    };
+  
 
   return (
       <main className={classes.content}>
@@ -245,6 +287,23 @@ export default function Operaciones() {
                 
             </Grid>
          </Grid>
+
+        <Dialog open={openRevisar} onClose={handleRevisarOperacion} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Cesión</DialogTitle>
+        <DialogContent>
+
+          <DialogContentText>
+            Seleccionar los títulos a transferir
+          </DialogContentText>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRevisarOperacion} color="primary" >
+            Aprobar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
 
       </main>
 
