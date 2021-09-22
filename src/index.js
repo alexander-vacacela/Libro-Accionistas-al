@@ -5,7 +5,6 @@ import {BrowserRouter} from "react-router-dom"
 
 
 import { createTheme,ThemeProvider } from '@material-ui/core/styles';
-//import { ThemeProvider } from "@material-ui/styles";
 import cyan from '@material-ui/core/colors/cyan';
 import orange from '@material-ui/core/colors/orange';
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -20,8 +19,7 @@ const myTheme = createTheme({
     primary: {
       main: cyan[500],
       contrastText: '#fff',
-    },
-    
+    },    
     secondary: {
       main: orange[300],
     }, 
@@ -31,8 +29,6 @@ const myTheme = createTheme({
     }
   },
   typography: {
-    // In Chinese and Japanese the characters are usually larger,
-    // so a smaller fontsize may be appropriate.
     fontSize: 12,
   },
 });
@@ -45,7 +41,7 @@ ReactDOM.render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
-      </ThemeProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

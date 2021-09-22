@@ -1,41 +1,18 @@
 import React, { useState,useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import { Container, Divider, Toolbar, Typography } from '@material-ui/core';
+import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyles,ListItem, ListItemText, ListSubheader,ListItemIcon,
+  List,IconButton,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Checkbox,Snackbar} from '@material-ui/core';
 
 
-import FormControl from '@material-ui/core/FormControl';
 
-import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
 import { listAccionistas, listTitulos } from './../graphql/queries';
 import {createOperaciones, createTituloPorOperacion} from './../graphql/mutations';
 
-import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import { withStyles } from "@material-ui/core/styles";
-
-import {  ListItem, ListItemText, ListSubheader,ListItemSecondaryAction,ListItemIcon } from '@material-ui/core';
-import List from '@material-ui/core/List';
-//import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import CheckIcon from '@material-ui/icons/Check';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Checkbox from '@material-ui/core/Checkbox';
-
-import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-//import { v4 as uuid } from 'uuid'
 import { uuid } from 'uuidv4';
 
 function Alert(props) {
@@ -75,54 +52,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const menuItems = [
-  {
-      titulo: "265",
-      fecha: "02/08/2020",
-      cantidad : 500
-    },
-  {
-    titulo: "360",
-    fecha: "25/10/2020",
-    cantidad : 750
-  },
-  {
-    titulo: "401",
-    fecha: "02/01/2021",
-    cantidad : 200
-  },
-  {
-    titulo: "483",
-    fecha: "17/05/2021",
-    cantidad : 500
-  },
-];
-
-const titPorOper = [
-  {
-      operacionID: "fe46b292-4ea4-4ab1-b74b-bbe20121ad11",
-      titulo: "777",
-      acciones : 222
-    },
-  {
-    operacionID: "fe46b292-4ea4-4ab1-b74b-bbe20121ad11",
-    titulo: "254",
-    acciones : 750
-  },
-];
-
-
 const today = new Date();
 const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
-/*
-const initialFormState = {
-  fecha: fecha, operacion: 'Cesión', 
-  idCedente: '', cedente: '', idCesionario:'', cesionario: '', 
-  titulo: '' , acciones: 0, 
-  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '',
-  cs: '', cg: '', ci: '', es: '', cp: ''}
 
-*/
 
 export default function Cesion() {
 
@@ -168,18 +100,18 @@ export default function Cesion() {
     }
 
     setChecked(newChecked);
-    //console.log(newChecked);
+    
   };
 
 
   const addOperacion = async () => {
     try {
-      console.log("operacion", formData);
+      
       
         if (!formData.cedente || !formData.cesionario) return
 
         const operacion = { ...formData }
-        const operacionTitulos = { ...formDataTitulos }; 
+        //const operacionTitulos = { ...formDataTitulos }; 
 
         setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
         setFormDataTitulos({ titulos : {operacionID: '', titulo: '',acciones: '' }})
@@ -196,7 +128,7 @@ export default function Cesion() {
         Promise.all(
           transferir.map(input => API.graphql(graphqlOperation(createTituloPorOperacion, { input: input })))
         ).then(values => {
-          console.log(values); // [3, 1337, "foo"]
+          
 
           setOpenSnack(true)
           setChecked([])
@@ -226,7 +158,7 @@ export default function Cesion() {
     return accionista;
     }))
     setAccionistas(apiData.data.listAccionistas.items);
-    //console.log('accionistas', accionistas);
+    
   }
 
   async function fetchTitulos(cedente) {
@@ -237,8 +169,7 @@ export default function Cesion() {
       }
   };
 
-    //console.log('cedenteid', cedente);
-    //console.log('filtros', filter);
+ 
 
     const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter} });
     const titulosFromAPI = apiData.data.listTitulos.items;
@@ -246,7 +177,7 @@ export default function Cesion() {
     return titulos;
     }))
     setTitulos(apiData.data.listTitulos.items);
-    //console.log('titulos', apiData.data);
+    
   }
 
 const handleClickCedente = (option, value) => {  
@@ -285,8 +216,7 @@ const handleClickCesionario = (option, value) => {
   else {
     setValCesionario({})
     setFormData({ ...formData, 'idCesionario': '', 'cesionario': ''})
-  }
-  console.log('click cesionario', formData);
+  }  
 }
 
 
@@ -294,9 +224,6 @@ const handleOpenTitulos = () => {
   setOpenTitulos(true);
 };
 
-const handleCloseTitulos = () => {
-  setOpenTitulos(false);
-};
 
 const handleSeleccionarTitulos = () => {
   //  var data = { records : [{ "empid": 1, "fname": "X", "lname": "Y" }, { "empid": 2, "fname": "A", "lname": "Y" }, { "empid": 3, "fname": "B", "lname": "Y" }, { "empid": 4, "fname": "C", "lname": "Y" }, { "empid": 5, "fname": "C", "lname": "Y" }] }
@@ -305,7 +232,6 @@ const handleSeleccionarTitulos = () => {
     return checked.indexOf(itm.id) > -1;
   });
 
-  //console.log('filtrados',filteredTitulos)
   //filteredTitulos = { records : filteredArray };
   setTitulosSelectos(filteredTitulos)
 
@@ -313,7 +239,7 @@ const handleSeleccionarTitulos = () => {
   const tituloString = filteredTitulos.map(function(titulos){
     return titulos.titulo;
   }).join(" | ");
-  //console.log(tituloString);
+  
   //setFormData({ ...formData, 'titulo': tituloString })
 
   const sum = filteredTitulos.reduce(function(prev, current) {
@@ -327,7 +253,7 @@ const handleSeleccionarTitulos = () => {
     return {operacionID: '', titulo : e.titulo, acciones: e.acciones} ;
   })
 
-  console.log('transferir',transferir);
+  
   setFormDataTitulos({ ...formDataTitulos, 'titulos': transferir })
   setFormDataTitulos2({ ...formDataTitulos2,  transferir })
 

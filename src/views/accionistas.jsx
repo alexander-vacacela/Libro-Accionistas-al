@@ -13,8 +13,6 @@ import TextField from '@material-ui/core/TextField';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import Button from '@material-ui/core/Button';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -62,16 +60,10 @@ const columns = [
               accionistaId: cellValues.row.id,
             },
           }} >Cesión</Link>;
-          //return <Link to='/transferencias' >Cesión</Link>;
-          //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
         }
       },
   ];
   
-  const handleClick = (event, cellValues) => {
-    console.log(cellValues.row);
-  };
-
   const defaultTheme = createTheme();
   const useStyles = makeStyles(
     (theme) => ({
@@ -155,22 +147,25 @@ function QuickSearchToolbar(props) {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        
+
       fetchAccionistas();
+
+
     }, [accionistas]);
    
-    
     async function fetchAccionistas() {
       const apiData = await API.graphql({ query: listAccionistas });
       const accionistasFromAPI = apiData.data.listAccionistas.items;
-      await Promise.all(accionistasFromAPI.map(async accionista => {
-      return accionista;
-      }))
-      setAccionistas(apiData.data.listAccionistas.items);
-      if(count == 0)
+
+      //await Promise.all(accionistasFromAPI.map(async accionista => {
+      //return accionista;
+      //}))
+
+      setAccionistas(accionistasFromAPI);
+      if(count === 0)
         {      
         setCount(1);
-        setRows(apiData.data.listAccionistas.items);
+        setRows(accionistasFromAPI);
         }
 
     }
@@ -180,10 +175,10 @@ function QuickSearchToolbar(props) {
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
         const filteredRows = accionistas.filter((row) => {
           return Object.keys(row).some((field) => {
+            //if (row[field] != null) {
+            return row[field] && searchRegex.test(row[field].toString());
+            //}
 
-            if (row[field] != null) {
-            return searchRegex.test(row[field].toString());
-            }
           });
         });
         setRows(filteredRows);

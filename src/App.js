@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react';
-//import './App.css';
-import {AmplifyAuthContainer, AmplifyAuthenticator, AmplifySignOut,AmplifySignIn } from '@aws-amplify/ui-react';
+import {AmplifyAuthContainer, AmplifyAuthenticator,AmplifySignIn } from '@aws-amplify/ui-react';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
+import { Switch, Route, Redirect } from "react-router-dom";
 import logo from './images/logoUNACEMmedMarco.jpg';
 
-import { Switch, Route, Link, Redirect } from "react-router-dom";
-
-import Orders from "./components/orders";
-import Dashboard from "./components/dashboard";
 import Accionistas from './views/accionistas';
 import Cesion from './views/cesion'
-import Transferencias from './components/transferencias'
 import Operaciones from './views/blotter';
 import Layout from './components/layout';
+import PersonaNatural from './views/personanatural';
+
 
 function App() {
 
-    const [authState, setAuthState] = React.useState();
-    const [user, setUser] = React.useState();
+    const [authState, setAuthState] = useState();
+    const [user, setUser] = useState();
   
-    React.useEffect(() => {
+    useEffect(() => {
 
         return onAuthUIStateChange((nextAuthState, authData) => {
 
@@ -31,30 +28,25 @@ function App() {
 
     return authState === AuthState.SignedIn && user ? (
         <div>            
-
-            <Layout>
-              <Switch>
-                <Route path="/orders">
-                  <Orders/>
-                </Route>
-                <Route path="/accionistas">
-                  <Accionistas />
-                </Route>
-                <Route path="/cesion">
-                  <Cesion />
-                </Route>
-                <Route path="/transferencias">
-                  <Transferencias/>
-                </Route>
-                <Route path="/blotter">
-                  <Operaciones/>
-                </Route>
-
-                <Route path="/">
-                  <Redirect to="/blotter" />
-                </Route>
-              </Switch>
-              </Layout>
+          <Layout>
+            <Switch>
+            <Route path="/personanatural">
+                <PersonaNatural />
+              </Route>              
+              <Route path="/accionistas">
+                <Accionistas />
+              </Route>
+              <Route path="/cesion">
+                <Cesion />
+              </Route>
+              <Route path="/blotter">
+                <Operaciones/>
+              </Route>
+              <Route path="/">
+                <Redirect to="/blotter" />
+              </Route>
+            </Switch>
+          </Layout>
         </div>
     ) : (
       <div style={{backgroundColor:"white",  backgroundImage: `url(${logo})`, backgroundRepeat: "no-repeat"}}>         
