@@ -137,7 +137,7 @@ export default function Header(props){
         open={Boolean(anchorEl)}
         onClose={handleCloseOperaciones}
     >
-        <MenuItem onClick={handleCloseOperaciones}>Posesión Efectiva</MenuItem>
+        <MenuItem onClick={()=>{history.push('/posesionefectiva'); setAnchorEl(null);} }>Posesión Efectiva</MenuItem>
         <MenuItem onClick={handleCloseOperaciones}>Testamento</MenuItem>
         <MenuItem onClick={handleCloseOperaciones}>Donación</MenuItem>
         <MenuItem onClick={handleCloseOperaciones}>Canje</MenuItem>
@@ -155,7 +155,7 @@ export default function Header(props){
         onClose={handleCloseAccionistas}
     >
         <MenuItem onClick={()=>{history.push('/personanatural'); setAnchorElAccionista(null);} }>Persona Natural</MenuItem>
-        <MenuItem onClick={handleCloseAccionistas}>Persona Jurídica</MenuItem>
+        <MenuItem onClick={()=>{history.push('/personajuridica'); setAnchorElAccionista(null);}}>Persona Jurídica</MenuItem>
     </Menu>
 
 

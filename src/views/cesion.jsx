@@ -87,7 +87,7 @@ export default function Cesion() {
   
   const [titulosSelectos, setTitulosSelectos] = useState([])
   
-  const [openSnack, setOpenSnack] = React.useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -393,10 +393,6 @@ async function onChangeCP(e) {
         <Grid item xs={3} >
           <BlaclTextTypography variant='h6'>
               Cesión
-              &nbsp;&nbsp;&nbsp;
-              <Button aria-controls="simple-menu" aria-haspopup="true" color='primary' size='small' style={{textTransform: 'none'}}>
-                + Crear nuevo accionista
-              </Button>
           </BlaclTextTypography>
           <Autocomplete
                   value={valCedente}

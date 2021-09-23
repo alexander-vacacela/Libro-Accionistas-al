@@ -9,6 +9,8 @@ import Cesion from './views/cesion'
 import Operaciones from './views/blotter';
 import Layout from './components/layout';
 import PersonaNatural from './views/personanatural';
+import PersonaJuridica from './views/personajuridica';
+import PosesionEfectiva from './views/posesionefectiva';
 
 
 function App() {
@@ -30,7 +32,13 @@ function App() {
         <div>            
           <Layout>
             <Switch>
-            <Route path="/personanatural">
+              <Route path="/posesionefectiva">
+                <PosesionEfectiva />
+              </Route>                
+              <Route path="/personajuridica">
+                <PersonaJuridica />
+              </Route>                
+              <Route path="/personanatural">
                 <PersonaNatural />
               </Route>              
               <Route path="/accionistas">

@@ -101,6 +101,8 @@ type Accionista @model {
   repLegal_identificacion: String
   repLegal_nombre: String
   repLegal_nacionalidad: String  
+  repLegal_telefono: String
+  repLegal_email: String
   telefono1: String
   obs1: String
   telefono2: String

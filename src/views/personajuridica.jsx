@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
   }));
   
   const defaultValues = {
+    razonSocial: '',
     apellidoMaterno: '',
     apellidoPaterno: '',
     banco: '1',
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     ciudadDireccion: '1',
     cuenta: '',
     email: '',
-    estadoCivil: '1',
+    estadoCivil: '',
     identificacion: '',
     nacionalidad: '1',
     numero: '',
@@ -104,14 +105,18 @@ const useStyles = makeStyles((theme) => ({
     observacionTelefonoAux2: '',
     emailAux1: '',
     emailAux2: '',
-
+    tipoIdentificacionRepLegal : '1',
+    identificacionRepLegal : '',
+    repLegal : '',
+    nacionalidadRepLegal : '1',
+    telefonoRepLegal : '',
+    emailRepLegal : '',
   };
   
-export default function PersonaNatural() {
+export default function PersonaJuridica() {
     const classes = useStyles();
     const [countTelef, setCountTelef] = useState(1);
     const [countEmail, setCountEmail] = useState(1);
-    const [conyugue, setConyugue] = useState(false);
 
     const [formData, setFormData] = useState({
       docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: ''});
@@ -124,7 +129,7 @@ export default function PersonaNatural() {
         const accionista = { 
             tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacion).label ,
             identificacion: data.identificacion,
-            nombre: data.primerNombre.concat(' ',  data.segundoNombre == null ? '' :  data.segundoNombre,' ', data.apellidoPaterno,' ',  data.apellidoMaterno == null ? '' :  data.apellidoMaterno)  , 
+            nombre: data.razonSocial, 
             direccionPais: pais.find(o => o.value === data.paisDireccion).label,
             direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion).label,
             direccionCiudad: ciudad.find(o => o.value === data.ciudadDireccion).label ,
@@ -137,16 +142,17 @@ export default function PersonaNatural() {
             cantidadAcciones: 0,
             tipoAcciones: '',
             estado: 'Activo',
-            tipoPersona: 'PN',
-            pn_primerNombre: data.primerNombre,
-            pn_segundoNombre: data.segundoNombre,
-            pn_apellidoPaterno: data.apellidoPaterno,
-            pn_apellidoMaterno: data.apellidoMaterno,
-            pn_estadoCivil: estadoCivil.find(o => o.value === data.estadoCivil).label, 
-            conyugue_tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacionConyugue).label ,
-            conyugue_identificacion: data.identificacionConyugue,
-            conyugue_nombre: data.nombreConyugue,
-            conyugue_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadConyugue).label,           
+            tipoPersona: 'PJ',
+
+            pn_primerNombre: '',
+            pn_segundoNombre: '',
+            pn_apellidoPaterno: '',
+            pn_apellidoMaterno: '',
+            pn_estadoCivil: '', 
+            conyugue_tipoIdentificacion: '' ,
+            conyugue_identificacion: '',
+            conyugue_nombre: '',
+            conyugue_nacionalidad: '',           
 
             telefono1: data.telefono,
             obs1: data.observacionTelefono,
@@ -161,26 +167,25 @@ export default function PersonaNatural() {
             docCertificadoBancario: formData.docCertificadoBancario,
             docIdentidadConyugue : formData.docIdentidadConyugue,
 
+            repLegal_tipoIdentificacion: tipoIdentificacionPN.find(o => o.value === data.tipoIdentificacionRepLegal).label ,
+            repLegal_identificacion: data.identificacionRepLegal,
+            repLegal_nombre: data.repLegal,
+            repLegal_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadRepLegal).label,   
+            repLegal_telefono: data.telefonoRepLegal,
+            repLegal_email: data.emailRepLegal,
+            
          };
 
          addAccionista(accionista);
-         //console.log('data',data);
-         //console.log('accionista',accionista);
+         console.log('data',data);
+         console.log('accionista',accionista);
     }
 
     const tipoIdentificacion = [
         {
-          label: "Cédula",
-          value: "1",
-        },
-        {
           label: "RUC",
-          value: "2",
-        },
-        {
-        label: "Pasaporte",
-        value: "3",
-        },        
+          value: "1",
+        },     
       ];
       
       const generateSelectTipoIdentificacion = () => {
@@ -193,32 +198,23 @@ export default function PersonaNatural() {
         });
       };
 
-
-    const estadoCivil = [
+      const tipoIdentificacionPN = [
         {
-          label: "Soltero",
-          value: "1",
-        },
-        {
-          label: "Casado",
-          value: "2",
-        },
-        {
-          label: "Unión de Hecho",
+            label: "Cédula",
+            value: "1",
+          },
+          {
+            label: "RUC",
+            value: "2",
+          },
+          {
+          label: "Pasaporte",
           value: "3",
-        },
-        {
-          label: "Divorciado",
-          value: "4",
-        },
-        {
-          label: "Viudo",
-          value: "5",
-        },
+          },  
       ];
       
-      const generateSelectEstadoCivil = () => {
-        return estadoCivil.map((option) => {
+      const generateSelectTipoIdentificacionPN = () => {
+        return tipoIdentificacionPN.map((option) => {
           return (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
@@ -226,6 +222,9 @@ export default function PersonaNatural() {
           );
         });
       };
+
+
+
 
       const nacionalidad = [
         {
@@ -418,15 +417,7 @@ export default function PersonaNatural() {
             setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
             reset(defaultValues);
       }
-    
-    const onChangeEstadoCivil = (e) =>{
-      //console.log('estado civil', e.target.value);
-      if(e.target.value === '2' || e.target.value === '3')
-        setConyugue(true)
-        else
-        setConyugue(false)
-    }
-
+  
     async function onChangeDI(e) {
       if (!e.target.files[0]) return
       const file = e.target.files[0];
@@ -465,7 +456,7 @@ export default function PersonaNatural() {
                         <Grid item xs={8}>
                             <div className={classes.formSection}>
                                 <div>
-                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Identificación</Typography>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Identificación Persona Jurídica</Typography>
                                     <Controller                    
                                         control={control}
                                         name={"tipoIdentificacion"}
@@ -487,67 +478,35 @@ export default function PersonaNatural() {
                                         <TextField  size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null} />
                                     )}
                                      />
-                                </div>
 
+                                </div>
                                 <div>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Nombre</Typography>                                
+                                    <Controller
+                                    name={"razonSocial"}
+                                    control={control}
+                                    rules={{required: 'Requerido'}}
+                                    render={({ field: { onChange, value }, fieldState: { error }, }) => (
+                                        <TextField size='small'  onChange={onChange} value={value} label={"Razón Social"}  variant='outlined' error={!!error} helperText={error ? error.message : null} style={{minWidth: 300}}/>
+                                    )} />                                 
+                                </div>
+                                <div>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Nacionalidad</Typography>                                
                                     <Controller
                                     control={control}
                                     name={"nacionalidad"}
                                     render={({ field: { onChange, value } }) => (<div>
-                                        <InputLabel id="ec"><small>Nacionalidad</small></InputLabel>
                                         <Select labelId="nac" id="nacid" onChange={onChange} value={value} defaultValue='1' variant="outlined" style={{height:37, minWidth:150}}>
                                         {generateSelectNacionalidad()}
                                         </Select>
                                         </div>
-                                    )}/>
-                                </div>
-                                <div>
-                                    <Controller
-                                    control={control}
-                                    name={"estadoCivil"}                                      
-                                    render={({ field: { onChange, value } }) => (<div>
-                                        <InputLabel id="ec"><small>Estado Civil</small></InputLabel>
-                                        <Select labelId="ec" id="ecid" onChange={(e) => {onChange(e);  onChangeEstadoCivil(e); }} value={value} defaultValue='1' variant="outlined" style={{height:37, minWidth:150}}>
-                                        {generateSelectEstadoCivil()}
-                                        </Select>
-                                        </div>
-                                    )}/>
+                                    )}/>                               
                                 </div>
 
-                            </div>
 
-                            <div className={classes.formSectionTitulo}>
-                                <Typography variant='subtitle1' style={{color:"#000000"}}>Nombre</Typography>
-                            </div>                                
-                            <div className={classes.formSection}>
-                                <Controller
-                                name={"primerNombre"}
-                                control={control}
-                                rules={{required: 'Requerido'}}
-                                render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                    <TextField size='small' onChange={onChange} value={value} label={"Primer Nombre"}  variant='outlined' error={!!error} helperText={error ? error.message : null}/>
-                                )} />
-                                <Controller
-                                name={"segundoNombre"}
-                                control={control}
-                                render={({ field: { onChange, value } }) => (
-                                    <TextField size='small' onChange={onChange} value={value} label={"Segundo Nombre"}  variant='outlined'/>
-                                )} />
 
-                                <Controller
-                                name={"apellidoPaterno"}
-                                control={control}
-                                rules={{required: 'Requerido'}}
-                                render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                    <TextField size='small' onChange={onChange} value={value} label={"Apellido Paterno"}  variant='outlined' error={!!error} helperText={error ? error.message : null}/>
-                                )} />
-                                <Controller
-                                name={"apellidoMaterno"}
-                                control={control}
-                                render={({ field: { onChange, value } }) => (
-                                    <TextField size='small' onChange={onChange} value={value} label={"Apellido Materno"}  variant='outlined'/>
-                                )} />          
                             </div>
+                            
                             <div className={classes.formSectionTitulo}>
                                 <Typography variant='subtitle1' style={{color:"#000000"}}>Dirección</Typography>
                             </div>    
@@ -621,60 +580,77 @@ export default function PersonaNatural() {
                                 )} />
                             </div>
                             &nbsp;&nbsp;    
-                            { conyugue &&
-                            <div> 
-                              <Divider/>    
+                            <Divider/>    
                               &nbsp;                            
-                              <Typography variant='subtitle1' style={{color:"#000000"}}>Identificación Cónyugue</Typography>
-                              <div style={{display: 'flex', alignItems:'center', justifyContent: 'space-between'}}>
-                                <div>
-                                      <Controller                    
+
+                            <div className={classes.formSection}> 
+                              <div>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Identificación Representante Legal</Typography>
+                                    <Controller                    
                                         control={control}
-                                        name={"tipoIdentificacionConyugue"}
+                                        name={"tipoIdentificacionRepLegal"}
                                         render={({ field: { onChange, value } }) => (
                                             <Select onChange={onChange} value={value}  variant="outlined" style={{height:37, minWidth:150}}>
-                                            {generateSelectTipoIdentificacion()}
+                                            {generateSelectTipoIdentificacionPN()}
                                             </Select>
                                         )}/>
                                         &nbsp;&nbsp;
-                                      <Controller
-                                      id={"identificacionConyugue"}
-                                      name={"identificacionConyugue"}
-                                      control={control}
-                                      render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                          <TextField  size='small' onChange={onChange} value={value} label={"Identificación Cónyugue"} variant='outlined'  />
-                                      )}
-                                      />     
-                                      </div>     
+                                    <Controller
+                                    id={"identificacionRepLegal"}
+                                    name={"identificacionRepLegal"}
+                                    control={control}
+                                    rules={{
+                                        required: 'Requerido'
+                                      }}
+                                    render={({ field: { onChange, value }, fieldState: { error }, }) => (
+                                        <TextField  size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null} />
+                                    )}
+                                     />
 
-                                      <Controller
-                                      id={"nacionalidadConyugue"}
-                                      control={control}
-                                      name={"nacionalidadConyugue"}
-                                      render={({ field: { onChange, value } }) => (<div>
-                                          <InputLabel id="naidcon"><small>Nacionalidad Cónyugue</small></InputLabel>
-                                          <Select labelId="naidcon" id="nacidconlb" onChange={onChange} value={value} defaultValue='1' variant="outlined" style={{height:37, minWidth:150}}>
-                                          {generateSelectNacionalidad()}
-                                          </Select>
-                                          </div>
-                                      )}/>                      
-
-                              </div>
-
-                              <div className={classes.formSectionTitulo}>
-                                  <Typography variant='subtitle1' style={{color:"#000000"}}>Nombre Cónyugue</Typography>
-                              </div>                                
-                              <div className={classes.formSection}>
-                                  <Controller
-                                  name={"nombreConyugue"}
-                                  control={control}
-                                  //rules={{required: 'Requerido'}}
-                                  render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Completo Cónyugue"}  variant='outlined' fullWidth/>
-                                  )} />
-                              </div>
+                                </div>
+                                <div>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Nombre Completo</Typography>                                
+                                    <Controller
+                                    name={"repLegal"}
+                                    control={control}
+                                    rules={{required: 'Requerido'}}
+                                    render={({ field: { onChange, value }, fieldState: { error }, }) => (
+                                        <TextField size='small'  onChange={onChange} value={value} label={"Representante Legal"}  variant='outlined' error={!!error} helperText={error ? error.message : null} style={{minWidth: 300}}/>
+                                    )} />                                 
+                                </div>
+                                <div>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Nacionalidad</Typography>                                
+                                    <Controller
+                                    control={control}
+                                    name={"nacionalidadRepLegal"}
+                                    render={({ field: { onChange, value } }) => (<div>
+                                        <Select labelId="nac" id="nacid" onChange={onChange} value={value} defaultValue='1' variant="outlined" style={{height:37, minWidth:150}}>
+                                        {generateSelectNacionalidad()}
+                                        </Select>
+                                        </div>
+                                    )}/>                               
+                                </div>
                             </div>   
-                            }                           
+                            <div className={classes.formSectionTitulo}>
+                                <Typography variant='subtitle1' style={{color:"#000000"}}>Contacto Representante Legal</Typography>
+                            </div>    
+                            <div className={classes.formSectionBanco}>                            
+                                <Controller
+                                name={"telefonoRepLegal"}
+                                control={control}
+                                rules={{required: 'Requerido'}}
+                                render={({ field: { onChange, value }, fieldState: { error }, }) => (
+                                    <TextField size='small' onChange={onChange} value={value} label={"Teléfono"} variant='outlined' style={{minWidth: 100}} error={!!error} helperText={error ? error.message : null}/>
+                                )} />
+                                &nbsp;&nbsp;
+                                <Controller
+                                name={"emailRepLegal"}
+                                control={control}
+                                render={({ field: { onChange, value } }) => (
+                                    <TextField size='small' onChange={onChange} value={value} label={"Email"} variant='outlined' style={{width: 300}}/>
+                                )} />
+                            </div>   
+                                                      
                         </Grid>
 
                         <Grid item xs={4} >
@@ -774,7 +750,7 @@ export default function PersonaNatural() {
                                 <div className={classes.formSection}>   
                                 <label htmlFor="upload-photo1">
                                     <input style={{ display: 'none' }} id="upload-photo1" name="upload-photo1" type="file" onChange={onChangeDI} />
-                                    <Button component="span" color="primary" size='small'>Documento de Identidad</Button>
+                                    <Button component="span" color="primary" size='small'>Nombramiento</Button>
                                     {formData.docIdentidadPrincipal.length > 0 && <CheckIcon />}
                                 </label>
                                 </div>  
@@ -785,15 +761,6 @@ export default function PersonaNatural() {
                                     {formData.docCertificadoBancario.length > 0 && <CheckIcon />}
                                 </label>
                                 </div>  
-                                { conyugue &&
-                                <div className={classes.formSection}>   
-                                <label htmlFor="upload-photo3">
-                                    <input style={{ display: 'none' }} id="upload-photo3" name="upload-photo3" type="file" onChange={onChangeDIC} />
-                                    <Button component="span" color="primary" size='small' >Documento de Identidad Cónyugue</Button>
-                                    {formData.docIdentidadConyugue.length > 0 && <CheckIcon />}
-                                </label>
-                                </div>  
-                                }
                             </div>
                         </Grid>                        
                     </Grid>

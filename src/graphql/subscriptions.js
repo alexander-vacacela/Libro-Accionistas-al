@@ -376,12 +376,12 @@ export const onCreateAccionista = /* GraphQL */ `
       direccionCiudad
       direccionCalle
       direccionNumero
-      bancoPais
       nombreBanco
       tipoCuenta
       cuentaBancaria
       paisNacionalidad
       cantidadAcciones
+      participacion
       tipoAcciones
       estado
       tipoPersona
@@ -394,11 +394,24 @@ export const onCreateAccionista = /* GraphQL */ `
       conyugue_identificacion
       conyugue_nombre
       conyugue_nacionalidad
-      conyugue_observaciones
       repLegal_tipoIdentificacion
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      repLegal_telefono
+      repLegal_email
+      telefono1
+      obs1
+      telefono2
+      obs2
+      telefono3
+      obs3
+      email1
+      email2
+      email3
+      docIdentidadPrincipal
+      docCertificadoBancario
+      docIdentidadConyugue
       titulos {
         items {
           id
@@ -428,12 +441,12 @@ export const onUpdateAccionista = /* GraphQL */ `
       direccionCiudad
       direccionCalle
       direccionNumero
-      bancoPais
       nombreBanco
       tipoCuenta
       cuentaBancaria
       paisNacionalidad
       cantidadAcciones
+      participacion
       tipoAcciones
       estado
       tipoPersona
@@ -446,11 +459,24 @@ export const onUpdateAccionista = /* GraphQL */ `
       conyugue_identificacion
       conyugue_nombre
       conyugue_nacionalidad
-      conyugue_observaciones
       repLegal_tipoIdentificacion
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      repLegal_telefono
+      repLegal_email
+      telefono1
+      obs1
+      telefono2
+      obs2
+      telefono3
+      obs3
+      email1
+      email2
+      email3
+      docIdentidadPrincipal
+      docCertificadoBancario
+      docIdentidadConyugue
       titulos {
         items {
           id
@@ -480,12 +506,12 @@ export const onDeleteAccionista = /* GraphQL */ `
       direccionCiudad
       direccionCalle
       direccionNumero
-      bancoPais
       nombreBanco
       tipoCuenta
       cuentaBancaria
       paisNacionalidad
       cantidadAcciones
+      participacion
       tipoAcciones
       estado
       tipoPersona
@@ -498,11 +524,24 @@ export const onDeleteAccionista = /* GraphQL */ `
       conyugue_identificacion
       conyugue_nombre
       conyugue_nacionalidad
-      conyugue_observaciones
       repLegal_tipoIdentificacion
       repLegal_identificacion
       repLegal_nombre
       repLegal_nacionalidad
+      repLegal_telefono
+      repLegal_email
+      telefono1
+      obs1
+      telefono2
+      obs2
+      telefono3
+      obs3
+      email1
+      email2
+      email3
+      docIdentidadPrincipal
+      docCertificadoBancario
+      docIdentidadConyugue
       titulos {
         items {
           id
