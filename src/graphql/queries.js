@@ -380,6 +380,7 @@ export const getAccionista = /* GraphQL */ `
           titulo
           acciones
           fechaCompra
+          estado
           createdAt
           updatedAt
         }
@@ -461,6 +462,7 @@ export const getTitulo = /* GraphQL */ `
       titulo
       acciones
       fechaCompra
+      estado
       createdAt
       updatedAt
     }
@@ -479,6 +481,7 @@ export const listTitulos = /* GraphQL */ `
         titulo
         acciones
         fechaCompra
+        estado
         createdAt
         updatedAt
       }
@@ -507,6 +510,7 @@ export const getOperaciones = /* GraphQL */ `
           operacionID
           titulo
           acciones
+          accionesTransferidas
           createdAt
           updatedAt
         }
@@ -570,6 +574,7 @@ export const getTituloPorOperacion = /* GraphQL */ `
       operacionID
       titulo
       acciones
+      accionesTransferidas
       createdAt
       updatedAt
     }
@@ -591,6 +596,46 @@ export const listTituloPorOperacions = /* GraphQL */ `
         operacionID
         titulo
         acciones
+        accionesTransferidas
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getHerederoPorOperacion = /* GraphQL */ `
+  query GetHerederoPorOperacion($id: ID!) {
+    getHerederoPorOperacion(id: $id) {
+      id
+      operacionId
+      numeroHeredero
+      herederoId
+      nombre
+      cantidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listHerederoPorOperacions = /* GraphQL */ `
+  query ListHerederoPorOperacions(
+    $filter: ModelHerederoPorOperacionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHerederoPorOperacions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        operacionId
+        numeroHeredero
+        herederoId
+        nombre
+        cantidad
         createdAt
         updatedAt
       }

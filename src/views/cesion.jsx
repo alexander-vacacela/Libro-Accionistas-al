@@ -70,7 +70,7 @@ export default function Cesion() {
   const [formDataTitulos, setFormDataTitulos] = useState({ titulos : {
       operacionID: '', titulo: '',acciones: '' }});
 
-  const [formDataTitulos2, setFormDataTitulos2] = useState({});
+  //const [formDataTitulos2, setFormDataTitulos2] = useState({});
   
   const [valCedente,setValCedente]=useState({})
   const [valCesionario,setValCesionario]=useState({})
@@ -107,7 +107,6 @@ export default function Cesion() {
   const addOperacion = async () => {
     try {
       
-      
         if (!formData.cedente || !formData.cesionario) return
 
         const operacion = { ...formData }
@@ -116,20 +115,19 @@ export default function Cesion() {
         setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
         setFormDataTitulos({ titulos : {operacionID: '', titulo: '',acciones: '' }})
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
-
+/*
         var filteredTitulos = titulos.filter(function(itm){
           return checked.indexOf(itm.id) > -1;
         });
-        const transferir = filteredTitulos.map(function(e) {
-          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones} ;
+        */
+        const transferir = titulosSelectos.map(function(e) {
+          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
         })
      
-
+        console.log("grabar acciones", transferir)
         Promise.all(
           transferir.map(input => API.graphql(graphqlOperation(createTituloPorOperacion, { input: input })))
         ).then(values => {
-          
-
           setOpenSnack(true)
           setChecked([])
           setTitulos([])
@@ -137,7 +135,6 @@ export default function Cesion() {
           setTotal(0)
           setValCedente({})
           setValCesionario({})
-
         });
 
     } catch (err) {
@@ -250,12 +247,12 @@ const handleSeleccionarTitulos = () => {
   //setFormData({ ...formData, 'acciones': sum })
 
   const transferir = filteredTitulos.map(function(e) {
-    return {operacionID: '', titulo : e.titulo, acciones: e.acciones} ;
+    return {operacionID: '', titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
   })
 
   
   setFormDataTitulos({ ...formDataTitulos, 'titulos': transferir })
-  setFormDataTitulos2({ ...formDataTitulos2,  transferir })
+  //setFormDataTitulos2({ ...formDataTitulos2,  transferir })
 
   setFormData({ ...formData, 'titulo': tituloString,'acciones': sum})
   setOpenTitulos(false);
@@ -318,6 +315,34 @@ async function onChangeCP(e) {
   setFormData({ ...formData, cp: filename });
   await Storage.put(filename, file);
 }
+
+const handleChangeCantidad = (event, item) => {
+/*
+  const herederos = formHerederos.map(function(e) {
+
+    return {numeroHeredero:  e.numeroHeredero, operacionId : e.operacionId, herederoId: e.herederoId, nombre: e.nombre, cantidad: e.numeroHeredero==nroHeredero ? event.target.value : e.cantidad  }
+  })
+*/
+
+  const transferir = titulosSelectos.map(function(e) {
+    return {operacionID: e.operacionID, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.titulo == item.titulo ? event.target.value: e.accionesTransferidas ? e.accionesTransferidas : e.acciones} ;
+  })
+
+  console.log("titulos a transferir", transferir)
+
+  setTitulosSelectos(transferir)
+  
+
+  const sum = transferir.reduce(function(prev, current) {
+    return prev + +current.accionesTransferidas
+  }, 0);
+  setTotal(sum);
+
+  setFormData({ ...formData, 'acciones': sum})
+  //console.log("titulos a transferir", event)
+  //console.log("titulos a transferir II", item)
+
+};
 
   return (
     <main className={classes.content}>
@@ -400,7 +425,7 @@ async function onChangeCP(e) {
                   options={accionistas}
                   getOptionLabel={(option) => option.nombre}
                   style={{ width: 'calc(100%)'}}
-                  renderInput={(params) => <TextField {...params} label="Cedente" margin="normal" />}
+                  renderInput={(params) => <TextField {...params} label="Cedente" margin="normal" variant='outlined'/>}
                   onChange={(option, value) => handleClickCedente(option, value)}
                 />
                 <Autocomplete
@@ -409,7 +434,7 @@ async function onChangeCP(e) {
                   options={accionistas}
                   getOptionLabel={(option) => option.nombre}
                   style={{ width: 'calc(100%)'}}
-                  renderInput={(params) => <TextField {...params} label="Cesionario" margin="normal" />}
+                  renderInput={(params) => <TextField {...params} label="Cesionario" margin="normal" variant='outlined'/>}
                   onChange={(option, value) => handleClickCesionario(option, value)}
                 />
 
@@ -419,36 +444,29 @@ async function onChangeCP(e) {
         <Grid item xs={4}>
 
           <BlaclTextTypography variant='h6' >
-            Títulos
+            Acciones a Transferir
             &nbsp;&nbsp;
-            <Button aria-controls="simple-menu" aria-haspopup="true" color='primary' size='small' style={{textTransform: 'none'}} onClick={handleOpenTitulos}>
-            + Agregar
+            <Button aria-controls="simple-menu" aria-haspopup="true" color='primary' size='small' style={{textTransform: 'none', borderRadius: 20, height: 20}} onClick={handleOpenTitulos} variant='contained'>
+            + Agregar Títulos
             </Button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Typography variant='caption'>
-                      Total acciones : {total}
-                    </Typography>
           </BlaclTextTypography>
           
 
           <List dense='true'
-          
           subheader={ total > 0 &&
-           <ListSubheader component="div" id="nested-list-subheader">
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <Typography variant='caption'>
-                F.Compra
-              </Typography>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Typography variant='caption'>
-                Título
-              </Typography>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Typography variant='caption'>
-                Cantidad
-              </Typography>
+            <ListSubheader component="div" id="nested-list-subheader">
+              <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around' , width: '100%'}}>              
+                <Typography variant='caption'  style={{flex: 1}}>
+                  Título
+                </Typography>
+                <Typography variant='caption'  style={{flex: 1}}>
+                  Acciones
+                </Typography>                
+                <Typography variant='caption'  style={{flex: 2}}>
+                  Acciones por Título a Transferir
+                </Typography>
+              </div>
             </ListSubheader>
-          
           }
           > 
                         {titulosSelectos.map(item => (
@@ -456,17 +474,28 @@ async function onChangeCP(e) {
                                 key={item.titulo} 
                                 //button
                                 //onClick={()=>history.push(item.path)}
-                                
                                 >
-                                <ListItemText>{item.fechaCompra}</ListItemText>                                
-                                <ListItemText>{item.titulo}</ListItemText>
-                                <TextField size='small'  type="number" defaultValue={item.acciones} inputProps={{ style: { textAlign: 'right' }}} />
-
+                                <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', width: '100%' }}>              
+                                  <div style={{flex: 1}}>
+                                    <ListItemText>{item.titulo}</ListItemText>
+                                  </div>
+                                  <div style={{flex: 1}}>
+                                    <ListItemText>{item.acciones}</ListItemText>
+                                  </div>
+                                  <div style={{flex: 2}}>                                   
+                                    <TextField size='small' type="number" defaultValue={item.acciones} inputProps={{ style: { textAlign: 'right' }}} onChange={(event)=>handleChangeCantidad(event,item)}/>
+                                  </div>
+                                </div>
                             </ListItem>
                             
                         ))}
                     </List>
-
+            { total > 0 &&
+              <Typography variant='caption' style={{display:'flex', flexDirection:'row', justifyContent:'right', alignItems:'center', paddingRight:60, color:'orange'}}>                 
+                 <div>Total a Transferir : </div>
+                 <div style={{fontWeight:'bold', fontSize:14}}>{total}</div>
+              </Typography>
+            }
 
 
 
@@ -474,7 +503,7 @@ async function onChangeCP(e) {
 
         <Grid item xs={1} >
         </Grid>
-        <Grid item xs={3} container direction='column' justifyContent= 'flex-start'>
+        <Grid item xs={3} container direction='column' justifyContent= 'flex-start' style={{backgroundColor:'#f9f9f9', padding:20, borderRadius: 10,}}>
           <BlaclTextTypography variant='h6' >
             Documentos requeridos
           </BlaclTextTypography>
@@ -518,7 +547,7 @@ async function onChangeCP(e) {
                     size='small'
                     onClick={addOperacion}
                 >
-                    Transferir
+                    Solicitar Aprobación
                 </Button>
         </Grid>
 

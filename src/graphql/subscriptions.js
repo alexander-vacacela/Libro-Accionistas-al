@@ -419,6 +419,7 @@ export const onCreateAccionista = /* GraphQL */ `
           titulo
           acciones
           fechaCompra
+          estado
           createdAt
           updatedAt
         }
@@ -484,6 +485,7 @@ export const onUpdateAccionista = /* GraphQL */ `
           titulo
           acciones
           fechaCompra
+          estado
           createdAt
           updatedAt
         }
@@ -549,6 +551,7 @@ export const onDeleteAccionista = /* GraphQL */ `
           titulo
           acciones
           fechaCompra
+          estado
           createdAt
           updatedAt
         }
@@ -567,6 +570,7 @@ export const onCreateTitulo = /* GraphQL */ `
       titulo
       acciones
       fechaCompra
+      estado
       createdAt
       updatedAt
     }
@@ -580,6 +584,7 @@ export const onUpdateTitulo = /* GraphQL */ `
       titulo
       acciones
       fechaCompra
+      estado
       createdAt
       updatedAt
     }
@@ -593,6 +598,7 @@ export const onDeleteTitulo = /* GraphQL */ `
       titulo
       acciones
       fechaCompra
+      estado
       createdAt
       updatedAt
     }
@@ -619,6 +625,7 @@ export const onCreateOperaciones = /* GraphQL */ `
           operacionID
           titulo
           acciones
+          accionesTransferidas
           createdAt
           updatedAt
         }
@@ -658,6 +665,7 @@ export const onUpdateOperaciones = /* GraphQL */ `
           operacionID
           titulo
           acciones
+          accionesTransferidas
           createdAt
           updatedAt
         }
@@ -697,6 +705,7 @@ export const onDeleteOperaciones = /* GraphQL */ `
           operacionID
           titulo
           acciones
+          accionesTransferidas
           createdAt
           updatedAt
         }
@@ -722,6 +731,7 @@ export const onCreateTituloPorOperacion = /* GraphQL */ `
       operacionID
       titulo
       acciones
+      accionesTransferidas
       createdAt
       updatedAt
     }
@@ -734,6 +744,7 @@ export const onUpdateTituloPorOperacion = /* GraphQL */ `
       operacionID
       titulo
       acciones
+      accionesTransferidas
       createdAt
       updatedAt
     }
@@ -746,6 +757,49 @@ export const onDeleteTituloPorOperacion = /* GraphQL */ `
       operacionID
       titulo
       acciones
+      accionesTransferidas
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateHerederoPorOperacion = /* GraphQL */ `
+  subscription OnCreateHerederoPorOperacion {
+    onCreateHerederoPorOperacion {
+      id
+      operacionId
+      numeroHeredero
+      herederoId
+      nombre
+      cantidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateHerederoPorOperacion = /* GraphQL */ `
+  subscription OnUpdateHerederoPorOperacion {
+    onUpdateHerederoPorOperacion {
+      id
+      operacionId
+      numeroHeredero
+      herederoId
+      nombre
+      cantidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteHerederoPorOperacion = /* GraphQL */ `
+  subscription OnDeleteHerederoPorOperacion {
+    onDeleteHerederoPorOperacion {
+      id
+      operacionId
+      numeroHeredero
+      herederoId
+      nombre
+      cantidad
       createdAt
       updatedAt
     }

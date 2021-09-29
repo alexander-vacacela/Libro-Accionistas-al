@@ -56,7 +56,7 @@ export const secondaryListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>
-        <DashboardIcon color='black'/>
+        <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Resumen" />
     </ListItem>
@@ -67,7 +67,7 @@ export const reportListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>
-        <DescriptionIcon color='black'/>
+        <DescriptionIcon />
       </ListItemIcon>
       <ListItemText primary="Reportes" />
     </ListItem>

@@ -106,9 +106,9 @@ export default function Header(props){
           aria-label="open drawer"
           onClick={props.handleDrawer}
       >
-          <MenuIcon color='black'/>
+          <MenuIcon />
       </IconButton>
-      <Typography variant='caption' color="black" noWrap className={classes.title}>
+      <Typography variant='caption'  noWrap className={classes.title}>
           Libro de Accionistas{location.pathname.replace('/', ' / ') }
       </Typography>
     </div>

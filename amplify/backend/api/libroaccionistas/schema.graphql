@@ -124,6 +124,7 @@ type Titulo @model @key(name: "byAccionista", fields: ["accionistaID", "titulo"]
   titulo : String!
   acciones: Int!
   fechaCompra: String
+  estado: String
 
 }
 
@@ -140,7 +141,7 @@ type Operaciones @model {
   estado: String!
   usuarioIngreso: String
   usuarioAprobador: String
-  titulos : [TituloPorOperacion] @connection(keyName: "PorOperacion", fields: ["id"])
+  titulos: [TituloPorOperacion] @connection(keyName: "PorOperacion", fields: ["id"])
   cs: String
   cg: String
   ci: String
@@ -158,4 +159,14 @@ type TituloPorOperacion @model @key(name: "PorOperacion", fields: ["operacionID"
   operacionID: ID!
   titulo : String!
   acciones: Int!
+  accionesTransferidas: Int
+}
+
+type HerederoPorOperacion @model {
+  id: ID!
+  operacionId: String!
+  numeroHeredero: Int
+  herederoId: String!
+  nombre: String
+  cantidad: Int
 }

@@ -55,22 +55,22 @@ export default function Sidebar(props){
         {
             label: "Blotter",
             path: "/blotter",
-            icon: <AssignmentTurnedInIcon color='black' />
+            icon: <AssignmentTurnedInIcon />
           },
         {
           label: "Accionistas",
           path: "/accionistas",
-          icon: <PeopleIcon color='black'/>
+          icon: <PeopleIcon />
         },
         {
           label: "Asambleas",
           path: "/logout",
-          icon: <GroupWorkIcon color='black'/>
+          icon: <GroupWorkIcon />
         },
         {
             label: "Dividendos",
             path: "/logout",
-            icon: <AttachMoneyIcon color='black'/>
+            icon: <AttachMoneyIcon />
         },
     ];
 
