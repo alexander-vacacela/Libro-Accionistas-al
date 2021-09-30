@@ -7,7 +7,7 @@ import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyle
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
 import { listAccionistas, listTitulos } from './../graphql/queries';
-import {createOperaciones, createTituloPorOperacion} from './../graphql/mutations';
+import {createOperaciones, createTituloPorOperacion, updateTitulo} from './../graphql/mutations';
 
 import SaveIcon from '@material-ui/icons/Save';
 import CheckIcon from '@material-ui/icons/Check';
@@ -67,8 +67,8 @@ export default function Cesion() {
     estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '',
     cs: '', cg: '', ci: '', es: '', cp: ''});
 
-  const [formDataTitulos, setFormDataTitulos] = useState({ titulos : {
-      operacionID: '', titulo: '',acciones: '' }});
+//  const [formDataTitulos, setFormDataTitulos] = useState({ titulos : {
+//      operacionID: '', titulo: '',acciones: '' }});
 
   //const [formDataTitulos2, setFormDataTitulos2] = useState({});
   
@@ -87,6 +87,8 @@ export default function Cesion() {
   
   const [titulosSelectos, setTitulosSelectos] = useState([])
   
+  const [titulosPorOper, settitulosPorOper] = useState([])
+
   const [openSnack, setOpenSnack] = useState(false);
 
   const handleToggle = (value) => () => {
@@ -113,15 +115,13 @@ export default function Cesion() {
         //const operacionTitulos = { ...formDataTitulos }; 
 
         setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
-        setFormDataTitulos({ titulos : {operacionID: '', titulo: '',acciones: '' }})
+        //setFormDataTitulos({ titulos : {operacionID: '', titulo: '',acciones: '' }})
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
-/*
-        var filteredTitulos = titulos.filter(function(itm){
-          return checked.indexOf(itm.id) > -1;
-        });
-        */
-        const transferir = titulosSelectos.map(function(e) {
-          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
+
+
+
+        const transferir = titulosPorOper.map(function(e) {
+          return {operacionID: operID.data.createOperaciones.id, tituloId : e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
         })
      
         console.log("grabar acciones", transferir)
@@ -132,10 +132,18 @@ export default function Cesion() {
           setChecked([])
           setTitulos([])
           setTitulosSelectos([])
+          settitulosPorOper([])
           setTotal(0)
           setValCedente({})
           setValCesionario({})
         });
+
+
+        //Bloquear lo titulos
+        Promise.all(
+          transferir.map(input => API.graphql({ query: updateTitulo, variables: { input: {id: input.tituloId, estado: 'Bloqueado'} } }))
+        );
+
 
     } catch (err) {
         console.log('error creating transaction:', err)
@@ -151,10 +159,10 @@ export default function Cesion() {
   async function fetchAccionistas() {
     const apiData = await API.graphql({ query: listAccionistas });
     const accionistasFromAPI = apiData.data.listAccionistas.items;
-    await Promise.all(accionistasFromAPI.map(async accionista => {
-    return accionista;
-    }))
-    setAccionistas(apiData.data.listAccionistas.items);
+    //await Promise.all(accionistasFromAPI.map(async accionista => {
+    //return accionista;
+    //}))
+    setAccionistas(accionistasFromAPI);
     
   }
 
@@ -163,17 +171,19 @@ export default function Cesion() {
     let filter = {
       accionistaID: {
           eq: cedente // filter priority = 1
+      },
+      estado: {
+        eq: 'Activo'
       }
-  };
-
- 
+    };
 
     const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter} });
     const titulosFromAPI = apiData.data.listTitulos.items;
-    await Promise.all(titulosFromAPI.map(async titulos => {
-    return titulos;
-    }))
-    setTitulos(apiData.data.listTitulos.items);
+    //await Promise.all(titulosFromAPI.map(async titulos => {
+    //return titulos;
+    //}))
+    console.log('busca titulos cedente',titulosFromAPI)
+    setTitulos(titulosFromAPI);
     
   }
 
@@ -189,6 +199,7 @@ const handleClickCedente = (option, value) => {
 
     setChecked([])
     setTitulosSelectos([])
+    settitulosPorOper([])
     setTotal(0)
 
   }
@@ -198,6 +209,7 @@ const handleClickCedente = (option, value) => {
     setChecked([])
     setTitulos([])
     setTitulosSelectos([])
+    settitulosPorOper([])
     setTotal(0)
     setValCedente({})
   }
@@ -231,7 +243,7 @@ const handleSeleccionarTitulos = () => {
 
   //filteredTitulos = { records : filteredArray };
   setTitulosSelectos(filteredTitulos)
-
+console.log('filtrados',filteredTitulos)
 
   const tituloString = filteredTitulos.map(function(titulos){
     return titulos.titulo;
@@ -246,16 +258,24 @@ const handleSeleccionarTitulos = () => {
 
   //setFormData({ ...formData, 'acciones': sum })
 
-  const transferir = filteredTitulos.map(function(e) {
-    return {operacionID: '', titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
-  })
+//  const transferir = filteredTitulos.map(function(e) {
+//    return {operacionID: '', titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
+//  })
 
   
-  setFormDataTitulos({ ...formDataTitulos, 'titulos': transferir })
+  //setFormDataTitulos({ ...formDataTitulos, 'titulos': transferir })
   //setFormDataTitulos2({ ...formDataTitulos2,  transferir })
 
   setFormData({ ...formData, 'titulo': tituloString,'acciones': sum})
   setOpenTitulos(false);
+
+
+  const transferir = filteredTitulos.map(function(e) {
+    return {operacionID: e.operacionID, tituloId: e.id, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.acciones } ;
+  })
+
+  settitulosPorOper(transferir)
+
 
 
 };
@@ -323,15 +343,16 @@ const handleChangeCantidad = (event, item) => {
     return {numeroHeredero:  e.numeroHeredero, operacionId : e.operacionId, herederoId: e.herederoId, nombre: e.nombre, cantidad: e.numeroHeredero==nroHeredero ? event.target.value : e.cantidad  }
   })
 */
+console.log("titulos a transferir antes", titulosSelectos)
 
-  const transferir = titulosSelectos.map(function(e) {
-    return {operacionID: e.operacionID, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.titulo == item.titulo ? event.target.value: e.accionesTransferidas ? e.accionesTransferidas : e.acciones} ;
+  const transferir = titulosPorOper.map(function(e) {
+    return {operacionID: e.operacionID, tituloId: e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.titulo == item.titulo ? event.target.value: e.accionesTransferidas} ;
   })
 
   console.log("titulos a transferir", transferir)
 
-  setTitulosSelectos(transferir)
-  
+  //setTitulosSelectos(transferir)
+  settitulosPorOper(transferir)
 
   const sum = transferir.reduce(function(prev, current) {
     return prev + +current.accionesTransferidas

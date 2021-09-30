@@ -412,6 +412,7 @@ export const onCreateAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -478,6 +479,7 @@ export const onUpdateAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -544,6 +546,7 @@ export const onDeleteAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -604,6 +607,48 @@ export const onDeleteTitulo = /* GraphQL */ `
     }
   }
 `;
+export const onCreateHeredero = /* GraphQL */ `
+  subscription OnCreateHeredero {
+    onCreateHeredero {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateHeredero = /* GraphQL */ `
+  subscription OnUpdateHeredero {
+    onUpdateHeredero {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteHeredero = /* GraphQL */ `
+  subscription OnDeleteHeredero {
+    onDeleteHeredero {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateOperaciones = /* GraphQL */ `
   subscription OnCreateOperaciones {
     onCreateOperaciones {
@@ -623,6 +668,7 @@ export const onCreateOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -639,6 +685,7 @@ export const onCreateOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -663,6 +710,7 @@ export const onUpdateOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -679,6 +727,7 @@ export const onUpdateOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -703,6 +752,7 @@ export const onDeleteOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -719,6 +769,7 @@ export const onDeleteOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -729,6 +780,7 @@ export const onCreateTituloPorOperacion = /* GraphQL */ `
     onCreateTituloPorOperacion {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -742,6 +794,7 @@ export const onUpdateTituloPorOperacion = /* GraphQL */ `
     onUpdateTituloPorOperacion {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -755,6 +808,7 @@ export const onDeleteTituloPorOperacion = /* GraphQL */ `
     onDeleteTituloPorOperacion {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -800,6 +854,36 @@ export const onDeleteHerederoPorOperacion = /* GraphQL */ `
       herederoId
       nombre
       cantidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateNumeroSecuencial = /* GraphQL */ `
+  subscription OnCreateNumeroSecuencial {
+    onCreateNumeroSecuencial {
+      id
+      numerotitulo
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateNumeroSecuencial = /* GraphQL */ `
+  subscription OnUpdateNumeroSecuencial {
+    onUpdateNumeroSecuencial {
+      id
+      numerotitulo
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteNumeroSecuencial = /* GraphQL */ `
+  subscription OnDeleteNumeroSecuencial {
+    onDeleteNumeroSecuencial {
+      id
+      numerotitulo
       createdAt
       updatedAt
     }

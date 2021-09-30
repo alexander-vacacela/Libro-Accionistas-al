@@ -373,6 +373,7 @@ export const getAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -444,6 +445,7 @@ export const listAccionistas = /* GraphQL */ `
         docIdentidadPrincipal
         docCertificadoBancario
         docIdentidadConyugue
+        herederos
         titulos {
           nextToken
         }
@@ -489,6 +491,41 @@ export const listTitulos = /* GraphQL */ `
     }
   }
 `;
+export const getHeredero = /* GraphQL */ `
+  query GetHeredero($id: ID!) {
+    getHeredero(id: $id) {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listHerederos = /* GraphQL */ `
+  query ListHerederos(
+    $filter: ModelHerederoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHerederos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        accionistaHerederoId
+        nombre
+        cantidad
+        idCedente
+        nombreCedente
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getOperaciones = /* GraphQL */ `
   query GetOperaciones($id: ID!) {
     getOperaciones(id: $id) {
@@ -508,6 +545,7 @@ export const getOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -524,6 +562,7 @@ export const getOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -560,6 +599,7 @@ export const listOperaciones = /* GraphQL */ `
         ced
         cb
         nom
+        fechaAprobacion
         createdAt
         updatedAt
       }
@@ -572,6 +612,7 @@ export const getTituloPorOperacion = /* GraphQL */ `
     getTituloPorOperacion(id: $id) {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -594,6 +635,7 @@ export const listTituloPorOperacions = /* GraphQL */ `
       items {
         id
         operacionID
+        tituloId
         titulo
         acciones
         accionesTransferidas
@@ -636,6 +678,37 @@ export const listHerederoPorOperacions = /* GraphQL */ `
         herederoId
         nombre
         cantidad
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getNumeroSecuencial = /* GraphQL */ `
+  query GetNumeroSecuencial($id: ID!) {
+    getNumeroSecuencial(id: $id) {
+      id
+      numerotitulo
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listNumeroSecuencials = /* GraphQL */ `
+  query ListNumeroSecuencials(
+    $filter: ModelNumeroSecuencialFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNumeroSecuencials(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        numerotitulo
         createdAt
         updatedAt
       }

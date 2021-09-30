@@ -5,7 +5,7 @@ import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyle
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
 import { listAccionistas, listTitulos } from './../graphql/queries';
-import {createOperaciones, createTituloPorOperacion, createHerederoPorOperacion} from './../graphql/mutations';
+import {createOperaciones, createTituloPorOperacion, createHerederoPorOperacion, updateTitulo} from './../graphql/mutations';
 
 import SaveIcon from '@material-ui/icons/Save';
 import CheckIcon from '@material-ui/icons/Check';
@@ -97,7 +97,7 @@ export default function PosesionEfectiva() {
 
         const operacion = { ...formData }
 
-        setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
+        setFormData({ fecha: fecha, operacion: 'Posesión Efectiva', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
         setFormDataTitulos({ titulos : {operacionID: '', titulo: '',acciones: '' }})
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
@@ -125,6 +125,14 @@ export default function PosesionEfectiva() {
 
         });
 
+        console.log('que es transferir', transferir)
+        //Bloquear lo titulos
+        Promise.all(
+          titulos.map(input => API.graphql({ query: updateTitulo, variables: { input: {id: input.id, estado: 'Bloqueado'} } }) ) 
+          
+        );
+
+
 
          } catch (err) {
         console.log('error creating transaction:', err)
@@ -151,6 +159,9 @@ export default function PosesionEfectiva() {
     let filter = {
       accionistaID: {
           eq: cedenteId // filter priority = 1
+      },
+      estado:{
+        eq: 'Activo'
       }
     };
 

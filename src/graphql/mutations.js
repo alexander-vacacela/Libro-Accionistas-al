@@ -505,6 +505,7 @@ export const createAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -574,6 +575,7 @@ export const updateAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -643,6 +645,7 @@ export const deleteAccionista = /* GraphQL */ `
       docIdentidadPrincipal
       docCertificadoBancario
       docIdentidadConyugue
+      herederos
       titulos {
         items {
           id
@@ -712,6 +715,57 @@ export const deleteTitulo = /* GraphQL */ `
     }
   }
 `;
+export const createHeredero = /* GraphQL */ `
+  mutation CreateHeredero(
+    $input: CreateHerederoInput!
+    $condition: ModelHerederoConditionInput
+  ) {
+    createHeredero(input: $input, condition: $condition) {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateHeredero = /* GraphQL */ `
+  mutation UpdateHeredero(
+    $input: UpdateHerederoInput!
+    $condition: ModelHerederoConditionInput
+  ) {
+    updateHeredero(input: $input, condition: $condition) {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteHeredero = /* GraphQL */ `
+  mutation DeleteHeredero(
+    $input: DeleteHerederoInput!
+    $condition: ModelHerederoConditionInput
+  ) {
+    deleteHeredero(input: $input, condition: $condition) {
+      id
+      accionistaHerederoId
+      nombre
+      cantidad
+      idCedente
+      nombreCedente
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createOperaciones = /* GraphQL */ `
   mutation CreateOperaciones(
     $input: CreateOperacionesInput!
@@ -734,6 +788,7 @@ export const createOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -750,6 +805,7 @@ export const createOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -777,6 +833,7 @@ export const updateOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -793,6 +850,7 @@ export const updateOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -820,6 +878,7 @@ export const deleteOperaciones = /* GraphQL */ `
         items {
           id
           operacionID
+          tituloId
           titulo
           acciones
           accionesTransferidas
@@ -836,6 +895,7 @@ export const deleteOperaciones = /* GraphQL */ `
       ced
       cb
       nom
+      fechaAprobacion
       createdAt
       updatedAt
     }
@@ -849,6 +909,7 @@ export const createTituloPorOperacion = /* GraphQL */ `
     createTituloPorOperacion(input: $input, condition: $condition) {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -865,6 +926,7 @@ export const updateTituloPorOperacion = /* GraphQL */ `
     updateTituloPorOperacion(input: $input, condition: $condition) {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -881,6 +943,7 @@ export const deleteTituloPorOperacion = /* GraphQL */ `
     deleteTituloPorOperacion(input: $input, condition: $condition) {
       id
       operacionID
+      tituloId
       titulo
       acciones
       accionesTransferidas
@@ -935,6 +998,45 @@ export const deleteHerederoPorOperacion = /* GraphQL */ `
       herederoId
       nombre
       cantidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createNumeroSecuencial = /* GraphQL */ `
+  mutation CreateNumeroSecuencial(
+    $input: CreateNumeroSecuencialInput!
+    $condition: ModelNumeroSecuencialConditionInput
+  ) {
+    createNumeroSecuencial(input: $input, condition: $condition) {
+      id
+      numerotitulo
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateNumeroSecuencial = /* GraphQL */ `
+  mutation UpdateNumeroSecuencial(
+    $input: UpdateNumeroSecuencialInput!
+    $condition: ModelNumeroSecuencialConditionInput
+  ) {
+    updateNumeroSecuencial(input: $input, condition: $condition) {
+      id
+      numerotitulo
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteNumeroSecuencial = /* GraphQL */ `
+  mutation DeleteNumeroSecuencial(
+    $input: DeleteNumeroSecuencialInput!
+    $condition: ModelNumeroSecuencialConditionInput
+  ) {
+    deleteNumeroSecuencial(input: $input, condition: $condition) {
+      id
+      numerotitulo
       createdAt
       updatedAt
     }

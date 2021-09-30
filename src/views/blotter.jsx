@@ -1,7 +1,7 @@
 import React, { useState, useEffect }  from 'react';
 
 import { Grid, Button,Typography,makeStyles,ButtonGroup,Badge,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,IconButton,TextField,
-  ListItem, ListItemText, ListSubheader, List, Divider, } from '@material-ui/core';
+  ListItem, ListItemText, ListSubheader, List, CircularProgress, ListItemIcon} from '@material-ui/core';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
@@ -9,10 +9,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import WarningIcon from '@material-ui/icons/Warning';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { API, Storage } from 'aws-amplify';
-import { listOperaciones, listTituloPorOperacions } from './../graphql/queries';
+import { listOperaciones, listTituloPorOperacions, getNumeroSecuencial, listTitulos,listHerederoPorOperacions } from './../graphql/queries';
+import { updateTitulo, createTitulo, updateNumeroSecuencial, updateAccionista, updateOperaciones } from './../graphql/mutations';
 import PropTypes from 'prop-types';
 
 
@@ -96,11 +98,12 @@ export default function Operaciones() {
   const [count, setCount] = useState(0);
   const [openRevisar, setOpenRevisar] = useState(false);
   const [imageCS, setImageCS] = useState('');
-
   const [transferencia, setTransferencia] = useState([]);
-
-  //const [estado, setEstado] = useState('Pendiente');
+  const [estado, setEstado] = useState('Pendiente');
   const [titulos, setTitulos] = useState([])
+  const [countEstado, setCountEstado] = useState([0,0,0,0])
+  const [circular, setCircular] = useState(false);
+  const [herederos, setHerederos] = useState([]);
 
 
   const columns = [
@@ -169,14 +172,13 @@ export default function Operaciones() {
 
 
   useEffect(() => {
-      
     fetchOperaciones("Pendiente");
-  }, [operaciones.length]);
+  }, [operaciones.length, count]);
  
   
-  async function fetchOperaciones(estado) {
+  async function fetchOperaciones() {
 
-console.log('entro de nuevo ??', 'SIIII')
+    console.log('entro de nuevo ??', 'SIIII')
 
     let filter = {
       estado: {
@@ -185,18 +187,8 @@ console.log('entro de nuevo ??', 'SIIII')
       
   };
 
-
-
-    const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter, sortDirection: 'DESC'},  });
+    const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter},  });
     const operacionesFromAPI = apiData.data.listOperaciones.items;
-    //await Promise.all(operacionesFromAPI.map(async accionista => {
-    //return accionista;
-    //}))
-    
-//    const apiData = await API.graphql(graphqlOperation(listOperaciones, { estado: 'Pendiente', sortDirection: 'ASC' }));
-//    const operacionesFromAPI = apiData.data.listOperaciones.items;
-    //const sorted = [...operacionesFromAPI].sort((a, b) => b['operacion'] - a['operacion']);
-    //console.log('sorte',sorted)
     
     setOperaciones(operacionesFromAPI);
     if(count === 0)
@@ -204,6 +196,19 @@ console.log('entro de nuevo ??', 'SIIII')
       setCount(1);
       setRows(operacionesFromAPI);
       }
+
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+
+      const apiData1 = await API.graphql({ query: listOperaciones , variables: { filter: {estado:{eq:'Pendiente'}}}});
+      const operacionesFromAPI1 = apiData1.data.listOperaciones.items.length; 
+      const apiData2 = await API.graphql({ query: listOperaciones , variables: { filter: {estado:{eq:'Aprobada'},fechaAprobacion:{eq:fecha}}}});
+      const operacionesFromAPI2 = apiData2.data.listOperaciones.items.length;
+      const apiData3 = await API.graphql({ query: listOperaciones , variables: { filter: {estado:{eq:'Rechazada'}}}});
+      const operacionesFromAPI3 = apiData3.data.listOperaciones.items.length;
+      const apiData4 = await API.graphql({ query: listOperaciones , variables: { filter: {estado:{eq:'Anulada'},fechaAprobacion:{eq:fecha}}}});
+      const operacionesFromAPI4 = apiData4.data.listOperaciones.items.length;
+      setCountEstado([operacionesFromAPI1,operacionesFromAPI2,operacionesFromAPI3,operacionesFromAPI4])
 
   }
 
@@ -226,17 +231,160 @@ console.log('entro de nuevo ??', 'SIIII')
       setTransferencia(values.row);
       setOpenRevisar(true);
       fetchTitulos(values.row.id);
+      fetchHerederos(values.row.id);
 
-      //console.log('values',values.row);
+      console.log('values',values.row);
       //console.log('operacion',values.row.id);
     };
     
     const handleRevisarOperacion = () => {
-      //codigo para aprobar
 
       setOpenRevisar(false);    
     };
+
+
+    const handleAprobarOperacion2 = async() => {
+      setCircular(true);
+
+      if(transferencia.operacion == "Cesión")
+      {
+      for (const titulo of titulos) {
+        console.log('titulo', titulo);
+        //inactivar los titulos de cedente
+        const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Inactivo'} } });
+        console.log('Inactivar titulos',apiData)
+
+        //leer secuencial de titulos
+        const secuen = await apiDataSecuencial();
+        console.log('Secuencial',secuen)
+
+        let tituloCesionario = {}
+        let tituloCedente = {}
+        //si la cantidad de acciones a transferir es la misma: crear el mismo titulo al  cesionario
+        if(titulo.acciones==titulo.accionesTransferidas){
+          console.log('Son iguales')
+          tituloCesionario = {
+            accionistaID:transferencia.idCesionario,
+            titulo : titulo.titulo,
+            acciones : titulo.acciones,
+            fechaCompra: transferencia.fecha,
+            estado:'Activo',}
+
+            console.log('input',tituloCesionario)
+            const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloCesionario } });  
+    
+        }
+        else{ //si la cantidad de acciones a transferir es menor
+
+          //crear nuevo titulo a cesionario (cantidad a transferir)
+          //incrementar secuencial de titulos
+          const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
+          const secuen2 = await apiDataUpdate(num);
+          console.log('Update Secuencial',secuen2)
+          console.log('Son diferentes')
+          tituloCesionario = {
+            accionistaID:transferencia.idCesionario,
+            titulo : num,
+            acciones : titulo.accionesTransferidas,
+            fechaCompra: transferencia.fecha,
+            estado:'Activo', };
+         console.log('input',tituloCesionario)
+         const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloCesionario } });  
+ 
+          //crear nuevo titulo a cedente (cantidad - cantidad a transferir)
+          //incrementar secuencial de titulos
+          const numCed = num  + 1
+          const secuenCed = await apiDataUpdate(numCed);
+          console.log('Update Secuencial',secuenCed)
+          tituloCedente = {
+            accionistaID:transferencia.idCedente,
+            titulo : num,
+            acciones : titulo.acciones - titulo.accionesTransferidas,
+            fechaCompra: transferencia.fecha,
+            estado:'Activo',}
+          const apiDataTituloCedente = await API.graphql({ query: createTitulo, variables: { input: tituloCedente } });  
+          
+         };
+        }
+
+      //actualizar saldo de acciones para Cedente y Cesionario
+      let filter = {
+        accionistaID: {
+            eq: transferencia.idCedente // filter priority = 1
+        },
+        estado: {
+          ne: 'Inactivo'
+        }
+      };
+      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+      const titulosCedenteFromAPI = apiDataTitulosCedente.data.listTitulos.items;
+      console.log('busca titulos cedente',titulosCedenteFromAPI)
+      let totalAccionesCedente = 0;
+      titulosCedenteFromAPI.map(titulo => {totalAccionesCedente = totalAccionesCedente + titulo.acciones})
+      console.log('total acciones cedente',totalAccionesCedente)
+
+      filter = {
+        accionistaID: {
+            eq: transferencia.idCesionario // filter priority = 1
+        },
+        estado: {
+          ne: 'Inactivo'
+        }
+      };
+      const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+      const titulosCesionarioFromAPI = apiDataTitulosCesionario.data.listTitulos.items;
+      console.log('busca titulos cedente',titulosCesionarioFromAPI)
+      let totalAccionesCesionario= 0;
+      titulosCesionarioFromAPI.map(titulo => {totalAccionesCesionario = totalAccionesCesionario + titulo.acciones})
+      console.log('total acciones cedente',totalAccionesCesionario)
+
+      const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, cantidadAcciones: totalAccionesCedente, estado: totalAccionesCedente== 0 ? 'Inactivo' : 'Activo' } } });
+      const apiDataUpdateCesionario = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCesionario, cantidadAcciones: totalAccionesCesionario } } });
+
+      //actualizar estado y fechaAprobacion de operacion aprobada
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, fechaAprobacion: fecha, estado: 'Aprobada' } } });
+    }
+    else if(transferencia.operacion == "Posesión Efectiva")
+    {
+      //Inactivar Cedente y Actualizar dato de Herederos (true)
+      //Asociar Herederos al Cedente
+      //Actualizar Total de Acciones de Herederos e indicar que es Heredero (true)
+      //actualizar estado y fechaAprobacion de operacion aprobada
+
+    }
+
+    setCircular(false);
+    setOpenRevisar(false);          
+    setCount(0);
+    setTransferencia([]);
+    setTitulos([]);
+    fetchOperaciones("Pendiente");
+
+    }
+
+    async function fetchHerederos(idOper) {
+
+      let filter = {
+        operacionId: {
+            eq: idOper // filter priority = 1
+        }
+      };
   
+      const apiData = await API.graphql({ query: listHerederoPorOperacions, variables: { filter: filter} });
+      const herederosFromAPI = apiData.data.listHerederoPorOperacions.items;
+ 
+      console.log('busca herederos por Operacion',herederosFromAPI)
+      setHerederos(herederosFromAPI);
+      
+    }
+  
+
+    const apiDataSecuencial = async() => await API.graphql({ query: getNumeroSecuencial, variables: { id: '1' } });
+    const apiDataUpdate =  async(nuevoSecuencial) => await API.graphql({ query: updateNumeroSecuencial, variables: { input: {id: '1', numerotitulo: nuevoSecuencial} } });
+    
+    
     async function fetchTitulos(idOper) {
 
       let filter = {
@@ -338,219 +486,258 @@ console.log('entro de nuevo ??', 'SIIII')
         .catch(err => console.log(err));
         
     };
-
-
+    
+/*
+    const listarPorEstado = (estado)=>{
+      fetchOperaciones(estado);
+      setEstado(estado);
+    }
+*/
 
   return (
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
+    <main className={classes.content}>
+      <div className={classes.appBarSpacer} />
 
-          <Grid container spacing={3} >
-            <Grid item xs={12} >
-                <ButtonGroup size="medium" variant="text" aria-label="text button group" style={{paddingBottom: 0, backgroundColor:'white'}} fullWidth='true'>
-                    <Button variant="contained" startIcon={<EditIcon/>} size="medium" color="primary">
-                        <Typography variant='subtitle2'>Pendientes</Typography>
-                        <Badge color="secondary" overlap="circular" badgeContent={rows.length} style={{left: 30,}}>                         
-                        </Badge>
-                    </Button>
-                    <Button variant="text" startIcon={<CheckIcon color='disabled'/>} size='medium'>
-                        <Typography variant='subtitle2' style={{color:'grey'}}>Aprobadas</Typography>
-                        <Badge color="secondary" overlap="circular" badgeContent="13" style={{left: 30,}}>                         
-                        </Badge>
-                    </Button>                                  
-                    <Button variant="text" startIcon={<WarningIcon color='disabled'/>} size='medium'>
-                        <Typography variant='subtitle2' style={{color:'grey'}}>Rechazadas</Typography>
-                        <Badge color="secondary" overlap="circular" badgeContent="2" style={{left: 30,}}>                     
-                        </Badge>
-                    </Button>
-                    <Button variant="text" startIcon={<DeleteIcon color='disabled'/>} size='medium'>
-                        <Typography variant='subtitle2' style={{color:'grey'}}>Anuladas</Typography>
-                        <Badge color="secondary" overlap="circular" badgeContent="0" style={{left: 30,}}>                         
-                        </Badge>
-                    </Button>
-                </ButtonGroup>
+        <Grid container spacing={3} >
+          <Grid item xs={12} >
+              <ButtonGroup size="medium" variant="text" aria-label="text button group" style={{paddingBottom: 0, backgroundColor:'white'}} fullWidth='true'>
+                  <Button onClick={()=>{setEstado("Pendiente"); setCount(0) }} variant={estado=="Pendiente" ? "contained" : "text"} startIcon={<EditIcon color={estado=='Pendiente' ? 'inherit': 'disabled'}/>} size="medium" color={estado=="Pendiente" ? "primary" : 'inherit'}>
+                      <Typography variant='subtitle2' style={estado=="Pendiente" ? {color:'white'} : {color:'grey'}}>Pendientes</Typography>
+                      <Badge color="secondary" overlap="circular" badgeContent={countEstado[0]} style={{left: 30,}}>                         
+                      </Badge>
+                  </Button>
+                  <Button onClick={()=>{setEstado("Aprobada"); setCount(0)}} variant={estado=="Aprobada" ? "contained" : "text"} startIcon={<CheckIcon color={estado=='Aprobada' ? 'inherit': 'disabled'}/>} size='medium' color={estado=="Aprobada" ? "primary" : 'inherit'}>
+                      <Typography variant='subtitle2' style={estado=="Aprobada" ? {color:'white'} : {color:'grey'}} >Aprobadas</Typography>
+                      <Badge color="secondary" overlap="circular" badgeContent={countEstado[1]} style={{left: 30,}}>                         
+                      </Badge>
+                  </Button>                                  
+                  <Button onClick={()=>{setEstado("Rechazada"); setCount(0)}} variant={estado=="Rechazada" ? "contained" : "text"} startIcon={<WarningIcon color={estado=='Rechazada' ? 'inherit': 'disabled'}/>} size='medium' color={estado=="Rechazada" ? "primary" : 'inherit'}>
+                      <Typography variant='subtitle2' style={estado=="Rechazada" ? {color:'white'} : {color:'grey'}}>Rechazadas</Typography>
+                      <Badge color="secondary" overlap="circular" badgeContent={countEstado[2]} style={{left: 30,}}>                     
+                      </Badge>
+                  </Button>
+                  <Button onClick={()=>{setEstado("Anulada"); setCount(0)}} variant={estado=="Anulada" ? "contained" : "text"} startIcon={<DeleteIcon color={estado=='Anulada' ? 'inherit': 'disabled'}/>} size='medium' color={estado=="Anulada" ? "primary" : 'inherit'}>
+                      <Typography variant='subtitle2' style={estado=="Anulada" ? {color:'white'} : {color:'grey'}}>Anuladas</Typography>
+                      <Badge color="secondary" overlap="circular" badgeContent={countEstado[3]} style={{left: 30,}}>                         
+                      </Badge>
+                  </Button>
+              </ButtonGroup>
 
-                <DataGrid
-                    //disableColumnMenu
-                    sortModel={ [{field: 'fecha', sort: 'desc',}]}
-                    style={{backgroundColor:'white'}}
-                    density="compact"             
-                    autoHeight='true'
-                    autoPageSize='true'
-                    components={{ Toolbar: QuickSearchToolbar}}
-                    rows={rows}
-                    columns={columns}
-                    componentsProps={{
-                        toolbar: {
-                        value: searchText,
-                        onChange: (event) => requestSearch(event.target.value),
-                        clearSearch: () => requestSearch(''),
-                        },
-                    }}
-                />
-                
-            </Grid>
-         </Grid>
+              <DataGrid
+                  //disableColumnMenu
+                  sortModel={ [{field: 'fecha', sort: 'desc',}]}
+                  style={{backgroundColor:'white'}}
+                  density="compact"             
+                  autoHeight='true'
+                  autoPageSize='true'
+                  components={{ Toolbar: QuickSearchToolbar}}
+                  rows={rows}
+                  columns={columns}
+                  componentsProps={{
+                      toolbar: {
+                      value: searchText,
+                      onChange: (event) => requestSearch(event.target.value),
+                      clearSearch: () => requestSearch(''),
+                      },
+                  }}
+              />
+              
+          </Grid>
+        </Grid>
 
-        <Dialog fullWidth='false' maxWidth = 'md' open={openRevisar} onClose={handleRevisarOperacion} aria-labelledby="form-dialog-title">
+      <Dialog fullWidth='false' maxWidth = 'md' open={openRevisar} onClose={handleRevisarOperacion} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" style={{backgroundColor:'#00BCD4'}}>
             <div>{transferencia.operacion}</div>
         </DialogTitle>
 
         <DialogContent>
           <DialogContentText>
-          <Grid container style={{display:'flex'}}>
-        <Grid item xs={4} >
-            <Typography variant='h6'>
-            Detalle Transferencia
-            </Typography>          
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Typography variant='body2'>
-            <small>Fecha Solicitud</small>
-            </Typography>
-            <Typography variant='subtitle1'>
-              {transferencia.fecha}
-            </Typography>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Typography variant='body2'>
-            <small>Cedente</small>
-            </Typography>
-            <Typography variant='subtitle1'>
-              {transferencia.cedente}
-            </Typography>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Typography variant='body2'>
-            <small>Cesionario</small>
-            </Typography>
-            <Typography variant='subtitle1'>
-              {transferencia.cesionario}
-            </Typography>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Typography variant='body2'>
-            <small>Acciones a Transferir</small>
-            </Typography>
-            <Typography variant='subtitle1' color='secondary'>
-              {transferencia.acciones}
-            </Typography>         
-</Grid>
-
-<Grid item xs={4} >
-  <Typography variant='h6'>
-    Acciones a Transferir
-  </Typography>
-
-
-
-
-  <List dense='true'           
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around' , width: '100%', marginTop:10}}>              
-                <Typography variant='caption'  style={{flex: 1}}>
-                  Título
+            <Grid container style={{display:'flex'}}>
+              <Grid item xs={4} >
+                <Typography variant='h6'>
+                Detalle Transferencia
+                </Typography>          
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Typography variant='body2'>
+                <small>Fecha Solicitud</small>
                 </Typography>
-                <Typography variant='caption'  style={{flex: 1}}>
-                  Acciones
-                </Typography>                
-                <Typography variant='caption'  style={{flex: 2}}>
-                  Transferir
+                <Typography variant='subtitle1'>
+                  {transferencia.fecha}
                 </Typography>
-              </div>
-            </ListSubheader>
-            
-          }
-          > 
-                        {titulos.map(item => (
-                            <ListItem key={item.id}>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Typography variant='body2'>
+                <small>Cedente</small>
+                </Typography>
+                <Typography variant='subtitle1'>
+                  {transferencia.cedente}
+                </Typography>
 
-                                <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', width: '100%', paddingRight:40 }}>              
-                                  <div style={{flex: 1}}>
-                                    <ListItemText>{item.titulo}</ListItemText>
-                                  </div>
-                                  <div style={{flex: 1}}>
-                                    <ListItemText>{item.acciones}</ListItemText>
-                                  </div>
-                                  <div style={{flex: 1}}>
-                                    <ListItemText style={{color:'#FFB74D'}}>{item.accionesTransferidas}</ListItemText>
-                                  </div>
-                                </div>
+                { transferencia.operacion=='Posesión Efectiva' &&
+                <List dense='true'           
+                    subheader={
+                      <ListSubheader component="div" id="nested-list-subheader">
+                        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around' , width: '100%', marginTop:10 , paddingRight:70 }}>              
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Nro. Título
+                          </Typography>
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Acciones
+                          </Typography>                
+                        </div>
+                      </ListSubheader>
+                      
+                      }> 
+                      {titulos.map(item => (
+                        <ListItem key={item.id}>
+                            <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', width: '100%', paddingRight:50 }}>              
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.titulo}</ListItemText>
+                              </div>
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.acciones}</ListItemText>
+                              </div>
+                            </div>
+                        </ListItem>                            
+                    ))}
+                  </List>
+                }
 
+                {transferencia.operacion!='Posesión Efectiva' &&
+                <div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <Typography variant='body2'>
+                  <small>Cesionario</small>
+                  </Typography>
+                  <Typography variant='subtitle1'>
+                    {transferencia.cesionario}
+                  </Typography>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <Typography variant='body2'>
+                  <small>Acciones a Transferir</small>
+                  </Typography>
+                  <Typography variant='subtitle1' color='secondary'>
+                    {transferencia.acciones}
+                  </Typography>        
+                </div>
+                }   
+              </Grid>
 
-                            </ListItem>                            
-                        ))}
+              <Grid item xs={4} >
+                { transferencia.operacion=='Posesión Efectiva' &&
+                  <div>
+                    <Typography variant='h6'>
+                      Herederos
+                    </Typography>
+                    <List dense='true'> 
+                        {herederos.map(item => (
+                          <ListItem key={item.id}>
+                                <ListItemIcon>
+                                  <PersonOutlineIcon />
+                                </ListItemIcon>
+                                  <ListItemText>{item.nombre}</ListItemText>
+                          </ListItem>                            
+                      ))}
                     </List>
+                  </div>
+                }
 
-</Grid>
+{transferencia.operacion!='Posesión Efectiva' &&
+                <div>
+                  <Typography variant='h6'>
+                    Acciones a Transferir
+                  </Typography>
+                  <List dense='true'           
+                    subheader={
+                      <ListSubheader component="div" id="nested-list-subheader">
+                        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around' , width: '100%', marginTop:10}}>              
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Título
+                          </Typography>
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Acciones
+                          </Typography>                
+                          <Typography variant='caption'  style={{flex: 2}}>
+                            Transferir
+                          </Typography>
+                        </div>
+                      </ListSubheader>
+                      
+                      }> 
+                      {titulos.map(item => (
+                        <ListItem key={item.id}>
 
-<Grid item xs={4} >
+                            <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', width: '100%', paddingRight:40 }}>              
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.titulo}</ListItemText>
+                              </div>
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.acciones}</ListItemText>
+                              </div>
+                              <div style={{flex: 1}}>
+                                <ListItemText style={{color:'#FFB74D'}}>{item.accionesTransferidas}</ListItemText>
+                              </div>
+                            </div>
+                        </ListItem>                            
+                    ))}
+                  </List>
+                </div>
+                }                
+                <div style={{display:'flex', justifyContent:'center'}}>
+                  {circular && <CircularProgress />}
+                </div>
+              </Grid>
 
-
-<Typography variant='h6'>
-  Documentación
-</Typography>
-
-
-          <div>
-            <Button component="span" color="primary" size='small' style={{marginTop:20}} onClick={getPictureCS}>
-              {transferencia.operacion == 'Cesión' ? 'Carta de Cesión' : 'Carta de Posesión Efectiva'}
-              </Button>
-            {/*imageCS && <p> Mostrar <a href={imageCS}> PDF</a></p> */}
-            {transferencia.cs && <IconButton ><CheckIcon /></IconButton>}
-            
-
-          </div>
-          <div>
-            <Button component="span" color="primary" size='small' onClick={getPictureCG}>
-            {transferencia.operacion == 'Cesión' ? 'Carta de Gerente' : 'Impuesto a la Herencia'}              
-              </Button>
-            {transferencia.cg  && <IconButton ><CheckIcon /></IconButton>}
-          </div>
-          <div>
-            <Button component="span" color="primary" size='small' onClick={getPictureCI}>
-            {transferencia.operacion == 'Cesión' ? 'Carta de Instrucciones' : 'Declaración Jurada'}              
-              </Button>
-            {transferencia.ci  && <IconButton ><CheckIcon /></IconButton>}
-          </div>
-          <div>
-            <Button component="span" color="primary" size='small' onClick={getPictureES}>
-            {transferencia.operacion == 'Cesión' ? 'Escritura' : 'Escritura de Posesión efectiva de Bienes'}
-              
-              </Button>
-            {transferencia.es  && <IconButton ><CheckIcon /></IconButton>}
-          </div>
-          <div>
-            <Button component="span" color="primary" size='small' onClick={getPictureCP}>Carta Poder</Button>
-            {transferencia.cp  && <IconButton ><CheckIcon /></IconButton>}
-          </div>
-
-</Grid>  
-
-
-
-</Grid>
+              <Grid item xs={4} >
+                <Typography variant='h6'>
+                  Documentación
+                </Typography>
+                <div>
+                  <Button component="span" color="primary" size='small' style={{marginTop:20}} onClick={getPictureCS}>
+                    {transferencia.operacion == 'Cesión' ? 'Carta de Cesión' : 'Carta de Posesión Efectiva'}
+                    </Button>
+                  {/*imageCS && <p> Mostrar <a href={imageCS}> PDF</a></p> */}
+                  {transferencia.cs && <IconButton ><CheckIcon /></IconButton>}
+                </div>
+                <div>
+                  <Button component="span" color="primary" size='small' onClick={getPictureCG}>
+                  {transferencia.operacion == 'Cesión' ? 'Carta de Gerente' : 'Impuesto a la Herencia'}              
+                    </Button>
+                  {transferencia.cg  && <IconButton ><CheckIcon /></IconButton>}
+                </div>
+                <div>
+                  <Button component="span" color="primary" size='small' onClick={getPictureCI}>
+                  {transferencia.operacion == 'Cesión' ? 'Carta de Instrucciones' : 'Declaración Jurada'}              
+                    </Button>
+                  {transferencia.ci  && <IconButton ><CheckIcon /></IconButton>}
+                </div>
+                <div>
+                  <Button component="span" color="primary" size='small' onClick={getPictureES}>
+                  {transferencia.operacion == 'Cesión' ? 'Escritura' : 'Escritura de Posesión efectiva de Bienes'}
+                    
+                    </Button>
+                  {transferencia.es  && <IconButton ><CheckIcon /></IconButton>}
+                </div>
+                <div>
+                  <Button component="span" color="primary" size='small' onClick={getPictureCP}>Carta Poder</Button>
+                  {transferencia.cp  && <IconButton ><CheckIcon /></IconButton>}
+                </div>            
+              </Grid>  
+            </Grid>
           </DialogContentText>
-
         </DialogContent>
-        <DialogActions style={{backgroundColor:'#f9f9f9', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>   
-
-
+        <DialogActions style={{backgroundColor:'#f9f9f9', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>             
           <div style={{fontWeight:'normal', fontSize:10, color:'grey'}}>Solicitante: {transferencia.usuarioIngreso}</div>
-          <div>
-          <Button onClick={handleRevisarOperacion} color="primary" variant='contained'>
+          <div>          
+            <Button onClick={handleAprobarOperacion2} color="primary" variant='contained'>
               Aprobar
             </Button>
             <Button onClick={handleRevisarOperacion}  >
               Rechazar
             </Button>
-          </div>
-
-
+          </div>            
         </DialogActions>
       </Dialog>
-
-
-      </main>
-
-
+    
+    </main>
   );
 }
