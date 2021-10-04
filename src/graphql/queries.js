@@ -374,6 +374,7 @@ export const getAccionista = /* GraphQL */ `
       docCertificadoBancario
       docIdentidadConyugue
       herederos
+      esHeredero
       titulos {
         items {
           id
@@ -446,6 +447,7 @@ export const listAccionistas = /* GraphQL */ `
         docCertificadoBancario
         docIdentidadConyugue
         herederos
+        esHeredero
         titulos {
           nextToken
         }

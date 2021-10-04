@@ -11,7 +11,7 @@ import Layout from './components/layout';
 import PersonaNatural from './views/personanatural';
 import PersonaJuridica from './views/personajuridica';
 import PosesionEfectiva from './views/posesionefectiva';
-
+import Pdf from './components/pdf';
 
 function App() {
 
@@ -32,6 +32,11 @@ function App() {
         <div>            
           <Layout>
             <Switch>
+
+            <Route path="/pdf">
+                <Pdf />
+              </Route>   
+
               <Route path="/posesionefectiva">
                 <PosesionEfectiva />
               </Route>                

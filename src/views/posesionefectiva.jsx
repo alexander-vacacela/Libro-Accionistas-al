@@ -161,7 +161,7 @@ export default function PosesionEfectiva() {
           eq: cedenteId // filter priority = 1
       },
       estado:{
-        eq: 'Activo'
+        ne: 'Inactivo'
       }
     };
 
@@ -349,15 +349,15 @@ const handleChangeCantidad = (event, nroHeredero) => {
                <List dense
                     subheader={ total > 0 &&
                     <ListSubheader component="div" id="nested-list-subheader">
-                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;
                         <Typography variant='caption'>
                             F.Compra
                         </Typography>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Typography variant='caption'>
                             Título
                         </Typography>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Typography variant='caption'>
                             Cantidad
                         </Typography>
@@ -373,7 +373,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                                 >
                                 <ListItemText>{item.fechaCompra}</ListItemText>                                
                                 <ListItemText>{item.titulo}</ListItemText>
-                                <TextField size='small'  type="number" defaultValue={item.acciones} inputProps={{ style: { textAlign: 'right' }}} />
+                                <ListItemText>{item.acciones}</ListItemText>
 
                             </ListItem>
                             
@@ -398,7 +398,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 1)}
                 />
                 &nbsp;&nbsp;&nbsp;
-                <TextField  disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,1)}/>
+                {particion && <TextField  disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,1)}/>}
               </div>
                 { CountHeredero > 1 &&
                 <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>
@@ -414,7 +414,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 2)}
                 />                
                 &nbsp;&nbsp;&nbsp;
-                <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,2)}/>
+                {particion && <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,2)}/>}
               </div>  }              
                 { CountHeredero > 2 &&
               <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>                
@@ -429,7 +429,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 3)}
                 />
                 &nbsp;&nbsp;&nbsp;
-                <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,3)}/>
+                {particion && <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,3)}/>}
               </div>  }        
                 { CountHeredero > 3 &&
               <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>                
@@ -444,7 +444,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 4)}
                 />  
                 &nbsp;&nbsp;&nbsp;
-                <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,4)}/>
+                {particion && <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,4)}/>}
               </div>  }        
                 { CountHeredero > 4 &&     
               <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>                  
@@ -459,7 +459,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 5)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,5)}/>
+                {particion && <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,5)}/>}
               </div>  }                                                                
                 <div>                            
                     <IconButton color='primary' onClick={() => setCountHeredero(CountHeredero + 1)} disabled={CountHeredero===15 ? true : false}><ControlPointIcon/></IconButton>

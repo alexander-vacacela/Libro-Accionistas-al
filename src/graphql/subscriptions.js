@@ -413,6 +413,7 @@ export const onCreateAccionista = /* GraphQL */ `
       docCertificadoBancario
       docIdentidadConyugue
       herederos
+      esHeredero
       titulos {
         items {
           id
@@ -480,6 +481,7 @@ export const onUpdateAccionista = /* GraphQL */ `
       docCertificadoBancario
       docIdentidadConyugue
       herederos
+      esHeredero
       titulos {
         items {
           id
@@ -547,6 +549,7 @@ export const onDeleteAccionista = /* GraphQL */ `
       docCertificadoBancario
       docIdentidadConyugue
       herederos
+      esHeredero
       titulos {
         items {
           id

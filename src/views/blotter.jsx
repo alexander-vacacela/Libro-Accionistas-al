@@ -11,10 +11,10 @@ import CheckIcon from '@material-ui/icons/Check';
 import WarningIcon from '@material-ui/icons/Warning';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { API, Storage } from 'aws-amplify';
 import { listOperaciones, listTituloPorOperacions, getNumeroSecuencial, listTitulos,listHerederoPorOperacions } from './../graphql/queries';
-import { updateTitulo, createTitulo, updateNumeroSecuencial, updateAccionista, updateOperaciones } from './../graphql/mutations';
+import { updateTitulo, createTitulo, updateNumeroSecuencial, updateAccionista, updateOperaciones, createHeredero } from './../graphql/mutations';
 import PropTypes from 'prop-types';
 
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     padding: theme.spacing(0.5, 0.5, 0),
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     display: 'flex',
     alignItems: 'flex-start',
     flexWrap: 'wrap',
@@ -79,6 +79,9 @@ function QuickSearchToolbar(props) {
             ),
           }}
         />
+        <GridToolbarContainer>
+          <GridToolbarExport />
+        </GridToolbarContainer>
       </div>
     );
   }
@@ -107,7 +110,7 @@ export default function Operaciones() {
 
 
   const columns = [
-    { field: 'id', headerName: 'Nro', width: 80, type: 'number' },
+    //{ field: 'id', headerName: 'Nro', width: 80, type: 'number' },
     {
       field: 'fecha',
       headerName: 'Fecha',
@@ -348,10 +351,59 @@ export default function Operaciones() {
     }
     else if(transferencia.operacion == "Posesión Efectiva")
     {
-      //Inactivar Cedente y Actualizar dato de Herederos (true)
+      //obtener fecha actual
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+
+      //Inactivar Cedente y Actualizar dato "Herederos" (true)
+      const apiData = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente,herederos: true, estado: 'Inactivo'} } });
+
       //Asociar Herederos al Cedente
-      //Actualizar Total de Acciones de Herederos e indicar que es Heredero (true)
+      for (const heredero of herederos) {        
+        const datosHeredero = {
+          accionistaHerederoId:heredero.herederoId,
+          nombre: heredero.nombre,
+          cantidad:  heredero.cantidad > 0 ? heredero.cantidad : transferencia.acciones,  //heredero.cantidad, en caso sea particion
+          idCedente: transferencia.idCedente,
+          nombreCedente: transferencia.cedente, };
+        const apiDataHeredero = await API.graphql({ query: createHeredero, variables: { input: datosHeredero } });  
+
+        //Crear Titulos a Herederos si hay Partición
+        if(heredero.cantidad > 0){
+        //leer secuencial de titulos
+        const secuen = await apiDataSecuencial();
+        //incrementar secuencial de titulos
+        const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
+        const secuen2 = await apiDataUpdate(num);
+        const tituloHeredero = {
+          accionistaID:heredero.herederoId,
+          titulo : num,
+          acciones : heredero.cantidad,
+          fechaCompra: fecha,
+          estado:'Activo', };
+         const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
+        }
+
+        //Actualizar Total de Acciones de Herederos e indicar que es Heredero (true)
+        let filter = {
+          accionistaID: {
+              eq: heredero.herederoId // filter priority = 1
+          },
+          estado: {
+            ne: 'Inactivo'
+          }
+        };
+        const apiDataTitulosHeredero = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+        const titulosCedenteFromAPI = apiDataTitulosHeredero.data.listTitulos.items;
+        console.log('busca titulos heredero',titulosCedenteFromAPI)
+        let totalAccionesHeredero = 0;
+        titulosCedenteFromAPI.map(titulo => {totalAccionesHeredero = totalAccionesHeredero + titulo.acciones})
+        const apiDataAccionistaHeredero = await API.graphql({ query: updateAccionista, variables: { input: {id: heredero.herederoId, esHeredero: true, cantidadAcciones: totalAccionesHeredero + transferencia.acciones} } });
+
+      }
+
       //actualizar estado y fechaAprobacion de operacion aprobada
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, fechaAprobacion: fecha, estado: 'Aprobada' } } });
 
     }
 
@@ -432,6 +484,7 @@ export default function Operaciones() {
           fetch(myRequest).then(function(response) {
             if (response.status === 200) {
               setImageCS(url);
+              window.open(url)
             }
           });
         })
@@ -448,6 +501,7 @@ export default function Operaciones() {
           fetch(myRequest).then(function(response) {
             if (response.status === 200) {
               setImageCS(url);
+              window.open(url)
             }
           });
         })
@@ -464,6 +518,7 @@ export default function Operaciones() {
           fetch(myRequest).then(function(response) {
             if (response.status === 200) {
               setImageCS(url);
+              window.open(url)
             }
           });
         })
@@ -480,6 +535,7 @@ export default function Operaciones() {
           fetch(myRequest).then(function(response) {
             if (response.status === 200) {
               setImageCS(url);
+              window.open(url)
             }
           });
         })
@@ -628,20 +684,20 @@ export default function Operaciones() {
                     <Typography variant='h6'>
                       Herederos
                     </Typography>
-                    <List dense='true'> 
+                    <List dense='true' > 
                         {herederos.map(item => (
-                          <ListItem key={item.id}>
+                          <ListItem key={item.id}  >
                                 <ListItemIcon>
-                                  <PersonOutlineIcon />
+                                  <PersonOutlineIcon/>
                                 </ListItemIcon>
-                                  <ListItemText>{item.nombre}</ListItemText>
+                                <ListItemText  secondary={item.cantidad >0 && <div style={{fontSize:10, fontWeight:'bold'}}>Acciones: {item.cantidad}</div>}> {item.nombre} </ListItemText>
                           </ListItem>                            
                       ))}
                     </List>
                   </div>
                 }
 
-{transferencia.operacion!='Posesión Efectiva' &&
+                {transferencia.operacion!='Posesión Efectiva' &&
                 <div>
                   <Typography variant='h6'>
                     Acciones a Transferir

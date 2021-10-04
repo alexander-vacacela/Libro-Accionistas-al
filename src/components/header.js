@@ -7,6 +7,11 @@ import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+import {Auth} from 'aws-amplify';
+/*
+const usuario = async() => await Auth.currentUserInfo()
+console.log('USUARIO', usuario)
+*/
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -92,6 +97,11 @@ export default function Header(props){
     setAnchorElAccionista(null);
   };
 
+  function getUser() {
+    let user = Auth.user.username;
+    return user;
+    }
+
   return (
 
 <div className={classes.root}>
@@ -165,9 +175,10 @@ export default function Header(props){
       aria-controls="menu-appbar"
       aria-haspopup="true"
       onClick={handleMenu}
-      color="primary"
+      color="primary"      
     >
       <AccountCircle />
+      
     </IconButton>
     <Menu
       id="menu-appbar"
@@ -187,7 +198,7 @@ export default function Header(props){
       <MenuItem onClick={handleClose}>Mi perfil</MenuItem>
       <MenuItem onClick={handleClose}>Salir</MenuItem>
     </Menu>
-
+      <div><Typography color='primary'> <small> {getUser()} </small> </Typography></div>
   </div>
 
     </Toolbar>

@@ -3,9 +3,9 @@ import { API } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-import { listAccionistas } from '../graphql/queries';
+import { listAccionistas, listTitulos } from '../graphql/queries';
 
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,63 +13,21 @@ import TextField from '@material-ui/core/TextField';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import ReorderIcon from '@material-ui/icons/Reorder';
 
 import Grid from '@material-ui/core/Grid';
 
-const columns = [
-    { field: 'id', headerName: 'Nro', width: 80, type: 'number',},
-    {
-      field: 'identificacion',
-      headerName: 'Identificacion',
-      width: 150,
-    },
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 180,
-      flex: 1 ,
-    },
-    {
-      field: 'paisNacionalidad',
-      headerName: 'Nacionalidad',
-      width: 150,
-    },
-    {
-        field: 'cantidadAcciones',
-        headerName: 'Acciones',
-        type: 'number',
-        width: 120,
-      },
-      {
-        field: 'tipoAcciones',
-        headerName: 'Tipo',
-        width: 90,
-      },      
-      {
-        field: 'estado',
-        headerName: 'Estado',
-        width: 110,
-      },      
-      {
-        field: "Operaciones",
-        width: 180,
-        renderCell: (cellValues) => {
-          return <Link to={{
-            pathname: "/transferencias",
-            state: {
-              accionistaId: cellValues.row.id,
-            },
-          }} >Cesión</Link>;
-        }
-      },
-  ];
-  
+
+import { Typography, Modal, Button, Box, ListItem, ListItemText, ListSubheader, List,} from '@material-ui/core';
+
+
   const defaultTheme = createTheme();
   const useStyles = makeStyles(
     (theme) => ({
       root: {
         padding: theme.spacing(0.5, 0.5, 0),
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         display: 'flex',
         alignItems: 'flex-start',
         flexWrap: 'wrap',
@@ -102,6 +60,14 @@ function escapeRegExp(value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
 
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport />
+      </GridToolbarContainer>
+    );
+  }
+
 function QuickSearchToolbar(props) {
     const classes = useStyles();
   
@@ -123,12 +89,17 @@ function QuickSearchToolbar(props) {
                 style={{ visibility: props.value ? 'visible' : 'hidden' }}
                 onClick={props.clearSearch}
               >
+
                 <ClearIcon fontSize="small" />
               </IconButton>
             ),
           }}
         />
+        <GridToolbarContainer>
+          <GridToolbarExport />
+        </GridToolbarContainer>
       </div>
+      
     );
   }
   
@@ -141,10 +112,72 @@ function QuickSearchToolbar(props) {
 
   export default function Accionistas() {
 
+    const [openTitulos, setOpenTitulos] = useState(false);
+    const handleClose = () => setOpenTitulos(false);
+    const columns = [
+      //{ field: 'id', headerName: 'Nro', width: 80, type: 'number',},
+      {
+        field: 'identificacion',
+        headerName: 'Identificacion',
+        width: 150,
+      },
+      {
+        field: 'nombre',
+        headerName: 'Nombre',
+        width: 180,
+        flex: 1 ,
+      },
+      {
+        field: 'paisNacionalidad',
+        headerName: 'Nacionalidad',
+        width: 150,
+      },
+      {
+          field: 'cantidadAcciones',
+          headerName: 'Acciones',
+          type: 'number',
+          width: 120,
+        },
+        {
+          field: 'tipoAcciones',
+          headerName: 'Tipo',
+          width: 90,
+        },      
+        {
+          field: 'estado',
+          headerName: 'Estado',
+          width: 110,
+        },      
+        {
+          field: "Títulos",
+          width: 100,
+          renderCell: (cellValues) => {
+            return <IconButton  disabled={cellValues.row.cantidadAcciones > 0 ? false : true} onClick={() => fetchTitulos(cellValues.row.id, cellValues.row.nombre)} color='primary'><PageviewIcon /></IconButton>
+          }
+        },
+
+        /*
+        {
+          field: "Operaciones",
+          width: 180,
+          renderCell: (cellValues) => {
+            return <Link to={{
+              pathname: "/transferencias",
+              state: {
+                accionistaId: cellValues.row.id,
+              },
+            }} >Cesión</Link>;
+          }
+        },*/
+    ];
+    
+
     const [accionistas, setAccionistas] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [rows, setRows] = useState([]);
     const [count, setCount] = useState(0);
+    const [titulos, setTitulos] = useState([])
+    const [accionistaSeleccionado, setAccionistaSeleccionado]= useState('');
 
     useEffect(() => {
 
@@ -184,8 +217,25 @@ function QuickSearchToolbar(props) {
         setRows(filteredRows);
       };
 
+      async function fetchTitulos(id, nombre) {
 
-
+        let filter = {
+          accionistaID: {
+              eq: id // filter priority = 1
+          },
+          estado: {
+            ne: 'Inactivo'
+          }
+        };
+    
+        const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+        const titulosFromAPI = apiData.data.listTitulos.items;
+        setTitulos(titulosFromAPI);
+        setAccionistaSeleccionado(nombre)
+        setOpenTitulos(true)
+        console.log('titulos', titulosFromAPI)
+      }
+    
 
   const classes = useStyles();
   return (
@@ -199,7 +249,7 @@ function QuickSearchToolbar(props) {
                           autoHeight='true'
                           autoPageSize='true'
         disableColumnMenu 
-        components={{ Toolbar: QuickSearchToolbar }}
+        components={{ Toolbar:  QuickSearchToolbar}}
         rows={rows}
         columns={columns}
         pageSize={20}
@@ -213,6 +263,71 @@ function QuickSearchToolbar(props) {
           }}
       />
                 </Grid>
+
+      <Modal
+      style={{overflow:'scroll',}}
+        open={openTitulos}
+        onClose={handleClose}
+      >
+        <Box sx={{  position: 'absolute',
+        
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,}}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Títulos
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {accionistaSeleccionado}
+          </Typography>
+
+          <List dense='true'           
+                    subheader={
+                      <ListSubheader component="div" id="nested-list-subheader">
+                        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around' , width: '100%', marginTop:10 , paddingRight:50 }}>              
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Nro. Título
+                          </Typography>
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Acciones
+                          </Typography>         
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Estado
+                          </Typography>            
+                        </div>
+                      </ListSubheader>
+                      
+                      }> 
+                      {titulos.map(item => (
+                        <ListItem key={item.id}>
+                            <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', width: '100%', paddingRight:50 }}>              
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.titulo}</ListItemText>
+                              </div>
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.acciones}</ListItemText>
+                              </div>
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.estado}</ListItemText>
+                              </div>
+                            </div>
+                        </ListItem>                            
+                    ))}
+                  </List>
+
+
+
+        </Box>
+      </Modal>
+
+
+      
+
          </Grid>
 
       </main>

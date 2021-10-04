@@ -1,0 +1,52 @@
+{
+    "Titulo-uvwmhskzgnd2zdeew2jrdsxo5q-staging": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "id": {
+                        "S": "1"
+                    },
+                    "accionistaID": {
+                        "S": "1"
+                    },
+                    "titulo": {
+                        "S": "1"
+                    },
+                    "acciones": {
+                        "N": "101"
+                    },
+                    "fechaCompra": {
+                        "S": "04-10-2021"
+                    },
+                    "estado": {
+                        "S": "Activo"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "id": {
+                        "S": "2"
+                    },
+                    "accionistaID": {
+                        "S": "2"
+                    },
+                    "titulo": {
+                        "S": "2"
+                    },
+                    "acciones": {
+                        "N": "102"
+                    },
+                    "fechaCompra": {
+                        "S": "04-10-2021"
+                    },
+                    "estado": {
+                        "S": "Activo"
+                    }
+                }
+            }
+        }
+    ]
+}
