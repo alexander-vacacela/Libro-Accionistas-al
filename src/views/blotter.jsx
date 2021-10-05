@@ -6,9 +6,11 @@ import { Grid, Button,Typography,makeStyles,ButtonGroup,Badge,Dialog,DialogActio
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/DeleteOutlineOutlined';
+//import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CheckIcon from '@material-ui/icons/Check';
-import WarningIcon from '@material-ui/icons/Warning';
+import WarningIcon from '@material-ui/icons/ErrorOutlineOutlined';
+//import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
@@ -251,6 +253,7 @@ export default function Operaciones() {
 
       if(transferencia.operacion == "Cesión")
       {
+
       for (const titulo of titulos) {
         console.log('titulo', titulo);
         //inactivar los titulos de cedente
@@ -310,6 +313,7 @@ export default function Operaciones() {
          };
         }
 
+
       //actualizar saldo de acciones para Cedente y Cesionario
       let filter = {
         accionistaID: {
@@ -319,7 +323,7 @@ export default function Operaciones() {
           ne: 'Inactivo'
         }
       };
-      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filter, limit: 1000} });
       const titulosCedenteFromAPI = apiDataTitulosCedente.data.listTitulos.items;
       console.log('busca titulos cedente',titulosCedenteFromAPI)
       let totalAccionesCedente = 0;
@@ -334,20 +338,24 @@ export default function Operaciones() {
           ne: 'Inactivo'
         }
       };
-      const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+      const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
       const titulosCesionarioFromAPI = apiDataTitulosCesionario.data.listTitulos.items;
       console.log('busca titulos cedente',titulosCesionarioFromAPI)
       let totalAccionesCesionario= 0;
       titulosCesionarioFromAPI.map(titulo => {totalAccionesCesionario = totalAccionesCesionario + titulo.acciones})
-      console.log('total acciones cedente',totalAccionesCesionario)
+      console.log('total acciones cesionario',totalAccionesCesionario)
 
       const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, cantidadAcciones: totalAccionesCedente, estado: totalAccionesCedente== 0 ? 'Inactivo' : 'Activo' } } });
       const apiDataUpdateCesionario = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCesionario, cantidadAcciones: totalAccionesCesionario } } });
 
+      console.log('Aprobar operacion y actualizar Fecha', transferencia.id)
       //actualizar estado y fechaAprobacion de operacion aprobada
       const today = new Date();
       const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, fechaAprobacion: fecha, estado: 'Aprobada' } } });
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      console.log(' Pasó Aprobar operacion y actualizar Fecha', apiDataUpdateOper)
+
+
     }
     else if(transferencia.operacion == "Posesión Efectiva")
     {
@@ -384,6 +392,7 @@ export default function Operaciones() {
          const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
         }
 
+  
         //Actualizar Total de Acciones de Herederos e indicar que es Heredero (true)
         let filter = {
           accionistaID: {
@@ -393,7 +402,7 @@ export default function Operaciones() {
             ne: 'Inactivo'
           }
         };
-        const apiDataTitulosHeredero = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+        const apiDataTitulosHeredero = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
         const titulosCedenteFromAPI = apiDataTitulosHeredero.data.listTitulos.items;
         console.log('busca titulos heredero',titulosCedenteFromAPI)
         let totalAccionesHeredero = 0;
@@ -402,8 +411,9 @@ export default function Operaciones() {
 
       }
 
-      //actualizar estado y fechaAprobacion de operacion aprobada
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, fechaAprobacion: fecha, estado: 'Aprobada' } } });
+        //actualizar estado y fechaAprobacion de operacion aprobada
+        const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+
 
     }
 

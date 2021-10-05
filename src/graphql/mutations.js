@@ -586,13 +586,9 @@ export const updateAccionista = /* GraphQL */ `
           acciones
           fechaCompra
           estado
-          createdAt
-          updatedAt
         }
         nextToken
       }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -696,8 +692,6 @@ export const updateTitulo = /* GraphQL */ `
       acciones
       fechaCompra
       estado
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -840,8 +834,6 @@ export const updateOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
-          createdAt
-          updatedAt
         }
         nextToken
       }

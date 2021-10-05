@@ -145,7 +145,7 @@ export default function PosesionEfectiva() {
   }, [])
 
   async function fetchAccionistas() {
-    const apiData = await API.graphql({ query: listAccionistas });
+    const apiData = await API.graphql({ query: listAccionistas , variables:{limit:1000}});
     const accionistasFromAPI = apiData.data.listAccionistas.items;
     await Promise.all(accionistasFromAPI.map(async accionista => {
     return accionista;
@@ -165,7 +165,7 @@ export default function PosesionEfectiva() {
       }
     };
 
-    const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+    const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter, limit: 1000} });
     const titulosFromAPI = apiData.data.listTitulos.items;
     setTitulos(titulosFromAPI);
   
@@ -525,7 +525,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
 
       <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
         <Alert onClose={handleCloseSnack} severity="success">
-          Se registró la Posesión Efectiva en estado Pendiente!
+          Se registró la solicitud de Posesión Efectiva.
         </Alert>
       </Snackbar>
 

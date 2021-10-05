@@ -32,8 +32,8 @@
           "defaultAuthentication": {
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 180,
-              "description": "unacem"
+              "apiKeyExpirationDays": 360,
+              "description": "demo"
             }
           },
           "additionalAuthenticationProviders": []

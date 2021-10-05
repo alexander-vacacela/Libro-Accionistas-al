@@ -157,7 +157,7 @@ export default function Cesion() {
   }, [])
 
   async function fetchAccionistas() {
-    const apiData = await API.graphql({ query: listAccionistas });
+    const apiData = await API.graphql({ query: listAccionistas, variables: {limit: 1000} });
     const accionistasFromAPI = apiData.data.listAccionistas.items;
     //await Promise.all(accionistasFromAPI.map(async accionista => {
     //return accionista;
@@ -177,7 +177,7 @@ export default function Cesion() {
       }
     };
 
-    const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+    const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
     const titulosFromAPI = apiData.data.listTitulos.items;
     //await Promise.all(titulosFromAPI.map(async titulos => {
     //return titulos;
@@ -578,7 +578,7 @@ console.log("titulos a transferir antes", titulosSelectos)
 
       <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
         <Alert onClose={handleCloseSnack} severity="success">
-          Se registró Cesión en estado Pendiente!
+          Se registró exitosamente la solicitud de Cesión
         </Alert>
       </Snackbar>
 

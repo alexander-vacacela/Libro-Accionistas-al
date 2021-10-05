@@ -451,8 +451,6 @@ export const listAccionistas = /* GraphQL */ `
         titulos {
           nextToken
         }
-        createdAt
-        updatedAt
       }
       nextToken
     }
@@ -486,8 +484,6 @@ export const listTitulos = /* GraphQL */ `
         acciones
         fechaCompra
         estado
-        createdAt
-        updatedAt
       }
       nextToken
     }

@@ -63,7 +63,7 @@ function escapeRegExp(value) {
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
-        <GridToolbarExport />
+        <GridToolbarExport  />
       </GridToolbarContainer>
     );
   }
@@ -184,10 +184,10 @@ function QuickSearchToolbar(props) {
       fetchAccionistas();
 
 
-    }, [accionistas]);
+    }, [accionistas.length,count]);
    
     async function fetchAccionistas() {
-      const apiData = await API.graphql({ query: listAccionistas });
+      const apiData = await API.graphql({ query: listAccionistas, variables: { limit: 1000} });
       const accionistasFromAPI = apiData.data.listAccionistas.items;
 
       //await Promise.all(accionistasFromAPI.map(async accionista => {
@@ -200,7 +200,9 @@ function QuickSearchToolbar(props) {
         setCount(1);
         setRows(accionistasFromAPI);
         }
-
+        
+        
+        console.log("accionistas",accionistasFromAPI)
     }
 
     const requestSearch = (searchValue) => {
@@ -219,6 +221,8 @@ function QuickSearchToolbar(props) {
 
       async function fetchTitulos(id, nombre) {
 
+        console.log('entro', id, nombre)
+
         let filter = {
           accionistaID: {
               eq: id // filter priority = 1
@@ -228,7 +232,7 @@ function QuickSearchToolbar(props) {
           }
         };
     
-        const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter} });
+        const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
         const titulosFromAPI = apiData.data.listTitulos.items;
         setTitulos(titulosFromAPI);
         setAccionistaSeleccionado(nombre)

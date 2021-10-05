@@ -120,7 +120,7 @@ type Accionista @model {
   titulos : [Titulo] @connection(keyName: "byAccionista", fields: ["id"])
 }
 
-type Titulo @model @key(name: "byAccionista", fields: ["accionistaID", "titulo"]) {
+type Titulo @model @key(name: "byAccionista", fields: ["accionistaID"]) {
   id: ID!
   accionistaID: ID!
   titulo : String!
