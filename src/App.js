@@ -12,6 +12,11 @@ import PersonaNatural from './views/personanatural';
 import PersonaJuridica from './views/personajuridica';
 import PosesionEfectiva from './views/posesionefectiva';
 import Pdf from './components/pdf';
+import Canje from './views/canje';
+import Bloqueo from './views/bloqueo';
+import Desbloqueo from './views/desbloqueo';
+import Testamento from './views/testamento';
+import Donacion from './views/donacion';
 
 function App() {
 
@@ -35,8 +40,22 @@ function App() {
 
             <Route path="/pdf">
                 <Pdf />
-              </Route>   
-
+              </Route>  
+              <Route path="/testamento">
+                <Testamento />
+              </Route>                   
+              <Route path="/donacion">
+                <Donacion />
+              </Route>                    
+              <Route path="/desbloqueo">
+                <Desbloqueo />
+              </Route>                       
+              <Route path="/bloqueo">
+                <Bloqueo />
+              </Route>                   
+              <Route path="/canje">
+                <Canje />
+              </Route>     
               <Route path="/posesionefectiva">
                 <PosesionEfectiva />
               </Route>                

@@ -1,11 +1,19 @@
 import React, {useState} from 'react'
 import { useHistory, useLocation } from 'react-router';
 
-import {  AppBar, Toolbar, Typography, makeStyles, Button, MenuItem, Menu, IconButton } from '@material-ui/core';
+import {  AppBar, Toolbar, Typography, makeStyles, Button, MenuItem, Menu, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
 import clsx from 'clsx';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
+import CardGiftcardOutlinedIcon from '@material-ui/icons/CardGiftcardOutlined';
+import SyncOutlinedIcon from '@material-ui/icons/SyncOutlined';     
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';                 
+import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
+import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 
 import {Auth} from 'aws-amplify';
 /*
@@ -147,11 +155,42 @@ export default function Header(props){
         open={Boolean(anchorEl)}
         onClose={handleCloseOperaciones}
     >
-        <MenuItem onClick={()=>{history.push('/posesionefectiva'); setAnchorEl(null);} }>Posesión Efectiva</MenuItem>
-        <MenuItem onClick={handleCloseOperaciones}>Testamento</MenuItem>
-        <MenuItem onClick={handleCloseOperaciones}>Donación</MenuItem>
-        <MenuItem onClick={handleCloseOperaciones}>Canje</MenuItem>
-        <MenuItem onClick={handleCloseOperaciones}>Bloqueo</MenuItem>
+        <MenuItem onClick={()=>{history.push('/posesionefectiva'); setAnchorEl(null);} }> 
+          <ListItemIcon>
+            <GroupOutlinedIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Posesión Efectiva" />
+        </MenuItem>
+        <MenuItem onClick={()=>{history.push('/testamento'); setAnchorEl(null);} }>
+          <ListItemIcon>
+            <DescriptionOutlinedIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Testamento" />
+        </MenuItem>
+        <MenuItem onClick={()=>{history.push('/donacion'); setAnchorEl(null);} }>
+          <ListItemIcon>
+            <CardGiftcardOutlinedIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Donación" />
+        </MenuItem>
+        <MenuItem onClick={()=>{history.push('/canje'); setAnchorEl(null);} }>
+          <ListItemIcon>
+            <SyncOutlinedIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Canje"/>
+        </MenuItem>
+        <MenuItem onClick={()=>{history.push('/bloqueo'); setAnchorEl(null);} }>
+          <ListItemIcon>
+            <LockOutlinedIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Bloqueo" />
+        </MenuItem>
+        <MenuItem onClick={()=>{history.push('/desbloqueo'); setAnchorEl(null);} }>
+          <ListItemIcon>
+            <LockOpenOutlinedIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Desbloqueo"/>
+        </MenuItem>
     </Menu>
 
     <Button aria-controls="menu-accionista" aria-haspopup="true" onClick={handleClickAccionistas} color='primary' size='small' style={{textTransform: 'none'}}>
@@ -164,11 +203,19 @@ export default function Header(props){
         open={Boolean(anchorElAccionista)}
         onClose={handleCloseAccionistas}
     >
-        <MenuItem onClick={()=>{history.push('/personanatural'); setAnchorElAccionista(null);} }>Persona Natural</MenuItem>
-        <MenuItem onClick={()=>{history.push('/personajuridica'); setAnchorElAccionista(null);}}>Persona Jurídica</MenuItem>
+        <MenuItem onClick={()=>{history.push('/personanatural'); setAnchorElAccionista(null);} }>
+          <ListItemIcon>
+            <PersonAddOutlinedIcon color='primary' />
+          </ListItemIcon>
+          <ListItemText primary="Registrar P. Natural" />
+        </MenuItem>
+        <MenuItem onClick={()=>{history.push('/personajuridica'); setAnchorElAccionista(null);}}>
+          <ListItemIcon>
+            <BusinessOutlinedIcon color='primary' />
+          </ListItemIcon>
+          <ListItemText primary="Registrar P. Jurídica" />
+        </MenuItem>
     </Menu>
-
-
 
     <IconButton
       aria-label="account of current user"

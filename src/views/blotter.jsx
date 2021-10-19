@@ -1,7 +1,7 @@
 import React, { useState, useEffect }  from 'react';
 
 import { Grid, Button,Typography,makeStyles,ButtonGroup,Badge,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,IconButton,TextField,
-  ListItem, ListItemText, ListSubheader, List, CircularProgress, ListItemIcon} from '@material-ui/core';
+  ListItem, ListItemText, ListSubheader, List, CircularProgress, ListItemIcon,  Switch, FormControlLabel, InputLabel, MenuItem, Select, OutlinedInput, Icon} from '@material-ui/core';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
@@ -12,6 +12,9 @@ import CheckIcon from '@material-ui/icons/Check';
 import WarningIcon from '@material-ui/icons/ErrorOutlineOutlined';
 //import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import DescriptionIcon from '@material-ui/icons/Description';
+//import PublishedWithChangesIcon from '@material-ui/icons/PublishedWithChanges';                  
+import FiberNewOutlined from '@material-ui/icons/FiberNewOutlined';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { API, Storage } from 'aws-amplify';
@@ -19,6 +22,8 @@ import { listOperaciones, listTituloPorOperacions, getNumeroSecuencial, listTitu
 import { updateTitulo, createTitulo, updateNumeroSecuencial, updateAccionista, updateOperaciones, createHeredero } from './../graphql/mutations';
 import PropTypes from 'prop-types';
 
+import { styled } from '@material-ui//styles';
+import { uuid } from 'uuidv4';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,9 +52,20 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiInput-underline:before': {
       borderBottom: `1px solid ${theme.palette.divider}`,
     },
-  },  
+  }, 
+  botonAnular: {
+    //color: theme.palette.error.light,
+    backgroundColor : theme.palette.error.light,
+  } ,
+  botonCellAnular: {
+    color: theme.palette.error.light,
+    //backgroundColor : theme.palette.error.light,
+  } 
 }));
 
+const Input = styled('input')({
+  display: 'none',
+});
   
 function escapeRegExp(value) {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -109,44 +125,56 @@ export default function Operaciones() {
   const [countEstado, setCountEstado] = useState([0,0,0,0])
   const [circular, setCircular] = useState(false);
   const [herederos, setHerederos] = useState([]);
-
+  const [anular, setAnular] = useState(false);
+  const [rechazo, setRechazo] = useState(false);
+  const [motivosRechazo, setMotivosRechazo] = useState([]);
+  const [formData, setFormData] = useState({cs: '', cg: '', ci: '', es: '', cp: ''});
 
   const columns = [
     //{ field: 'id', headerName: 'Nro', width: 80, type: 'number' },
     {
       field: 'fecha',
       headerName: 'Fecha',
-      width: 120,
+      //width: 120,
       //flex: 1 ,
     },
     {
       field: 'operacion',
       headerName: 'Operación',
-      width: 180,
+      //width: 180,
       flex: 1 ,
     },
     {
       field: 'cedente',
       headerName: 'Cedente',
-      width: 180,
-      flex: 1 ,
+      //width: 180,
+      flex: 2 ,
     },
     {
         field: 'acciones',
         headerName: 'Acciones',
         type: 'number',
-        width: 150,
-        //flex: 1 ,
+        //width: 150,
+        flex: 1 ,
       },
       {
         field: 'cesionario',
         headerName: 'Cesionario',
-        width: 180,
-        flex: 1 ,
-      },      
+        //width: 180,
+        flex: 2 ,
+        
+      },    
+      {
+        field: 'observacion',
+        hide: estado == 'Rechazada' ? false : true,
+        headerName: 'Motivo',
+        //width: 280,
+        flex: 2 ,
+        
+      },         
       {
         field: "Opciones",
-        width: 180,
+        hide: (estado == 'Rechazada' || estado == 'Pendiente')? false : true,
         renderCell: (cellValues) => {
           return (
             <Button
@@ -160,21 +188,84 @@ export default function Operaciones() {
             </Button>
           );
         }
-        /*
-        renderCell: (cellValues) => {
-          return <Link to={{
-            flex: 1 ,
-            pathname: "/",
-            state: {
-              accionistaId: cellValues.row.id,
-            },
-          }} >Revisar</Link>; 
-          //return <Link to='/transferencias' >Cesión</Link>;
-          //return <Link href={`#${cellValues.row.url}`}>Cesión</Link>;
-        }*/
       },
+      {
+        field: "Anular",
+        hide: estado == 'Rechazada' ? false : true,
+        //width: 180,
+        renderCell: (cellValues) => {
+          return (
+            <Button
+              //variant="contained"
+              //color="primary"
+              classes={{ root: classes.botonCellAnular }}
+              onClick={(event) => {
+                handleClickAnular(event, cellValues);
+              }}
+            >
+              Anular
+            </Button>
+          );
+        }
+      },
+      {
+        field: "Detalles",        
+        hide: (estado == 'Rechazada' || estado == 'Pendiente')? true : false,
+        renderCell: (cellValues) => {
+          return (
+            <IconButton
+              //variant="contained"
+              //color="primary"
+              onClick={(event) => {
+                handleClickRevisar(event, cellValues);
+                //console.log('click Icon',event,cellValues)
+              }}
+            >
+              <DescriptionIcon />
+            </IconButton>
+          );
+        }
+      },
+
   ];
 
+
+  const motivoRechazo = [
+    {
+      label: "Falta documentación",
+      value: "1",
+    },
+    {
+      label: "Documentación errada",
+      value: "2",
+    },
+    {
+      label: "Documentación duplicada",
+      value: "3",
+    },
+    {
+      label: "Falta de Habilitantes",
+      value: "4",
+    },
+    {
+      label: "Operación Duplicada",
+      value: "5",
+    },
+    {
+      label: "Accionista no hábil",
+      value: "6",
+    },
+  ];
+
+  const generateSelectMotivoRechazo = () => {
+    return motivoRechazo.map((option) => {
+      return (
+        <MenuItem key={option.value} value={option.value}>
+         {option.label}
+        </MenuItem>
+      );
+    });
+  };
 
   useEffect(() => {
     fetchOperaciones("Pendiente");
@@ -231,6 +322,19 @@ export default function Operaciones() {
       setRows(filteredRows);
     };
 
+    const handleClickAnular = (e,values) => {
+
+      setTransferencia(values.row);
+      setOpenRevisar(true);
+      setAnular(true);
+      fetchTitulos(values.row.id);
+      fetchHerederos(values.row.id);
+
+      console.log('values anular',values.row);
+      //console.log('operacion',values.row.id);
+    };
+ 
+
     const handleClickRevisar = (e,values) => {
 
       setTransferencia(values.row);
@@ -241,17 +345,121 @@ export default function Operaciones() {
       console.log('values',values.row);
       //console.log('operacion',values.row.id);
     };
+
     
     const handleRevisarOperacion = () => {
 
       setOpenRevisar(false);    
+      setAnular(false);
+      setRechazo(false); 
     };
 
 
-    const handleAprobarOperacion2 = async() => {
+    const handleReenviarOperacion = async() => {
+
+    setCircular(true);
+    const operacion = { ...formData }
+
+    //Actualizar estado de operacion Rechazada a Pendiente
+    //console.log('Aprobar operacion y actualizar Fecha', transferencia.id)
+    //actualizar estado y fechaAprobacion de operacion aprobada
+    //const today = new Date();
+    //const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+
+    const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Pendiente', cs: operacion.cs, cg: operacion.cg, ci: operacion.ci, es: operacion.es, cp: operacion.cp, } } });
+    //console.log('xxxxxxxxxxxxxxxxxxxx', transferencia.id, operacion.cs, operacion.cg, operacion.ci, operacion.es, operacion.cp)
+
+    setFormData({ cs: '', cg: '', ci: '', es: '', cp: ''})        
+    setCircular(false);
+    setOpenRevisar(false);     
+    setAnular(false);     
+    setCount(0);
+    setTransferencia([]);
+    setTitulos([]);
+    fetchOperaciones("Rechazada");
+    setRechazo(false); 
+    setMotivosRechazo([]);
+
+    }
+
+
+
+
+    const handleAnularOperacion = async() => {
+
       setCircular(true);
 
-      if(transferencia.operacion == "Cesión")
+      console.log('Anular Operacion')
+      //Desbloquear Titulos
+      for (const titulo of titulos) {
+        console.log('Titulo a Desbloquear',titulo)
+        const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
+        console.log('Titulo Desbloqueado',apiData)
+      }
+
+      //Actualizar estado de operacion a Anulada
+      console.log('Aprobar operacion y actualizar Fecha', transferencia.id)
+      //actualizar estado y fechaAprobacion de operacion aprobada
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Anulada', fechaAprobacion: fecha } } });
+      console.log(' Pasó Aprobar operacion y actualizar Fecha', apiDataUpdateOper)
+
+
+      setCircular(false);
+      setOpenRevisar(false);     
+      setAnular(false);     
+      setCount(0);
+      setTransferencia([]);
+      setTitulos([]);
+      fetchOperaciones("Pendiente");
+      setRechazo(false); 
+  
+      }
+  
+
+      const handleRechazarOperacion = async() => {
+
+        setCircular(true);
+  
+        console.log('Rechazar Operacion')
+
+        //Actualizar estado de operacion a Anulada
+        console.log('Rechazar operacion y actualizar Fecha', transferencia.id)
+        //actualizar estado y fechaAprobacion de operacion aprobada
+        const today = new Date();
+        const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+        let obs = '';
+        const res = motivosRechazo.map(motivo => {
+          obs = obs  + motivoRechazo.find(item => item.value == motivo ).label + ' | '
+        });
+
+        const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Rechazada', fechaAprobacion: fecha, motivoRechazo: motivosRechazo, observacion : obs} } });
+        console.log(' Pasó Rechazar operacion y actualizar Fecha', apiDataUpdateOper)
+    
+        setCircular(false);
+        setOpenRevisar(false);     
+        setAnular(false);     
+        setCount(0);
+        setTransferencia([]);
+        setTitulos([]);
+        fetchOperaciones("Pendiente");
+        setRechazo(false); 
+        setMotivosRechazo([]);
+    
+        }
+    
+
+
+
+      
+
+
+    const handleAprobarOperacion2 = async() => {
+      
+      setCircular(true);
+
+      if(transferencia.operacion == "Cesión" || transferencia.operacion == "Testamento" || transferencia.operacion == "Donación")
       {
 
       for (const titulo of titulos) {
@@ -304,7 +512,7 @@ export default function Operaciones() {
           console.log('Update Secuencial',secuenCed)
           tituloCedente = {
             accionistaID:transferencia.idCedente,
-            titulo : num,
+            titulo : numCed,
             acciones : titulo.acciones - titulo.accionesTransferidas,
             fechaCompra: transferencia.fecha,
             estado:'Activo',}
@@ -355,19 +563,17 @@ export default function Operaciones() {
       const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
       console.log(' Pasó Aprobar operacion y actualizar Fecha', apiDataUpdateOper)
 
-
     }
     else if(transferencia.operacion == "Posesión Efectiva")
     {
+      console.log('entra Posesión Efectiva')
       //obtener fecha actual
       const today = new Date();
       const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
 
-      //Inactivar Cedente y Actualizar dato "Herederos" (true)
-      const apiData = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente,herederos: true, estado: 'Inactivo'} } });
-
       //Asociar Herederos al Cedente
-      for (const heredero of herederos) {        
+      for (const heredero of herederos) {   
+        console.log('entra Posesión herederos')     
         const datosHeredero = {
           accionistaHerederoId:heredero.herederoId,
           nombre: heredero.nombre,
@@ -392,7 +598,6 @@ export default function Operaciones() {
          const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
         }
 
-  
         //Actualizar Total de Acciones de Herederos e indicar que es Heredero (true)
         let filter = {
           accionistaID: {
@@ -403,22 +608,147 @@ export default function Operaciones() {
           }
         };
         const apiDataTitulosHeredero = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
-        const titulosCedenteFromAPI = apiDataTitulosHeredero.data.listTitulos.items;
-        console.log('busca titulos heredero',titulosCedenteFromAPI)
+        const titulosHerederoFromAPI = apiDataTitulosHeredero.data.listTitulos.items;
+        console.log('busca titulos heredero',titulosHerederoFromAPI)
+        //const totalAccionesHeredero = titulosHerederoFromAPI.reduce(function(prev, current) {
+        //  return prev + +current.acciones
+        //}, 0);
         let totalAccionesHeredero = 0;
-        titulosCedenteFromAPI.map(titulo => {totalAccionesHeredero = totalAccionesHeredero + titulo.acciones})
-        const apiDataAccionistaHeredero = await API.graphql({ query: updateAccionista, variables: { input: {id: heredero.herederoId, esHeredero: true, cantidadAcciones: totalAccionesHeredero + transferencia.acciones} } });
+        titulosHerederoFromAPI.map(titulo => {totalAccionesHeredero = totalAccionesHeredero + titulo.acciones})
+        console.log('cuanto es el total de heredero', totalAccionesHeredero)
 
+        const apiDataAccionistaHeredero = await API.graphql({ query: updateAccionista, variables: { input: {id: heredero.herederoId, esHeredero: true, cantidadAcciones: totalAccionesHeredero } } });
+      }//fin loop herederos
+
+      //crear titulo a cedente si tiene saldo
+      //preguntar si herederos cantidad > 0, entonces:
+      const totalAccionesDelCedente_Aux = herederos.reduce(function(prev, current) {
+        return prev + +current.cantidad
+      }, 0);
+
+      console.log('cuanto es el total', totalAccionesDelCedente_Aux)
+      
+      if(totalAccionesDelCedente_Aux > 0){
+        let totalAccionesParaHerencia=0;
+        let limiteTitulos = false;
+        for(const titulo of titulos)
+        {
+          totalAccionesParaHerencia = totalAccionesParaHerencia + titulo.acciones
+          if(totalAccionesParaHerencia > transferencia.acciones){
+            if(limiteTitulos==false)
+            {
+              console.log('llegoo a crear titulo para cedente',totalAccionesParaHerencia,titulo.acciones)
+            //crear titulo particionado del cedente
+            //leer secuencial de titulos
+            const secuen = await apiDataSecuencial();
+            //incrementar secuencial de titulos
+            const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
+            const secuen2 = await apiDataUpdate(num);
+            console.log('paso secuenciao',num,secuen2)
+            const tituloCedente = {
+              accionistaID:transferencia.idCedente,
+              titulo : num,
+              acciones : totalAccionesParaHerencia - transferencia.acciones,
+              fechaCompra: fecha,
+              estado:'Activo', };
+              console.log('paso secuenciao II',tituloCedente)
+            const apiDataTituloCedente = await API.graphql({ query: createTitulo, variables: { input: tituloCedente } });  
+
+            //Dejar inactivo el titulo partido
+            const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Inactivo'} } });
+
+            // Ya no crear más titulos
+            limiteTitulos = true;
+
+
+            }else{
+              console.log('problema en actulizar titulso',titulo.tituloId)
+              //Desbloquear titulos restantes
+              const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
+            }
+          }else{
+            //falta dejar inactivos los titulos bloqueados
+            const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Inactivo'} } });
+          }
+        
+        }//fin loop titulos por operacion
+      }//fin if con particion
+
+      //Actualiza saldo cedente, Inactivar Cedente (solo si su saldo es cero) y Actualizar dato "Herederos" (true)
+      let filterCedente = {
+        accionistaID: {
+            eq: transferencia.idCedente
+        },
+        estado: {
+          ne: 'Inactivo'
+        }
+      };
+      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filterCedente, limit : 1000} });
+      const titulosCedenteFromAPI = apiDataTitulosCedente.data.listTitulos.items;
+      //const totalAccionesDelCedente = titulosCedenteFromAPI.map(item => parseInt(item.acciones)).reduce((prev, next) => prev + next);
+      const totalAccionesDelCedente = titulosCedenteFromAPI.reduce(function(prev, current) {
+        return prev + +current.acciones
+      }, 0);
+
+      //titulosCedenteFromAPI.map(titulo => {totalAccionesDelCedente = totalAccionesDelCedente + titulo.acciones})
+      
+      if(totalAccionesDelCedente == 0){
+        const apiDataAccionistaCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, herederos: true, cantidadAcciones: totalAccionesDelCedente, estado: 'Inactivo'} } });
+        //const apiData = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente,herederos: true, estado: 'Inactivo'} } });  
+      }else{
+        const apiDataAccionistaCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, herederos: true, cantidadAcciones: totalAccionesDelCedente} } });
+        //const apiData = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente,herederos: true, estado: 'Inactivo'} } });  
       }
 
-        //actualizar estado y fechaAprobacion de operacion aprobada
-        const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      //actualizar estado y fechaAprobacion de operacion aprobada
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
 
+
+    }
+    else if(transferencia.operacion == "Canje"){
+      //obtener fecha actual
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+      
+      //Desbloquear Valores 
+      for (const titulo of titulos) {
+        const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
+      }
+      // Cambiar a Desmaterializados en Libro de Accionistas
+      const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, tipoAcciones: 'D' } } });
+      //actualizar estado y fechaAprobacion de operacion aprobada
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+
+    }
+    else if(transferencia.operacion == "Bloqueo"){
+      //obtener fecha actual
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+      
+      // Cambiar a Bloqueado en Libro de Accionistas
+      const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, estado: 'Bloqueado' } } });
+      //actualizar estado y fechaAprobacion de operacion aprobada
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+    }
+    else if(transferencia.operacion == "Desbloqueo"){
+      //obtener fecha actual
+      const today = new Date();
+      const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+      
+      //Desbloquear Valores 
+      for (const titulo of titulos) {
+        const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
+      }
+      // Cambiar a Activo en Libro de Accionistas
+      const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, estado: 'Activo' } } });
+      //actualizar estado y fechaAprobacion de operacion aprobada
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
 
     }
 
     setCircular(false);
-    setOpenRevisar(false);          
+    setOpenRevisar(false);     
+    setAnular(false);     
     setCount(0);
     setTransferencia([]);
     setTitulos([]);
@@ -552,13 +882,64 @@ export default function Operaciones() {
         .catch(err => console.log(err));
         
     };
-    
-/*
-    const listarPorEstado = (estado)=>{
-      fetchOperaciones(estado);
-      setEstado(estado);
-    }
-*/
+
+  const handleChangeRechazo = (event) => {
+    setRechazo(event.target.checked);
+  };
+
+  
+  const handleChangeMotivosRechazo = (event) => {
+    const {
+      target: { value },
+    } = event;
+    console.log('motivos', event)
+    setMotivosRechazo(
+      // On autofill we get a the stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+  async function onChangeCS(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    const filename = uuid() + file.name
+    setFormData({ ...formData, cs: filename });
+    await Storage.put(filename, file);
+  }
+  
+
+  async function onChangeCG(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    const filename = uuid() + file.name
+    setFormData({ ...formData, cg: filename });
+    await Storage.put(filename, file);
+  }
+  
+  async function onChangeCI(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    const filename = uuid() + file.name
+    setFormData({ ...formData, ci: filename });
+    await Storage.put(filename, file);
+  }
+  
+  async function onChangeES(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    const filename = uuid() + file.name
+    setFormData({ ...formData, es: filename });
+    await Storage.put(filename, file);
+  }
+  
+  async function onChangeCP(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    const filename = uuid() + file.name
+    setFormData({ ...formData, cp: filename });
+    await Storage.put(filename, file);
+  }
+  
 
   return (
     <main className={classes.content}>
@@ -589,8 +970,8 @@ export default function Operaciones() {
                   </Button>
               </ButtonGroup>
 
-              <DataGrid
-                  //disableColumnMenu
+              <DataGrid              
+                  disableColumnMenu
                   sortModel={ [{field: 'fecha', sort: 'desc',}]}
                   style={{backgroundColor:'white'}}
                   density="compact"             
@@ -621,7 +1002,7 @@ export default function Operaciones() {
             <Grid container style={{display:'flex'}}>
               <Grid item xs={4} >
                 <Typography variant='h6'>
-                Detalle Transferencia
+                Detalle Operación
                 </Typography>          
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Typography variant='body2'>
@@ -632,7 +1013,7 @@ export default function Operaciones() {
                 </Typography>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Typography variant='body2'>
-                <small>Cedente</small>
+                { (transferencia.operacion=='Canje' || transferencia.operacion=='Bloqueo') ? <small>Accionista</small> :  <small>Cedente</small>}
                 </Typography>
                 <Typography variant='subtitle1'>
                   {transferencia.cedente}
@@ -668,7 +1049,7 @@ export default function Operaciones() {
                   </List>
                 }
 
-                {transferencia.operacion!='Posesión Efectiva' &&
+                {transferencia.operacion!='Posesión Efectiva' && transferencia.operacion!='Canje' && transferencia.operacion!='Bloqueo' && transferencia.operacion!='Desbloqueo' &&
                 <div>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Typography variant='body2'>
@@ -707,7 +1088,7 @@ export default function Operaciones() {
                   </div>
                 }
 
-                {transferencia.operacion!='Posesión Efectiva' &&
+                {transferencia.operacion!='Posesión Efectiva' && transferencia.operacion!='Canje' && transferencia.operacion!='Bloqueo' && transferencia.operacion!='Desbloqueo' &&
                 <div>
                   <Typography variant='h6'>
                     Acciones a Transferir
@@ -747,7 +1128,45 @@ export default function Operaciones() {
                     ))}
                   </List>
                 </div>
+                }       
+
+                {(transferencia.operacion=='Canje' || transferencia.operacion=='Bloqueo' || transferencia.operacion=='Desbloqueo')&&
+                <div>
+                  <Typography variant='h6'>
+                    Acciones
+                  </Typography>
+                  <List dense='true'           
+                    subheader={
+                      <ListSubheader component="div" id="nested-list-subheader">
+                        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around' , width: '100%', marginTop:10, paddingRight:50}}>              
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Título
+                          </Typography>
+                          <Typography variant='caption'  style={{flex: 1}}>
+                            Acciones
+                          </Typography>                
+                        </div>
+                      </ListSubheader>
+                      
+                      }> 
+                      {titulos.map(item => (
+                        <ListItem key={item.id}>
+
+                            <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', width: '100%', paddingRight:40 }}>              
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.titulo}</ListItemText>
+                              </div>
+                              <div style={{flex: 1}}>
+                                <ListItemText>{item.acciones}</ListItemText>
+                              </div>
+                            </div>
+                        </ListItem>                            
+                    ))}
+                  </List>
+                </div>
                 }                
+
+
                 <div style={{display:'flex', justifyContent:'center'}}>
                   {circular && <CircularProgress />}
                 </div>
@@ -758,48 +1177,126 @@ export default function Operaciones() {
                   Documentación
                 </Typography>
                 <div>
-                  <Button component="span" color="primary" size='small' style={{marginTop:20}} onClick={getPictureCS}>
-                    {transferencia.operacion == 'Cesión' ? 'Carta de Cesión' : 'Carta de Posesión Efectiva'}
-                    </Button>
-                  {/*imageCS && <p> Mostrar <a href={imageCS}> PDF</a></p> */}
-                  {transferencia.cs && <IconButton ><CheckIcon /></IconButton>}
+                {estado == 'Rechazada' && !anular &&
+                  <label htmlFor="icon-button-fileCS">
+                    <Input id="icon-button-fileCS" type="file" onChange={onChangeCS}/>
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                      <EditIcon fontSize="small" color='secondary' />
+                    </IconButton>
+                  </label>}
+                  <Button component="span" color="primary" size='small' style={{marginTop:10}} onClick={getPictureCS}>
+                    {transferencia.operacion == 'Cesión' ? 'Carta de Cesión' :  transferencia.operacion == 'Posesión Efectiva' ? 'Carta de Posesión Efectiva' : transferencia.operacion == 'Bloqueo' || transferencia.operacion == 'Desbloqueo' ? 'Documento de Respaldo' :  transferencia.operacion == 'Testamento' ? 'Carta de Testamento' :  transferencia.operacion == 'Donación' ? 'Carta de Donación' : 'Titulo Ordinario'}
+                  </Button>
+                  {transferencia.cs && <CheckIcon />}
+                  {formData.cs && <FiberNewOutlined color='secondary'/>}
                 </div>
+                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
+                  {estado == 'Rechazada' && !anular && 
+                  <label htmlFor="icon-button-fileCG">
+                    <Input id="icon-button-fileCG" type="file" onChange={onChangeCG}/>
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                      <EditIcon fontSize="small" color='secondary' />
+                    </IconButton>
+                  </label>}                  
                   <Button component="span" color="primary" size='small' onClick={getPictureCG}>
-                  {transferencia.operacion == 'Cesión' ? 'Carta de Gerente' : 'Impuesto a la Herencia'}              
-                    </Button>
-                  {transferencia.cg  && <IconButton ><CheckIcon /></IconButton>}
+                    {transferencia.operacion == 'Cesión' ? 'Carta de Gerente' :  transferencia.operacion == 'Testamento' ? 'Escritura de Testamento' :  transferencia.operacion == 'Donación' ? 'Escritura de Donación de Bienes' : 'Impuesto a la Herencia'}              
+                  </Button>
+                  {transferencia.cg  && <CheckIcon />}
+                  {formData.cg && <FiberNewOutlined color='secondary'/>}
                 </div>
+                }
+                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
+                  {estado == 'Rechazada' && !anular && 
+                  <label htmlFor="icon-button-fileCI">
+                    <Input id="icon-button-fileCI" type="file" onChange={onChangeCI}/>
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                      <EditIcon fontSize="small" color='secondary' />
+                    </IconButton>
+                  </label>}                  
                   <Button component="span" color="primary" size='small' onClick={getPictureCI}>
-                  {transferencia.operacion == 'Cesión' ? 'Carta de Instrucciones' : 'Declaración Jurada'}              
-                    </Button>
-                  {transferencia.ci  && <IconButton ><CheckIcon /></IconButton>}
+                    {transferencia.operacion == 'Cesión' ? 'Carta de Instrucciones' :  transferencia.operacion == 'Testamento' ? 'Pago de Impuestos' :  transferencia.operacion == 'Donación' ? 'Pago de Impuestos' : 'Declaración Jurada'}              
+                  </Button>
+                  {transferencia.ci  && <CheckIcon />}
+                  {formData.ci && <FiberNewOutlined color='secondary'/>}
                 </div>
+                }
+                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
+                  {estado == 'Rechazada' && !anular && 
+                  <label htmlFor="icon-button-fileES">
+                    <Input id="icon-button-fileES" type="file" onChange={onChangeES}/>
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                      <EditIcon fontSize="small" color='secondary' />
+                    </IconButton>
+                  </label>}                  
                   <Button component="span" color="primary" size='small' onClick={getPictureES}>
-                  {transferencia.operacion == 'Cesión' ? 'Escritura' : 'Escritura de Posesión efectiva de Bienes'}
-                    
-                    </Button>
-                  {transferencia.es  && <IconButton ><CheckIcon /></IconButton>}
+                    {transferencia.operacion == 'Cesión' ? 'Escritura' :  transferencia.operacion == 'Testamento' ? 'Declaración Jurada' :  transferencia.operacion == 'Donación' ? 'Declaración Jurada' : 'Escritura Posesión efectiva de Bienes'}                    
+                  </Button>
+                  {transferencia.es  && <CheckIcon />}
+                  {formData.es && <FiberNewOutlined color='secondary'/>}
                 </div>
+                }
+                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
-                  <Button component="span" color="primary" size='small' onClick={getPictureCP}>Carta Poder</Button>
-                  {transferencia.cp  && <IconButton ><CheckIcon /></IconButton>}
-                </div>            
+                  {estado == 'Rechazada' && !anular && 
+                  <label htmlFor="icon-button-fileCP">
+                    <Input id="icon-button-fileCP" type="file" onChange={onChangeCP}/>
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                      <EditIcon fontSize="small" color='secondary' />
+                    </IconButton>
+                  </label>}                  
+                  <Button component="span" color="primary" size='small' onClick={getPictureCP}>Poder</Button>
+                    {transferencia.cp  && <CheckIcon />}
+                  {formData.cp && <FiberNewOutlined color='secondary'/>}
+                </div>  
+                }   
               </Grid>  
             </Grid>
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{backgroundColor:'#f9f9f9', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>             
           <div style={{fontWeight:'normal', fontSize:10, color:'grey'}}>Solicitante: {transferencia.usuarioIngreso}</div>
-          <div>          
-            <Button onClick={handleAprobarOperacion2} color="primary" variant='contained'>
-              Aprobar
+          
+          {!anular &&  estado == 'Pendiente' &&
+          <FormControlLabel control={<Switch size="small" checked={rechazo} onChange={handleChangeRechazo}/>} label="Rechazar" />
+          }
+
+          <div>      
+            {!anular && !rechazo && estado == 'Pendiente' &&
+            <div>   
+              <Button onClick={handleAprobarOperacion2} color="primary" variant='contained'>
+                Aprobar
+              </Button>
+            </div>
+            }
+
+            {rechazo &&  !anular &&   (estado == 'Rechazada' || estado == 'Pendiente') &&
+            <div>   
+
+                <InputLabel id="rec"><small>Motivos de Rechazo</small></InputLabel>
+                <Select labelId="rec" id="rechazo-multiple" multiple onChange={handleChangeMotivosRechazo} value={motivosRechazo}  style={{height:37 , minWidth:150, marginRight:20, fontSize: 10}}>
+                  {generateSelectMotivoRechazo()}
+                </Select>
+
+              <Button onClick={handleRechazarOperacion} color="secondary" variant='contained' >
+                Rechazar
+              </Button>
+            </div>
+            }
+
+            {anular && estado == 'Rechazada' &&
+            <Button onClick={handleAnularOperacion} classes={{ root: classes.botonAnular }} variant='contained'>
+              Anular
             </Button>
-            <Button onClick={handleRevisarOperacion}  >
-              Rechazar
+            }
+
+            {!anular && estado == 'Rechazada' &&
+            <Button onClick={handleReenviarOperacion} color="primary" variant='contained'>
+              Volver a Solicitar Aprobación
             </Button>
+            }
           </div>            
         </DialogActions>
       </Dialog>

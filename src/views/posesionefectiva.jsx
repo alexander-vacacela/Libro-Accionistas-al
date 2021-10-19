@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyles,ListItem, ListItemText, ListSubheader,ListItemIcon,
-  List,IconButton,Snackbar, Switch, FormControlLabel} from '@material-ui/core';
+  List,IconButton,Snackbar, Switch, FormControlLabel, CircularProgress} from '@material-ui/core';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API, Storage, graphqlOperation } from 'aws-amplify';
@@ -15,6 +15,7 @@ import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { uuid } from 'uuidv4';
 import { ConsoleLogger } from '@aws-amplify/core';
+import { red } from '@material-ui/core/colors';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -90,10 +91,16 @@ export default function PosesionEfectiva() {
 
   const [particion, setParticion] = useState(false);
 
+  const [totalAccionesHerencia, setTotalAccionesHerencia] = useState(0);
+  
+  const [circular, setCircular] = useState(false);
+
   const addOperacion = async () => {
     try {
         
         if (!formData.cedente || !formData.cesionario) return
+
+        setCircular(true);
 
         const operacion = { ...formData }
 
@@ -102,7 +109,7 @@ export default function PosesionEfectiva() {
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
         const transferir = titulos.map(function(e) {
-          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones} ;
+          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones, tituloId: e.id} ;
         })
 
         Promise.all(
@@ -115,6 +122,7 @@ export default function PosesionEfectiva() {
         const herederos = formHerederos.map(function(e) {
           return {numeroHeredero:  e.numeroHeredero, operacionId : operID.data.createOperaciones.id, herederoId: e.herederoId, nombre: e.nombre, cantidad: e.cantidad  }
         })
+
         Promise.all(
           herederos.map(input => API.graphql(graphqlOperation(createHerederoPorOperacion, { input: input })))
         ).then(values => {          
@@ -122,6 +130,7 @@ export default function PosesionEfectiva() {
           setFormHerederos([ ]);
           setOpenSnack(true);
           setOperacion(operacion + 1 );
+          setTotalAccionesHerencia(0);
 
         });
 
@@ -132,7 +141,7 @@ export default function PosesionEfectiva() {
           
         );
 
-
+        setCircular(false);
 
          } catch (err) {
         console.log('error creating transaction:', err)
@@ -145,7 +154,12 @@ export default function PosesionEfectiva() {
   }, [])
 
   async function fetchAccionistas() {
-    const apiData = await API.graphql({ query: listAccionistas , variables:{limit:1000}});
+    const filter = {
+      estado: {
+        eq: 'Activo',
+      }
+    };
+    const apiData = await API.graphql({ query: listAccionistas , variables:{filter: filter, limit:1000}});
     const accionistasFromAPI = apiData.data.listAccionistas.items;
     await Promise.all(accionistasFromAPI.map(async accionista => {
     return accionista;
@@ -161,7 +175,7 @@ export default function PosesionEfectiva() {
           eq: cedenteId // filter priority = 1
       },
       estado:{
-        ne: 'Inactivo'
+        eq: 'Activo'
       }
     };
 
@@ -205,7 +219,7 @@ const handleClickCesionario = (option, value, herederoNro) => {
       const heredero = {numeroHeredero:  herederoNro, operacionId : '', herederoId: value.id, nombre: value.nombre, cantidad: 0  }
       setFormHerederos([...formHerederos,  heredero])
       setFormData({ ...formData, 'idCesionario': '' , 'cesionario': 'Herederos'  })
-  
+
   }
   else {
     const index = formHerederos.map(function(e) {
@@ -305,6 +319,10 @@ const handleChangeCantidad = (event, nroHeredero) => {
 
   setFormHerederos(herederos)
   console.log("herederos", herederos)
+  //const totalAcciones = herederos.reduce((a, b) => a + (b['cantidad'] || 0), 0);
+  setTotalAccionesHerencia(herederos.map(item => parseInt(item.cantidad)).reduce((prev, next) => prev + next));
+ // console.log('totalll', herederos.map(item => parseInt(item.cantidad)).reduce((prev, next) => prev + next));
+  setFormData({ ...formData, 'acciones':  herederos.map(item => parseInt(item.cantidad)).reduce((prev, next) => prev + next)})
 
 };
 
@@ -336,37 +354,28 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   renderInput={(params) => <TextField {...params} label="Cedente" margin="normal"  variant="outlined"  />}
                   onChange={(option, value) => handleClickCedente(option, value)}
                 />
-                { total > 0 &&
-                    <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                        <BlaclTextTypography variant='subtitle1' >
-                            Títulos
-                        </BlaclTextTypography>
-                        <Typography variant='caption'>
-                            Total acciones : {total}
-                        </Typography>
-                    </div>
-                }
+
                <List dense
                     subheader={ total > 0 &&
                     <ListSubheader component="div" id="nested-list-subheader">
                         &nbsp;
                         <Typography variant='caption'>
-                            F.Compra
+                            <strong style={{color:'black'}}>F.Compra</strong>
                         </Typography>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Typography variant='caption'>
-                            Título
+                            <strong style={{color:'black'}}>Título</strong>
                         </Typography>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Typography variant='caption'>
-                            Cantidad
+                            <strong style={{color:'black'}}>Cantidad</strong>
                         </Typography>
                         </ListSubheader>          
                     }
                     > 
                         {titulos.map(item => (
                             <ListItem 
-                                key={item.titulo} 
+                                key={item.titulo}                                 
                                 //button
                                 //onClick={()=>history.push(item.path)}
                                 
@@ -374,11 +383,18 @@ const handleChangeCantidad = (event, nroHeredero) => {
                                 <ListItemText>{item.fechaCompra}</ListItemText>                                
                                 <ListItemText>{item.titulo}</ListItemText>
                                 <ListItemText>{item.acciones}</ListItemText>
-
                             </ListItem>
                             
                         ))}
                 </List>
+                { total > 0 &&
+                    <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+  
+                        <Typography variant='caption'>
+                            <strong style={{color:'black'}}> Total Acciones Cedente: {total} </strong>
+                        </Typography>
+                    </div>
+                }                
             </div>
         </Grid>
 
@@ -461,11 +477,17 @@ const handleChangeCantidad = (event, nroHeredero) => {
                 &nbsp;&nbsp;&nbsp;
                 {particion && <TextField disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,5)}/>}
               </div>  }                                                                
-                <div>                            
+                <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>    
+                  <div>                        
                     <IconButton color='primary' onClick={() => setCountHeredero(CountHeredero + 1)} disabled={CountHeredero===15 ? true : false}><ControlPointIcon/></IconButton>
                     <IconButton color='primary' onClick={() => eliminarHeredero()} disabled={CountHeredero===1 ? true : false}><RemoveCircleOutlineIcon/></IconButton>
+                  </div>
+                  {formHerederos.length > 0 && particion &&
+                    <small style={{color:total - totalAccionesHerencia < 0 ?'red':'black'}}> Saldo: <strong>{total - totalAccionesHerencia}</strong> </small>                  
+                  }
                 </div>            
             </div>
+            {circular && <CircularProgress />}
         </Grid>
 
 
@@ -514,6 +536,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                     startIcon={<SaveIcon/>}                    
                     size='small'
                     onClick={addOperacion}
+                    disabled={total - formHerederos.length > 0 && particion ? totalAccionesHerencia < 0 ?true:false : 0}
                 >
                     Solicitar aprobación
                 </Button>

@@ -689,6 +689,8 @@ export const onCreateOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }
@@ -731,6 +733,8 @@ export const onUpdateOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }
@@ -773,6 +777,8 @@ export const onDeleteOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }

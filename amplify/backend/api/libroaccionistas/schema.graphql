@@ -162,7 +162,8 @@ type Operaciones @model {
   cb: String
   nom: String
   fechaAprobacion:String
-  
+  motivoRechazo: String
+  observacion: String
 }
 
 type TituloPorOperacion @model @key(name: "PorOperacion", fields: ["operacionID", "titulo"]) {

@@ -803,6 +803,8 @@ export const createOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }
@@ -834,6 +836,8 @@ export const updateOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          createdAt
+          updatedAt
         }
         nextToken
       }
@@ -846,6 +850,8 @@ export const updateOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }
@@ -891,6 +897,8 @@ export const deleteOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }

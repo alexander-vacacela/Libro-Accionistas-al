@@ -56,12 +56,12 @@ const today = new Date();
 const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
 
 
-export default function Cesion() {
+export default function Testamento() {
 
   const classes = useStyles();
  
   const [formData, setFormData] = useState({
-    fecha: fecha, operacion: 'Cesión', 
+    fecha: fecha, operacion: 'Testamento', 
     idCedente: '', cedente: '', idCesionario:'', cesionario: '', 
     titulo: '' , acciones: 0, 
     estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '',
@@ -112,7 +112,7 @@ export default function Cesion() {
 
         const operacion = { ...formData }
 
-        setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
+        setFormData({ fecha: fecha, operacion: 'Testamento', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
 
@@ -439,7 +439,7 @@ console.log("titulos a transferir antes", titulosSelectos)
       <Grid container>
         <Grid item xs={3} >
           <BlaclTextTypography variant='h6'>
-              Cesión
+              Testamento
           </BlaclTextTypography>
           <Autocomplete
                   value={valCedente}
@@ -532,27 +532,27 @@ console.log("titulos a transferir antes", titulosSelectos)
 
           <label htmlFor="upload-photo1">
             <input style={{ display: 'none' }} id="upload-photo1" name="upload-photo1" type="file" onChange={onChangeCS} />
-            <Button component="span" color="primary" size='small' style={{marginTop:20}}>Carta de Cesión</Button>
+            <Button component="span" color="primary" size='small' style={{marginTop:20}}>Carta de Testamento</Button>
             {formData.cs.length > 0 && <IconButton ><CheckIcon /></IconButton>}
           </label>
           <label htmlFor="upload-photo2">
             <input style={{ display: 'none' }} id="upload-photo2" name="upload-photo2" type="file" onChange={onChangeCG} />
-            <Button component="span" color="primary" size='small' >Carta de Gerente</Button>
+            <Button component="span" color="primary" size='small' >Escritura de Testamento</Button>
             {formData.cg.length > 0 && <IconButton ><CheckIcon /></IconButton>}
           </label>
           <label htmlFor="upload-photo3">
             <input style={{ display: 'none' }} id="upload-photo3" name="upload-photo3" type="file" onChange={onChangeCI} />
-            <Button component="span" color="primary" size='small' >Carta de Instrucciones</Button>
+            <Button component="span" color="primary" size='small' >Pago de Impuestos</Button>
             {formData.ci.length > 0 && <IconButton ><CheckIcon /></IconButton>}
           </label>
           <label htmlFor="upload-photo4">
             <input style={{ display: 'none' }} id="upload-photo4" name="upload-photo4" type="file" onChange={onChangeES} />
-            <Button component="span" color="primary" size='small' >Escritura</Button>
+            <Button component="span" color="primary" size='small' >Declaración Jurada</Button>
             {formData.es.length > 0 && <IconButton ><CheckIcon /></IconButton>}
           </label>
           <label htmlFor="upload-photo5">
             <input style={{ display: 'none' }} id="upload-photo5" name="upload-photo5" type="file" onChange={onChangeCP} />
-            <Button component="span" color="primary" size='small' >Carta Poder</Button>
+            <Button component="span" color="primary" size='small' >Poder</Button>
             {formData.cp.length > 0 && <IconButton ><CheckIcon /></IconButton>}
           </label>
         </Grid>
@@ -579,7 +579,7 @@ console.log("titulos a transferir antes", titulosSelectos)
 
       <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
         <Alert onClose={handleCloseSnack} severity="success">
-          Se registró exitosamente la solicitud de Cesión
+          Se registró exitosamente la solicitud de Testamento
         </Alert>
       </Snackbar>
 

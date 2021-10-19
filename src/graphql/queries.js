@@ -383,13 +383,9 @@ export const getAccionista = /* GraphQL */ `
           acciones
           fechaCompra
           estado
-          createdAt
-          updatedAt
         }
         nextToken
       }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -465,8 +461,6 @@ export const getTitulo = /* GraphQL */ `
       acciones
       fechaCompra
       estado
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -561,6 +555,8 @@ export const getOperaciones = /* GraphQL */ `
       cb
       nom
       fechaAprobacion
+      motivoRechazo
+      observacion
       createdAt
       updatedAt
     }
@@ -598,6 +594,8 @@ export const listOperaciones = /* GraphQL */ `
         cb
         nom
         fechaAprobacion
+        motivoRechazo
+        observacion
         createdAt
         updatedAt
       }
