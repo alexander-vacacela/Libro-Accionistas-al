@@ -375,6 +375,7 @@ export const getAccionista = /* GraphQL */ `
       docIdentidadConyugue
       herederos
       esHeredero
+      decevale
       titulos {
         items {
           id
@@ -383,6 +384,8 @@ export const getAccionista = /* GraphQL */ `
           acciones
           fechaCompra
           estado
+          idCedenteHereda
+          nombreCedenteHereda
         }
         nextToken
       }
@@ -444,6 +447,7 @@ export const listAccionistas = /* GraphQL */ `
         docIdentidadConyugue
         herederos
         esHeredero
+        decevale
         titulos {
           nextToken
         }
@@ -461,6 +465,8 @@ export const getTitulo = /* GraphQL */ `
       acciones
       fechaCompra
       estado
+      idCedenteHereda
+      nombreCedenteHereda
     }
   }
 `;
@@ -478,6 +484,8 @@ export const listTitulos = /* GraphQL */ `
         acciones
         fechaCompra
         estado
+        idCedenteHereda
+        nombreCedenteHereda
       }
       nextToken
     }
@@ -492,6 +500,7 @@ export const getHeredero = /* GraphQL */ `
       cantidad
       idCedente
       nombreCedente
+      estado
       createdAt
       updatedAt
     }
@@ -511,6 +520,7 @@ export const listHerederos = /* GraphQL */ `
         cantidad
         idCedente
         nombreCedente
+        estado
         createdAt
         updatedAt
       }
@@ -541,8 +551,6 @@ export const getOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
-          createdAt
-          updatedAt
         }
         nextToken
       }
@@ -557,8 +565,6 @@ export const getOperaciones = /* GraphQL */ `
       fechaAprobacion
       motivoRechazo
       observacion
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -705,6 +711,35 @@ export const listNumeroSecuencials = /* GraphQL */ `
       items {
         id
         numerotitulo
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getParametro = /* GraphQL */ `
+  query GetParametro($id: ID!) {
+    getParametro(id: $id) {
+      id
+      moneda
+      cantidadEmitida
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listParametros = /* GraphQL */ `
+  query ListParametros(
+    $filter: ModelParametroFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listParametros(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        moneda
+        cantidadEmitida
         createdAt
         updatedAt
       }

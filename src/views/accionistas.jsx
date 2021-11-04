@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { API,Storage } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
-import { Link } from "react-router-dom";
-import { listAccionistas, listTitulos } from '../graphql/queries';
+//import { Link } from "react-router-dom";
+import { listAccionistas, listTitulos, listOperaciones,getParametro, listHerederos } from '../graphql/queries';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 
@@ -28,10 +28,11 @@ import Grid from '@material-ui/core/Grid';
 
 import { Typography,  Button, ListItem, ListItemText, ListSubheader, List, Tooltip, Chip, 
   FormControl, RadioGroup, FormControlLabel, Radio, Box, Tabs, Tab,
-  Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,} from '@material-ui/core';
+  Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle, ListItemIcon,} from '@material-ui/core';
 
 import logo from './../images/UnderConstruction.gif';
 import { styled } from '@material-ui//styles';
+import { ConsoleLogger } from '@aws-amplify/core';
 
   const defaultTheme = createTheme();
   const useStyles = makeStyles(
@@ -160,18 +161,28 @@ function QuickSearchToolbar(props) {
 
   export default function Accionistas() {
 
+    const [cantidadEmitido, setCantidadEmitido] = useState(1);
     const [openTitulos, setOpenTitulos] = useState(false);
     const handleClose = () => setOpenTitulos(false);
     
     const [estado, setEstado] = useState('Activo');
+
+    function getParticipacion(params) {
+      return `${params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido || ''} `;
+    }
 
     const columns = [
       //{ field: 'id', headerName: 'Nro', width: 80, type: 'number',},
       {
         field: 'identificacion',
         headerName: 'Identificacion',
-        width: 150,
+        width: 120,
       },
+      {
+        field: 'decevale',
+        headerName: 'Decevale',
+        width: 100,
+      },      
       {
         field: 'nombre',
         headerName: 'Nombre',
@@ -181,62 +192,71 @@ function QuickSearchToolbar(props) {
       {
         field: 'paisNacionalidad',
         headerName: 'Nacionalidad',
-        width: 150,
-      },
+        width: 130,
+      },      
       {
-          field: 'cantidadAcciones',
-          headerName: 'Acciones',
-          type: 'number',
-          width: 120,
-        },
-        {
-          field: 'tipoAcciones',
-          headerName: 'Tipo',
-          width: 90,
-          renderCell: (cellValues) => {
-            return cellValues.row.tipoAcciones == "D" ? 
-            <Tooltip title="Desmaterializadas" >
-              <DevicesOutlinedIcon /> 
-            </Tooltip>
-            : 
-            <Tooltip title="Ordinarias" >
-            <DescriptionOutlinedIcon color='error'/> 
+        field: 'cantidadAcciones',
+        headerName: 'Acciones',
+        type: 'number',
+        width: 120,
+      },             
+      {
+        field: 'participacion',
+        headerName: 'Participación',
+        type: 'number',
+        width: 120,
+        valueGetter: getParticipacion,
+      },             
+      {
+        field: 'tipoAcciones',
+        headerName: 'Tipo',
+        width: 90,
+        renderCell: (cellValues) => {
+          return cellValues.row.tipoAcciones == "D" ? 
+          <Tooltip title="Desmaterializadas" >
+            <DevicesOutlinedIcon /> 
           </Tooltip>
+          : 
+          <Tooltip title="Ordinarias" >
+          <DescriptionOutlinedIcon color='error'/> 
+        </Tooltip>
+        }
+      },       
+      {
+        field: 'estado',
+        headerName: 'Estado',
+        width: 110,
+        renderCell: (cellValues) => {
+          return <Chip size="small" variant="outlined" label={cellValues.row.estado} color={cellValues.row.estado == 'Activo' ? 'primary' : 'secondary'} />
+        }
+      },      
+      
+      {
+        field: "Info",
+        width: 100,
+        renderCell: (cellValues) => {
+          return <IconButton  disabled={cellValues.row.cantidadAcciones > 0 ? false : true} onClick={() =>  
+            //console.log('datos de accionista',cellValues.row )
+            {
+            fetchTitulos(cellValues.row);
+            //fetchTitulosPorHeredar(cellValues.row);
+            }
+          } color='primary'><PageviewIcon /></IconButton>
+        }
+      },
 
-          }
-        },         
-        {
-          field: 'estado',
-          headerName: 'Estado',
-          width: 110,
-          renderCell: (cellValues) => {
-            return <Chip size="small" variant="outlined" label={cellValues.row.estado} color={cellValues.row.estado == 'Activo' ? 'primary' : 'secondary'} />
-          }
-        },      
-        
-        {
-          field: "Info",
-          width: 100,
-          renderCell: (cellValues) => {
-            return <IconButton  disabled={cellValues.row.cantidadAcciones > 0 ? false : true} onClick={() =>  
-              //console.log('datos de accionista',cellValues.row )
-              fetchTitulos(cellValues.row)
-            } color='primary'><PageviewIcon /></IconButton>
-          }
-        },
+      {
+        field: "Herederos",
+        width: 100,
+        renderCell: (cellValues) => {
+          return cellValues.row.herederos ? 
+          <Tooltip title="Tiene herederos" >
 
-        {
-          field: "Herederos",
-          width: 100,
-          renderCell: (cellValues) => {
-            return cellValues.row.herederos ? 
-            <Tooltip title="Tiene herederos" >
-
-              <GroupOutlinedIcon /> 
-            </Tooltip>
-            : null
-          }
-        },
+            <GroupOutlinedIcon /> 
+          </Tooltip>
+          : null
+        }
+      },
 
         /*
         {
@@ -257,10 +277,11 @@ function QuickSearchToolbar(props) {
     const [accionistas, setAccionistas] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [rows, setRows] = useState([]);
-    const [count, setCount] = useState(0);
+    //const [count, setCount] = useState(0);
     const [titulos, setTitulos] = useState([])
+    const [titulosHerencia, setTitulosHerencia] = useState([])
     const [accionistaSeleccionado, setAccionistaSeleccionado]= useState({});
-
+    const [operaciones, setOperaciones] = useState([]);
 
     const handleChange = (event) => {
       console.log("estado",event.target.value)
@@ -273,11 +294,22 @@ function QuickSearchToolbar(props) {
 
     useEffect(() => {
 
+      fetchParametros();
       fetchAccionistas();
-
+      
 
     }, [estado]);
    
+
+    async function fetchParametros() {
+
+      const apiData = await API.graphql({ query: getParametro , variables: { id: '1' } });
+
+      const parametrosFromAPI = apiData.data.getParametro;    
+
+      setCantidadEmitido(parametrosFromAPI.cantidadEmitida);
+  }
+
     async function fetchAccionistas() {
 
       console.log("entro a buscar con estado",estado)
@@ -336,13 +368,113 @@ function QuickSearchToolbar(props) {
         };
     
         const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
-        const titulosFromAPI = apiData.data.listTitulos.items;
+        const titulosFromAPI = apiData.data.listTitulos.items;        
         setTitulos(titulosFromAPI);
         setAccionistaSeleccionado(row)
+
+        let filterOper = {
+          //idCedente: {
+          //    eq: row.id 
+          // }
+
+          or: [{ idCedente: {eq:row.id} },
+            { idCesionario: {eq:row.id}} ]
+
+        };
+        const apiDataOper = await API.graphql({ query: listOperaciones, variables: { filter: filterOper, limit : 1000} });
+        const OperacionesFromAPI = apiDataOper.data.listOperaciones.items;        
+        setOperaciones(OperacionesFromAPI);
+
         setOpenTitulos(true)
         console.log('titulos', titulosFromAPI)
       }
 
+      //async function fetchTitulosPorHeredar(row) {
+      const fetchTitulosPorHeredar = async(row) => {  
+
+        console.log('entro titulos por heredar', row)
+
+        let filter = {
+          accionistaHerederoId: {
+              eq: row.id // filter priority = 1
+          },
+          estado: {
+            eq: 'Pendiente'
+          }
+        };
+    
+        const apiData = await API.graphql({ query: listHerederos, variables: { filter: filter, limit : 1000} });
+        const titulosHerenciaFromAPI = apiData.data.listHerederos.items;        
+        setTitulosHerencia(titulosHerenciaFromAPI);
+        console.log('titulos a heredar', titulosHerenciaFromAPI)
+
+        //Buscar acciones en titulos del idCedente que esten bloqueados y que sumen la cantidad de herencia
+        //Barrer listado
+
+
+        //for (const tituloHerencia of titulosHerencia) {
+          //const herederos = titulosHerencia.map(function(e) {
+            
+        const herederos = titulosHerenciaFromAPI.map(async(e) => {
+
+          let filterTitulos = {
+            accionistaID: {
+                eq: e.idCedente // filter priority = 1
+            },
+            estado: {
+              eq: 'Bloqueado' // o estado Herencia
+            }
+          };
+
+
+          const apiDataTitulos =  await API.graphql({ query: listTitulos, variables: { filter: filterTitulos, limit : 1000} });
+          const titulosFromAPI = apiDataTitulos.data.listTitulos.items;    
+
+          let totalAccionesCedente = 0;
+          titulosFromAPI.map(titulo => {totalAccionesCedente = totalAccionesCedente + titulo.acciones})
+
+
+          if(totalAccionesCedente > 0 && totalAccionesCedente == e.cantidad){
+            //show
+            //const herederos = formHerederos.map(function(e) {
+            //  return {numeroHeredero:  e.numeroHeredero, operacionId : operID.data.createOperaciones.id, herederoId: e.herederoId, nombre: e.nombre, cantidad: e.cantidad  }
+            //})
+
+            return {id: e.id, accionistaHerederoId: e.accionistaHerederoId.id, nombre: e.nombre, cantidad: e.cantidad, idCedente: e.idCedente, nombreCedente: e.nombreCedente, estado: 'Si'  }
+          } else{
+            //hide
+            return {id: e.id, accionistaHerederoId: e.accionistaHerederoId.id, nombre: e.nombre, cantidad: e.cantidad, idCedente: e.idCedente, nombreCedente: e.nombreCedente, estado: 'No'  }
+          }
+
+          
+
+        })
+  
+
+        console.log('Mostrar titulos a heredar', herederos)
+
+    
+    
+
+
+/*
+        let filterOper = {
+          //idCedente: {
+          //    eq: row.id 
+          // }
+
+          or: [{ idCedente: {eq:row.id} },
+            { idCesionario: {eq:row.id}} ]
+
+        };
+        const apiDataOper = await API.graphql({ query: listOperaciones, variables: { filter: filterOper, limit : 1000} });
+        const OperacionesFromAPI = apiDataOper.data.listOperaciones.items;        
+        setOperaciones(OperacionesFromAPI);
+        setOpenTitulos(true)
+        console.log('titulos', titulosFromAPI)
+*/
+
+      }
       
       const [value, setValue] = useState(0);
 
@@ -367,6 +499,25 @@ function QuickSearchToolbar(props) {
           .catch(err => console.log(err));
           
       };
+
+      const get_PDF = (e) => {
+        //e.stopPropagation();
+
+        //console.log(e);
+        
+        Storage.get(e)
+          .then(url => {
+            var myRequest = new Request(url);
+            fetch(myRequest).then(function(response) {
+              if (response.status === 200) {
+                //setImageCS(url);
+                window.open(url)
+              }
+            });
+          })
+          .catch(err => console.log(err));          
+      };
+
 
   const classes = useStyles();
 
@@ -749,9 +900,55 @@ function QuickSearchToolbar(props) {
               </List>
             </TabPanel>
             <TabPanel value={value} index={3}>
-              <div style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
-                <img src={logo} alt="loading..." width='150' height='200' />
-              </div>
+              <List dense='true'           
+                subheader={
+                <ListSubheader component="div" id="nested-list-subheader">
+                  <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'100%'}}>                
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold'}}>
+                      Fecha
+                    </Typography>
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold'}}>
+                      Operación
+                    </Typography>
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>
+                      Cantidad
+                    </Typography>
+                    <Typography variant='caption' style={{flex:2, fontWeight:'bold'}}>
+                      Cedente
+                    </Typography>      
+                    <Typography variant='caption' style={{flex:2, fontWeight:'bold'}}>
+                      Cesionario
+                    </Typography>                    
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold'}}>
+                      Estado
+                    </Typography>   
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold'}}>
+                      Documentación
+                    </Typography>   
+                  </div>                               
+                </ListSubheader>            
+                }> 
+                {operaciones.map(item => (
+                  <ListItem  key={item.id}>  
+                    <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'100%'}}>                                                            
+                      <ListItemText style={{flex:1}}><small>{item.fecha}</small></ListItemText>                                
+                      <ListItemText style={{flex:1}}><small>{item.operacion}</small></ListItemText>
+                      <ListItemText style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}><small>{item.acciones}</small></ListItemText>
+                      <ListItemText style={{flex:2}}><small>{item.cedente}</small></ListItemText>
+                      <ListItemText style={{flex:2}}><small>{item.cesionario}</small></ListItemText>
+                      <ListItemText style={{flex:1}}><small>{item.estado}</small></ListItemText>
+                      <div style={{flex:1, display:'flex', flexDirection:'column', alignItems:'center'}}>
+                        {item.cs && <ListItemIcon style={{flex:1}} ><IconButton onClick={() => get_PDF(item.cs)}>  <PageviewIcon /> </IconButton> </ListItemIcon> }
+                        {item.cg && <ListItemIcon style={{flex:1}}><IconButton onClick={() => get_PDF(item.cg)}><PageviewIcon /> </IconButton> </ListItemIcon> }
+                        {item.ci && <ListItemIcon style={{flex:1}}><IconButton onClick={() => get_PDF(item.ci)}><PageviewIcon /> </IconButton> </ListItemIcon> }
+                        {item.es && <ListItemIcon style={{flex:1}}><IconButton onClick={() => get_PDF(item.es)}><PageviewIcon /> </IconButton> </ListItemIcon> }
+                        {item.ced && <ListItemIcon style={{flex:1}}><IconButton onClick={() => get_PDF(item.ced)}><PageviewIcon /> </IconButton> </ListItemIcon> }
+                        {item.cb && <ListItemIcon style={{flex:1}}><IconButton onClick={() => get_PDF(item.cb)}><PageviewIcon /> </IconButton> </ListItemIcon> }
+                        {item.nom && <ListItemIcon style={{flex:1}}><IconButton onClick={() => get_PDF(item.nom)}><PageviewIcon /> </IconButton> </ListItemIcon> }
+                      </div>
+                    </div>
+                  </ListItem>))}
+              </List>
             </TabPanel>
 
 

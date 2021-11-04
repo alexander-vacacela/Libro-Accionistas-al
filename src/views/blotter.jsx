@@ -7,17 +7,14 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlineOutlined';
-//import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CheckIcon from '@material-ui/icons/Check';
 import WarningIcon from '@material-ui/icons/ErrorOutlineOutlined';
-//import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import DescriptionIcon from '@material-ui/icons/Description';
-//import PublishedWithChangesIcon from '@material-ui/icons/PublishedWithChanges';                  
 import FiberNewOutlined from '@material-ui/icons/FiberNewOutlined';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import { API, Storage } from 'aws-amplify';
+import { API, Storage, Auth } from 'aws-amplify';
 import { listOperaciones, listTituloPorOperacions, getNumeroSecuencial, listTitulos,listHerederoPorOperacions } from './../graphql/queries';
 import { updateTitulo, createTitulo, updateNumeroSecuencial, updateAccionista, updateOperaciones, createHeredero } from './../graphql/mutations';
 import PropTypes from 'prop-types';
@@ -112,7 +109,7 @@ function QuickSearchToolbar(props) {
 
 export default function Operaciones() {
   const classes = useStyles();
-
+  const [userName, setUserName] = useState("");
   const [operaciones, setOperaciones] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [rows, setRows] = useState([]);
@@ -269,12 +266,14 @@ export default function Operaciones() {
 
   useEffect(() => {
     fetchOperaciones("Pendiente");
+    let user = Auth.user;     
+    setUserName(user.username);
   }, [operaciones.length, count]);
  
   
   async function fetchOperaciones() {
 
-    console.log('entro de nuevo ??', 'SIIII')
+    //console.log('entro de nuevo ??', 'SIIII')
 
     let filter = {
       estado: {
@@ -285,7 +284,7 @@ export default function Operaciones() {
 
     const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter},  });
     const operacionesFromAPI = apiData.data.listOperaciones.items;
-    
+    //console.log('revisar operaciones',operacionesFromAPI);
     setOperaciones(operacionesFromAPI);
     if(count === 0)
       {      
@@ -437,6 +436,15 @@ export default function Operaciones() {
         const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Rechazada', fechaAprobacion: fecha, motivoRechazo: motivosRechazo, observacion : obs} } });
         console.log(' Pasó Rechazar operacion y actualizar Fecha', apiDataUpdateOper)
     
+        //Desbloquear Titulos
+
+        for (const titulo of titulos) {
+          console.log('titulo', titulo);
+          //Activar los titulos de cedente
+          const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
+          console.log('Inactivar titulos',apiData)
+        }  
+
         setCircular(false);
         setOpenRevisar(false);     
         setAnular(false);     
@@ -560,7 +568,7 @@ export default function Operaciones() {
       //actualizar estado y fechaAprobacion de operacion aprobada
       const today = new Date();
       const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
       console.log(' Pasó Aprobar operacion y actualizar Fecha', apiDataUpdateOper)
 
     }
@@ -571,6 +579,27 @@ export default function Operaciones() {
       const today = new Date();
       const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
 
+
+      //Actualizar el estado de las titulos Herencia a Inactivo cuando pertenece al mismo cedente
+      //Buscar titulos del cedente (herencia)
+      //
+
+      let filterH = {
+        idCedenteHereda: {
+            eq: transferencia.idCedente // filter priority = 1
+        },
+        estado: {
+          eq: 'Herencia'
+        }
+      };
+      const apiDataTitulosHerederoAnt = await API.graphql({ query: listTitulos, variables: { filter: filterH, limit : 1000} });
+      const titulosHerederoFromAPIAnt = apiDataTitulosHerederoAnt.data.listTitulos.items;
+
+      Promise.all(
+        titulosHerederoFromAPIAnt.map(input => API.graphql({ query: updateTitulo, variables: { input: {id: input.id, estado: 'Inactivo'} } }) )           
+      );
+
+
       //Asociar Herederos al Cedente
       for (const heredero of herederos) {   
         console.log('entra Posesión herederos')     
@@ -579,7 +608,9 @@ export default function Operaciones() {
           nombre: heredero.nombre,
           cantidad:  heredero.cantidad > 0 ? heredero.cantidad : transferencia.acciones,  //heredero.cantidad, en caso sea particion
           idCedente: transferencia.idCedente,
-          nombreCedente: transferencia.cedente, };
+          nombreCedente: transferencia.cedente, 
+          estado:  heredero.cantidad > 0 ? 'Partido' : 'Pendiente',  //heredero.cantidad, en caso sea particion
+        };
         const apiDataHeredero = await API.graphql({ query: createHeredero, variables: { input: datosHeredero } });  
 
         //Crear Titulos a Herederos si hay Partición
@@ -596,6 +627,31 @@ export default function Operaciones() {
           fechaCompra: fecha,
           estado:'Activo', };
          const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
+
+          
+
+        }
+        else 
+        {
+          //Sin particion
+            const titulosHerencia = titulos.map(function(e) {
+              return {          
+                accionistaID: heredero.herederoId ,
+                titulo : e.titulo ,
+                acciones: e.acciones ,
+                fechaCompra: fecha ,
+                estado: 'Herencia' ,
+                idCedenteHereda: transferencia.idCedente ,
+                nombreCedenteHereda: transferencia.cedente
+              } ;
+            })
+            //console.log('GENERAR TITULOS HERENCIA', titulosHerencia)
+            Promise.all(
+              titulosHerencia.map(input =>  {  
+                API.graphql({ query: createTitulo, variables: { input: input } })}
+                )
+            );
+            //console.log('GENERAR TITULOS HERENCIA SIGUE')
         }
 
         //Actualizar Total de Acciones de Herederos e indicar que es Heredero (true)
@@ -619,6 +675,8 @@ export default function Operaciones() {
 
         const apiDataAccionistaHeredero = await API.graphql({ query: updateAccionista, variables: { input: {id: heredero.herederoId, esHeredero: true, cantidadAcciones: totalAccionesHeredero } } });
       }//fin loop herederos
+
+
 
       //crear titulo a cedente si tiene saldo
       //preguntar si herederos cantidad > 0, entonces:
@@ -674,6 +732,7 @@ export default function Operaciones() {
         }//fin loop titulos por operacion
       }//fin if con particion
 
+
       //Actualiza saldo cedente, Inactivar Cedente (solo si su saldo es cero) y Actualizar dato "Herederos" (true)
       let filterCedente = {
         accionistaID: {
@@ -701,7 +760,7 @@ export default function Operaciones() {
       }
 
       //actualizar estado y fechaAprobacion de operacion aprobada
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
 
 
     }
@@ -717,7 +776,7 @@ export default function Operaciones() {
       // Cambiar a Desmaterializados en Libro de Accionistas
       const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, tipoAcciones: 'D' } } });
       //actualizar estado y fechaAprobacion de operacion aprobada
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
 
     }
     else if(transferencia.operacion == "Bloqueo"){
@@ -728,7 +787,7 @@ export default function Operaciones() {
       // Cambiar a Bloqueado en Libro de Accionistas
       const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, estado: 'Bloqueado' } } });
       //actualizar estado y fechaAprobacion de operacion aprobada
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
     }
     else if(transferencia.operacion == "Desbloqueo"){
       //obtener fecha actual
@@ -742,7 +801,7 @@ export default function Operaciones() {
       // Cambiar a Activo en Libro de Accionistas
       const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, estado: 'Activo' } } });
       //actualizar estado y fechaAprobacion de operacion aprobada
-      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha } } });
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
 
     }
 
@@ -1258,7 +1317,7 @@ export default function Operaciones() {
         </DialogContent>
         <DialogActions style={{backgroundColor:'#f9f9f9', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>             
           <div style={{fontWeight:'normal', fontSize:10, color:'grey'}}>Solicitante: {transferencia.usuarioIngreso}</div>
-          
+          {transferencia.usuarioAprobador && <div style={{fontWeight:'normal', fontSize:10, color:'grey'}}>Aprobador: {transferencia.usuarioAprobador}    Fecha: {transferencia.fechaAprobacion} </div>}
           {!anular &&  estado == 'Pendiente' &&
           <FormControlLabel control={<Switch size="small" checked={rechazo} onChange={handleChangeRechazo}/>} label="Rechazar" />
           }

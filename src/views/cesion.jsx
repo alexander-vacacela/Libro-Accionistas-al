@@ -5,13 +5,15 @@ import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyle
 
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { API, Storage, graphqlOperation } from 'aws-amplify';
+import { API, Storage, graphqlOperation, Auth } from 'aws-amplify';
 import { listAccionistas, listTitulos } from './../graphql/queries';
 import {createOperaciones, createTituloPorOperacion, updateTitulo} from './../graphql/mutations';
 
 import SaveIcon from '@material-ui/icons/Save';
 import CheckIcon from '@material-ui/icons/Check';
 import MuiAlert from '@material-ui/lab/Alert';
+import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 import { uuid } from 'uuidv4';
 
@@ -56,15 +58,18 @@ const today = new Date();
 const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
 
 
+
 export default function Cesion() {
 
   const classes = useStyles();
+
+  const [userName, setUserName] = useState("");
  
   const [formData, setFormData] = useState({
     fecha: fecha, operacion: 'Cesión', 
     idCedente: '', cedente: '', idCesionario:'', cesionario: '', 
     titulo: '' , acciones: 0, 
-    estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '',
+    estado: 'Pendiente', usuarioIngreso: '', usuarioAprobador: '',
     cs: '', cg: '', ci: '', es: '', cp: ''});
 
   const [valCedente,setValCedente]=useState({})
@@ -112,7 +117,7 @@ export default function Cesion() {
 
         const operacion = { ...formData }
 
-        setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
+        setFormData({ fecha: fecha, operacion: 'Cesión', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: userName, usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
 
@@ -152,6 +157,11 @@ export default function Cesion() {
 
   useEffect(() => {
     fetchAccionistas();
+
+    let user = Auth.user;     
+    setUserName(user.username);
+    //console.log('USER',user.username);
+
   }, [])
 
   async function fetchAccionistas() {
@@ -195,7 +205,7 @@ const handleClickCedente = (option, value) => {
 
     setValCedente(value)
 
-    setFormData({ ...formData, 'idCedente': value.id, 'cedente': value.nombre})
+    setFormData({ ...formData, 'idCedente': value.id, 'cedente': value.nombre, 'usuarioIngreso' : userName})
     fetchTitulos(value.id);
 
     setChecked([])
@@ -366,6 +376,10 @@ console.log("titulos a transferir antes", titulosSelectos)
 
 };
 
+async function eliminarDocumento(doc) {
+  setFormData({ ...formData, doc: ''})
+}
+
   return (
     <main className={classes.content}>
     <div className={classes.appBarSpacer} />
@@ -443,6 +457,7 @@ console.log("titulos a transferir antes", titulosSelectos)
           </BlaclTextTypography>
           <Autocomplete
                   value={valCedente}
+                  size='small'
                   id="combo-box-cedente"
                   options={accionistas}
                   getOptionLabel={(option) => option.nombre}
@@ -452,6 +467,7 @@ console.log("titulos a transferir antes", titulosSelectos)
                 />
                 <Autocomplete
                   value={valCesionario}
+                  size='small'
                   id="combo-box-cecionario"
                   options={accionistas}
                   getOptionLabel={(option) => option.nombre}
@@ -530,30 +546,30 @@ console.log("titulos a transferir antes", titulosSelectos)
             Documentos requeridos
           </BlaclTextTypography>
 
-          <label htmlFor="upload-photo1">
-            <input style={{ display: 'none' }} id="upload-photo1" name="upload-photo1" type="file" onChange={onChangeCS} />
-            <Button component="span" color="primary" size='small' style={{marginTop:20}}>Carta de Cesión</Button>
-            {formData.cs.length > 0 && <IconButton ><CheckIcon /></IconButton>}
+          <label htmlFor="upload-photo1" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
+            <input style={{ display: 'none' }} id="upload-photo1" name="upload-photo1" type="file" onChange={onChangeCS} />            
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Cesión</Button>
+            {formData.cs.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'cs': ''})} ><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
-          <label htmlFor="upload-photo2">
-            <input style={{ display: 'none' }} id="upload-photo2" name="upload-photo2" type="file" onChange={onChangeCG} />
-            <Button component="span" color="primary" size='small' >Carta de Gerente</Button>
-            {formData.cg.length > 0 && <IconButton ><CheckIcon /></IconButton>}
+          <label htmlFor="upload-photo2" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
+            <input style={{ display: 'none' }} id="upload-photo2" name="upload-photo2" type="file" onChange={onChangeCG} />            
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Gerente</Button>
+            {formData.cg.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'cg': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
-          <label htmlFor="upload-photo3">
+          <label htmlFor="upload-photo3" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
             <input style={{ display: 'none' }} id="upload-photo3" name="upload-photo3" type="file" onChange={onChangeCI} />
-            <Button component="span" color="primary" size='small' >Carta de Instrucciones</Button>
-            {formData.ci.length > 0 && <IconButton ><CheckIcon /></IconButton>}
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Instrucciones</Button>
+            {formData.ci.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'ci': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
-          <label htmlFor="upload-photo4">
+          <label htmlFor="upload-photo4" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
             <input style={{ display: 'none' }} id="upload-photo4" name="upload-photo4" type="file" onChange={onChangeES} />
-            <Button component="span" color="primary" size='small' >Escritura</Button>
-            {formData.es.length > 0 && <IconButton ><CheckIcon /></IconButton>}
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Escritura</Button>
+            {formData.es.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'es': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
-          <label htmlFor="upload-photo5">
+          <label htmlFor="upload-photo5" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
             <input style={{ display: 'none' }} id="upload-photo5" name="upload-photo5" type="file" onChange={onChangeCP} />
-            <Button component="span" color="primary" size='small' >Carta Poder</Button>
-            {formData.cp.length > 0 && <IconButton ><CheckIcon /></IconButton>}
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Poder</Button>
+            {formData.cp.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'cp': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
         </Grid>
         <Grid item xs={12} style={{paddingTop:20}} >

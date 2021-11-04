@@ -5,6 +5,7 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import PeopleIcon from '@material-ui/icons/People';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import { reportListItems, secondaryListItems } from './listitems';
 import clsx from 'clsx';
@@ -111,6 +112,16 @@ export default function Sidebar(props){
                 <List>{secondaryListItems}</List>
                 <Divider />
                 <List>{reportListItems}</List>
+                <Divider />
+                <ListItem 
+                  button
+                  onClick={()=>history.push('/parametros')} >
+                  <ListItemIcon>
+                    <SettingsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Configuración" />
+                </ListItem>   
+
             </Drawer>            
         </div>
     )

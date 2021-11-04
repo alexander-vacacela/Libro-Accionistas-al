@@ -117,6 +117,7 @@ type Accionista @model {
   docIdentidadConyugue : String
   herederos: Boolean
   esHeredero: Boolean
+  decevale: String
   titulos : [Titulo] @connection(keyName: "byAccionista", fields: ["id"])
 }
 
@@ -127,7 +128,8 @@ type Titulo @model @key(name: "byAccionista", fields: ["accionistaID"]) {
   acciones: Int!
   fechaCompra: String
   estado: String
-
+  idCedenteHereda: ID
+  nombreCedenteHereda: String
 }
 
 type Heredero @model {
@@ -137,6 +139,7 @@ type Heredero @model {
   cantidad: Int
   idCedente: String!
   nombreCedente: String!
+  estado: String
 }
 
 type Operaciones @model {  
@@ -187,4 +190,10 @@ type HerederoPorOperacion @model {
 type NumeroSecuencial @model {
   id: ID!
   numerotitulo: Int
+}
+
+type Parametro @model {
+  id: ID!
+  moneda: String
+  cantidadEmitida: Int
 }

@@ -17,6 +17,7 @@ import Bloqueo from './views/bloqueo';
 import Desbloqueo from './views/desbloqueo';
 import Testamento from './views/testamento';
 import Donacion from './views/donacion';
+import Parametros from './views/parametros';
 
 function App() {
 
@@ -41,6 +42,9 @@ function App() {
             <Route path="/pdf">
                 <Pdf />
               </Route>  
+              <Route path="/parametros">
+                <Parametros />
+              </Route>                                 
               <Route path="/testamento">
                 <Testamento />
               </Route>                   

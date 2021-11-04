@@ -414,6 +414,7 @@ export const onCreateAccionista = /* GraphQL */ `
       docIdentidadConyugue
       herederos
       esHeredero
+      decevale
       titulos {
         items {
           id
@@ -422,6 +423,8 @@ export const onCreateAccionista = /* GraphQL */ `
           acciones
           fechaCompra
           estado
+          idCedenteHereda
+          nombreCedenteHereda
           createdAt
           updatedAt
         }
@@ -482,6 +485,7 @@ export const onUpdateAccionista = /* GraphQL */ `
       docIdentidadConyugue
       herederos
       esHeredero
+      decevale
       titulos {
         items {
           id
@@ -490,6 +494,8 @@ export const onUpdateAccionista = /* GraphQL */ `
           acciones
           fechaCompra
           estado
+          idCedenteHereda
+          nombreCedenteHereda
           createdAt
           updatedAt
         }
@@ -550,6 +556,7 @@ export const onDeleteAccionista = /* GraphQL */ `
       docIdentidadConyugue
       herederos
       esHeredero
+      decevale
       titulos {
         items {
           id
@@ -558,6 +565,8 @@ export const onDeleteAccionista = /* GraphQL */ `
           acciones
           fechaCompra
           estado
+          idCedenteHereda
+          nombreCedenteHereda
           createdAt
           updatedAt
         }
@@ -577,6 +586,8 @@ export const onCreateTitulo = /* GraphQL */ `
       acciones
       fechaCompra
       estado
+      idCedenteHereda
+      nombreCedenteHereda
       createdAt
       updatedAt
     }
@@ -591,6 +602,8 @@ export const onUpdateTitulo = /* GraphQL */ `
       acciones
       fechaCompra
       estado
+      idCedenteHereda
+      nombreCedenteHereda
       createdAt
       updatedAt
     }
@@ -605,6 +618,8 @@ export const onDeleteTitulo = /* GraphQL */ `
       acciones
       fechaCompra
       estado
+      idCedenteHereda
+      nombreCedenteHereda
       createdAt
       updatedAt
     }
@@ -619,6 +634,7 @@ export const onCreateHeredero = /* GraphQL */ `
       cantidad
       idCedente
       nombreCedente
+      estado
       createdAt
       updatedAt
     }
@@ -633,6 +649,7 @@ export const onUpdateHeredero = /* GraphQL */ `
       cantidad
       idCedente
       nombreCedente
+      estado
       createdAt
       updatedAt
     }
@@ -647,6 +664,7 @@ export const onDeleteHeredero = /* GraphQL */ `
       cantidad
       idCedente
       nombreCedente
+      estado
       createdAt
       updatedAt
     }
@@ -893,6 +911,39 @@ export const onDeleteNumeroSecuencial = /* GraphQL */ `
     onDeleteNumeroSecuencial {
       id
       numerotitulo
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateParametro = /* GraphQL */ `
+  subscription OnCreateParametro {
+    onCreateParametro {
+      id
+      moneda
+      cantidadEmitida
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateParametro = /* GraphQL */ `
+  subscription OnUpdateParametro {
+    onUpdateParametro {
+      id
+      moneda
+      cantidadEmitida
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteParametro = /* GraphQL */ `
+  subscription OnDeleteParametro {
+    onDeleteParametro {
+      id
+      moneda
+      cantidadEmitida
       createdAt
       updatedAt
     }

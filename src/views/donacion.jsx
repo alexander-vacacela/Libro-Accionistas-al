@@ -5,7 +5,7 @@ import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyle
 
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { API, Storage, graphqlOperation } from 'aws-amplify';
+import { API, Storage, graphqlOperation, Auth } from 'aws-amplify';
 import { listAccionistas, listTitulos } from './../graphql/queries';
 import {createOperaciones, createTituloPorOperacion, updateTitulo} from './../graphql/mutations';
 
@@ -58,13 +58,15 @@ const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getF
 
 export default function Donacion() {
 
+  const [userName, setUserName] = useState("");
+
   const classes = useStyles();
  
   const [formData, setFormData] = useState({
     fecha: fecha, operacion: 'Donación', 
     idCedente: '', cedente: '', idCesionario:'', cesionario: '', 
     titulo: '' , acciones: 0, 
-    estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '',
+    estado: 'Pendiente', usuarioIngreso: '', usuarioAprobador: '',
     cs: '', cg: '', ci: '', es: '', cp: ''});
 
   const [valCedente,setValCedente]=useState({})
@@ -112,7 +114,7 @@ export default function Donacion() {
 
         const operacion = { ...formData }
 
-        setFormData({ fecha: fecha, operacion: 'Donación', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
+        setFormData({ fecha: fecha, operacion: 'Donación', idCedente: '', cedente: '', idCesionario: '', cesionario: 'JY',titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: '', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
 
@@ -152,6 +154,8 @@ export default function Donacion() {
 
   useEffect(() => {
     fetchAccionistas();
+    let user = Auth.user;     
+    setUserName(user.username);    
   }, [])
 
   async function fetchAccionistas() {
@@ -195,7 +199,7 @@ const handleClickCedente = (option, value) => {
 
     setValCedente(value)
 
-    setFormData({ ...formData, 'idCedente': value.id, 'cedente': value.nombre})
+    setFormData({ ...formData, 'idCedente': value.id, 'cedente': value.nombre, 'usuarioIngreso' : userName})
     fetchTitulos(value.id);
 
     setChecked([])
@@ -443,6 +447,7 @@ console.log("titulos a transferir antes", titulosSelectos)
           </BlaclTextTypography>
           <Autocomplete
                   value={valCedente}
+                  size='small'
                   id="combo-box-cedente"
                   options={accionistas}
                   getOptionLabel={(option) => option.nombre}
@@ -452,6 +457,7 @@ console.log("titulos a transferir antes", titulosSelectos)
                 />
                 <Autocomplete
                   value={valCesionario}
+                  size='small'
                   id="combo-box-cecionario"
                   options={accionistas}
                   getOptionLabel={(option) => option.nombre}

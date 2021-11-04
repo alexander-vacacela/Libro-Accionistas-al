@@ -3,7 +3,7 @@ import { makeStyles, Paper, Avatar , Grid, Typography,TextField,Button,withStyle
   List,IconButton,Snackbar, CircularProgress, LinearProgress } from '@material-ui/core';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { API, Storage, graphqlOperation } from 'aws-amplify';
+import { API, Storage, graphqlOperation, Auth } from 'aws-amplify';
 import { listAccionistas, listTitulos } from './../graphql/queries';
 import { createOperaciones, createTituloPorOperacion, updateTitulo} from './../graphql/mutations';
 
@@ -61,14 +61,15 @@ const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getF
 
 export default function Canje() {
 
+  const [userName, setUserName] = useState("");
+
   const classes = useStyles();
 
-  
   const [formData, setFormData] = useState({
     fecha: fecha, operacion: 'Canje', 
     idCedente: '', cedente: '', idCesionario:'', cesionario: '', 
     titulo: '' , acciones: 0, 
-    estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '',
+    estado: 'Pendiente', usuarioIngreso: '', usuarioAprobador: '',
     cs: '', cg: '', ci: '', es: '', cp: ''});
 
   const [valCedente,setValCedente]=useState({})    
@@ -96,7 +97,7 @@ export default function Canje() {
 
         const operacion = { ...formData }
 
-        setFormData({ fecha: fecha, operacion: 'Canje', idCedente: '', cedente: '', idCesionario: '', cesionario: '', titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: 'Jorge', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
+        setFormData({ fecha: fecha, operacion: 'Canje', idCedente: '', cedente: '', idCesionario: '', cesionario: '', titulo: '' , acciones: '',  estado: 'Pendiente', usuarioIngreso: '', usuarioAprobador: '', cs: '', cg: '', ci: '', es: '', cp: ''})
 
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
@@ -128,6 +129,8 @@ export default function Canje() {
 
   useEffect(() => {
     fetchAccionistas();
+    let user = Auth.user;     
+    setUserName(user.username);    
   }, [])
 
   async function fetchAccionistas() {
@@ -173,7 +176,7 @@ export default function Canje() {
         return titulos.titulo;
       }).join(" | ");
       
-      setFormData({ ...formData, 'titulo': tituloString, 'acciones': sum, 'idCedente': cedenteId, 'cedente': cedenteNombre})
+      setFormData({ ...formData, 'titulo': tituloString, 'acciones': sum, 'idCedente': cedenteId, 'cedente': cedenteNombre, 'usuarioIngreso' : userName})
 
   }
 

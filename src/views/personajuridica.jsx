@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
     email: '',
     estadoCivil: '',
     identificacion: '',
+    decevale: '',
     nacionalidad: '1',
     numero: '',
     observaciónTelefono: '',
@@ -129,6 +130,7 @@ export default function PersonaJuridica() {
         const accionista = { 
             tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacion).label ,
             identificacion: data.identificacion,
+            decevale: data.decevale,
             nombre: data.razonSocial, 
             direccionPais: pais.find(o => o.value === data.paisDireccion).label,
             direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion).label,
@@ -140,7 +142,7 @@ export default function PersonaJuridica() {
             cuentaBancaria: data.cuenta,
             paisNacionalidad: nacionalidad.find(o => o.value === data.nacionalidad).label, 
             cantidadAcciones: 0,
-            tipoAcciones: '',
+            tipoAcciones: 'D',
             estado: 'Activo',
             tipoPersona: 'PJ',
 
@@ -462,7 +464,7 @@ export default function PersonaJuridica() {
                                         name={"tipoIdentificacion"}
                                         //label={"Y Ahora"}
                                         render={({ field: { onChange, value } }) => (
-                                            <Select onChange={onChange} value={value}  variant="outlined" style={{height:37, minWidth:150}}>
+                                            <Select onChange={onChange} value={value}  variant="outlined" style={{height:37, minWidth:100}}>
                                             {generateSelectTipoIdentificacion()}
                                             </Select>
                                         )}/>
@@ -475,10 +477,18 @@ export default function PersonaJuridica() {
                                         required: 'Requerido'
                                       }}
                                     render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                        <TextField  size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null} />
+                                        <TextField  size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null} style={{height:37, width:150}}/>
                                     )}
                                      />
-
+                                        &nbsp;&nbsp;
+                                    <Controller
+                                    id={"decevale"}
+                                    name={"decevale"}
+                                    control={control}
+                                    render={({ field: { onChange, value }, fieldState: { error }, }) => (
+                                        <TextField  size='small' onChange={onChange} value={value} label={"Decevale"} variant='outlined' error={!!error} helperText={error ? error.message : null} style={{height:37, width:100}} />
+                                    )}
+                                     />    
                                 </div>
                                 <div>
                                     <Typography variant='subtitle1' style={{color:"#000000"}}>Nombre</Typography>                                
