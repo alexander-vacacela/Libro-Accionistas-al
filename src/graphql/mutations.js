@@ -518,9 +518,15 @@ export const createAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
+          createdAt
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -588,9 +594,15 @@ export const updateAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
+          createdAt
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -658,6 +670,8 @@ export const deleteAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -682,6 +696,10 @@ export const createTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -699,6 +717,10 @@ export const updateTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -716,6 +738,10 @@ export const deleteTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -799,6 +825,8 @@ export const createOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -846,6 +874,8 @@ export const updateOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -893,6 +923,8 @@ export const deleteOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -926,6 +958,8 @@ export const createTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -943,6 +977,8 @@ export const updateTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -960,6 +996,8 @@ export const deleteTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }

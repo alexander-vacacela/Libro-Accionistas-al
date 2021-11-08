@@ -425,6 +425,8 @@ export const onCreateAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -496,6 +498,8 @@ export const onUpdateAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -567,6 +571,8 @@ export const onDeleteAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -588,6 +594,8 @@ export const onCreateTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -604,6 +612,8 @@ export const onUpdateTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -620,6 +630,8 @@ export const onDeleteTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -693,6 +705,8 @@ export const onCreateOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -737,6 +751,8 @@ export const onUpdateOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -781,6 +797,8 @@ export const onDeleteOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
           createdAt
           updatedAt
         }
@@ -811,6 +829,8 @@ export const onCreateTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -825,6 +845,8 @@ export const onUpdateTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -839,6 +861,8 @@ export const onDeleteTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }

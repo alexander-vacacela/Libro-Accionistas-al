@@ -235,7 +235,8 @@ function QuickSearchToolbar(props) {
         field: "Info",
         width: 100,
         renderCell: (cellValues) => {
-          return <IconButton  disabled={cellValues.row.cantidadAcciones > 0 ? false : true} onClick={() =>  
+          //return <IconButton  disabled={cellValues.row.cantidadAcciones > 0 ? false : true} onClick={() =>  
+          return <IconButton  onClick={() =>  
             //console.log('datos de accionista',cellValues.row )
             {
             fetchTitulos(cellValues.row);
@@ -882,6 +883,12 @@ function QuickSearchToolbar(props) {
                     <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>
                       Cantidad
                     </Typography>
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>
+                      Desde
+                    </Typography>
+                    <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>
+                      Hasta
+                    </Typography>                                        
                     <Typography variant='caption' style={{flex:2, fontWeight:'bold'}}>
                       Estado
                     </Typography>   
@@ -894,6 +901,8 @@ function QuickSearchToolbar(props) {
                       <ListItemText style={{flex:2}}>{item.fechaCompra}</ListItemText>                                
                       <ListItemText style={{flex:1}}>{item.titulo}</ListItemText>
                       <ListItemText style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>{item.acciones}</ListItemText>
+                      <ListItemText style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>{item.desde}</ListItemText>
+                      <ListItemText style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'30px'}}>{item.hasta}</ListItemText>
                       <ListItemText style={{flex:2}}>{item.estado}</ListItemText>
                     </div>
                   </ListItem>))}

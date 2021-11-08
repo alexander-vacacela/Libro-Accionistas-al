@@ -386,9 +386,15 @@ export const getAccionista = /* GraphQL */ `
           estado
           idCedenteHereda
           nombreCedenteHereda
+          desde
+          hasta
+          createdAt
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -451,6 +457,8 @@ export const listAccionistas = /* GraphQL */ `
         titulos {
           nextToken
         }
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -467,6 +475,10 @@ export const getTitulo = /* GraphQL */ `
       estado
       idCedenteHereda
       nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -486,6 +498,10 @@ export const listTitulos = /* GraphQL */ `
         estado
         idCedenteHereda
         nombreCedenteHereda
+        desde
+        hasta
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -551,6 +567,10 @@ export const getOperaciones = /* GraphQL */ `
           titulo
           acciones
           accionesTransferidas
+          desde
+          hasta
+          createdAt
+          updatedAt
         }
         nextToken
       }
@@ -565,6 +585,8 @@ export const getOperaciones = /* GraphQL */ `
       fechaAprobacion
       motivoRechazo
       observacion
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -618,6 +640,8 @@ export const getTituloPorOperacion = /* GraphQL */ `
       titulo
       acciones
       accionesTransferidas
+      desde
+      hasta
       createdAt
       updatedAt
     }
@@ -641,6 +665,8 @@ export const listTituloPorOperacions = /* GraphQL */ `
         titulo
         acciones
         accionesTransferidas
+        desde
+        hasta
         createdAt
         updatedAt
       }

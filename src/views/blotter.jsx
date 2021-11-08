@@ -486,11 +486,13 @@ export default function Operaciones() {
         if(titulo.acciones==titulo.accionesTransferidas){
           console.log('Son iguales')
           tituloCesionario = {
-            accionistaID:transferencia.idCesionario,
-            titulo : titulo.titulo,
-            acciones : titulo.acciones,
+            accionistaID: transferencia.idCesionario,
+            titulo: titulo.titulo,
+            acciones: titulo.acciones,
             fechaCompra: transferencia.fecha,
-            estado:'Activo',}
+            estado: 'Activo',
+            desde: titulo.desde,
+            hasta: titulo.hasta,};
 
             console.log('input',tituloCesionario)
             const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloCesionario } });  
@@ -509,7 +511,10 @@ export default function Operaciones() {
             titulo : num,
             acciones : titulo.accionesTransferidas,
             fechaCompra: transferencia.fecha,
-            estado:'Activo', };
+            estado:'Activo', 
+            desde: titulo.desde,
+            hasta: (parseInt(titulo.desde) + parseInt(titulo.accionesTransferidas) - 1),};        
+
          console.log('input',tituloCesionario)
          const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloCesionario } });  
  
@@ -521,13 +526,15 @@ export default function Operaciones() {
           tituloCedente = {
             accionistaID:transferencia.idCedente,
             titulo : numCed,
-            acciones : titulo.acciones - titulo.accionesTransferidas,
+            acciones : parseInt(titulo.acciones) - parseInt(titulo.accionesTransferidas),
             fechaCompra: transferencia.fecha,
-            estado:'Activo',}
+            estado:'Activo',
+            desde: parseInt(titulo.desde) + parseInt(titulo.accionesTransferidas),
+            hasta: titulo.hasta };                 
           const apiDataTituloCedente = await API.graphql({ query: createTitulo, variables: { input: tituloCedente } });  
           
          };
-        }
+      } // Fin For Titulos
 
 
       //actualizar saldo de acciones para Cedente y Cesionario
@@ -599,7 +606,11 @@ export default function Operaciones() {
         titulosHerederoFromAPIAnt.map(input => API.graphql({ query: updateTitulo, variables: { input: {id: input.id, estado: 'Inactivo'} } }) )           
       );
 
-
+      const titulosAsignados=[];
+      let saldoTitulo=0;
+      let tituloFraccionado='';
+      let desdeFraccion = 0;
+      let herenciaAcumulada = 0;
       //Asociar Herederos al Cedente
       for (const heredero of herederos) {   
         console.log('entra Posesión herederos')     
@@ -613,23 +624,86 @@ export default function Operaciones() {
         };
         const apiDataHeredero = await API.graphql({ query: createHeredero, variables: { input: datosHeredero } });  
 
-        //Crear Titulos a Herederos si hay Partición
+        //Crear Titulos a Herederos si hay Partición        
         if(heredero.cantidad > 0){
-        //leer secuencial de titulos
-        const secuen = await apiDataSecuencial();
-        //incrementar secuencial de titulos
-        const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
-        const secuen2 = await apiDataUpdate(num);
-        const tituloHeredero = {
-          accionistaID:heredero.herederoId,
-          titulo : num,
-          acciones : heredero.cantidad,
-          fechaCompra: fecha,
-          estado:'Activo', };
-         const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
+          let cantidadHerencia = heredero.cantidad;
 
-          
+          for (const titulo of titulos){
+            const found = titulosAsignados.findIndex( element => element == titulo.titulo)
+            console.log('FOUND', found)     
+            if(found == -1){
 
+              console.log('Validar titulos Posesión herederos', titulo)     
+              console.log('Cantidad Herencia', cantidadHerencia)     
+              console.log('Saldo Titulo', saldoTitulo)     
+
+              if(cantidadHerencia >= titulo.acciones - saldoTitulo && saldoTitulo == 0) //1er saldoTitulo cambiar por HerenciaAcumulada
+              {
+                //Asignar el titulo con el mismo númmero
+                const tituloHeredero = {
+                  accionistaID:heredero.herederoId,
+                  titulo : titulo.titulo,
+                  acciones : titulo.acciones,
+                  fechaCompra: fecha,
+                  estado:'Activo', 
+                  desde: titulo.desde,
+                  hasta: titulo.hasta,};
+                const apiDataTituloHeredero = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
+
+                console.log("asignar mismo titulo", titulo);
+                cantidadHerencia = cantidadHerencia - titulo.acciones;
+                titulosAsignados.push(titulo.titulo)
+              }
+              else {
+                //leer secuencial de titulos
+                const secuen = await apiDataSecuencial();
+                //incrementar secuencial de titulos
+                const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
+                const secuen2 = await apiDataUpdate(num);            
+                
+                //Asignar el titulo parcialmente con el nuevo númmero
+                //const totalTransferir = saldoTitulo == 0 ? cantidadHerencia : saldoTitulo ;//Problemas
+                //const totalTransferir = saldoTitulo > 0 && saldoTitulo < cantidadHerencia ? saldoTitulo : cantidadHerencia ;//Problemas
+                const totalTransferir = saldoTitulo > cantidadHerencia ? cantidadHerencia : saldoTitulo == 0 ? cantidadHerencia : saldoTitulo   ;//Problemas
+                const tituloHeredero = {
+                  accionistaID:heredero.herederoId,
+                  titulo : num,
+                  acciones : totalTransferir, //Se va con los 104 , debe ser 14 (saldo titulo) en caso QH > ST
+                  fechaCompra: fecha,
+                  estado:'Activo', 
+                  desde: tituloFraccionado == '' ? titulo.desde : desdeFraccion, //+  titulo.cantidad - saldoTitulo 
+                  hasta: tituloFraccionado == '' ? titulo.desde + totalTransferir - 1 : desdeFraccion + totalTransferir - 1,};
+                const apiDataTituloHeredero = await API.graphql({ query: createTitulo, variables: { input: tituloHeredero } });  
+                
+
+                herenciaAcumulada = herenciaAcumulada + totalTransferir; //Deberia ser + saldoTitulo
+                console.log("asignar titulo nuevo numero", titulo);
+                
+                saldoTitulo = titulo.acciones - herenciaAcumulada;                
+                desdeFraccion = tituloFraccionado == '' ? titulo.desde + totalTransferir : desdeFraccion + totalTransferir //PROBLEMA ESTA DUPLICANDO
+                tituloFraccionado = titulo.titulo;
+                //desdeFraccion = desdeFraccion + cantidadHerencia //PROBLEMA ESTA DUPLICANDO
+
+                console.log("herenciaAcumulada", herenciaAcumulada);
+                console.log("saldoTitulo", saldoTitulo);
+                console.log("desdeFraccion", desdeFraccion);
+
+                if(saldoTitulo==0)
+                {
+                  titulosAsignados.push(titulo.titulo)
+                  tituloFraccionado = '';
+                  desdeFraccion = 0;
+             
+                  cantidadHerencia = cantidadHerencia - totalTransferir; // ???
+                  herenciaAcumulada = 0;
+
+                  continue;
+                }
+                break;
+              }                
+            }
+          }//Fin Loop Titulos
+      
         }
         else 
         {
@@ -678,6 +752,54 @@ export default function Operaciones() {
 
 
 
+
+      //titulosAsignados
+      //herenciaAcumulada = 0; //del titulo
+      //existe aun un titulo fraccionado ?
+        //crear un nuevo titulo
+      if(tituloFraccionado!='')
+      {
+        //leer secuencial de titulos
+        const secuenSaldo = await apiDataSecuencial();
+        //incrementar secuencial de titulos
+        const numeroTitulo = parseInt(secuenSaldo.data.getNumeroSecuencial.numerotitulo)  + 1
+        const secuen3 = await apiDataUpdate(numeroTitulo);            
+
+        const tituloSaldoCedente = {
+          accionistaID:transferencia.idCedente,
+          titulo : numeroTitulo,
+          acciones : saldoTitulo, //Se va con los 104 , debe ser 14 (saldo titulo) en caso QH > ST
+          fechaCompra: fecha,
+          estado:'Activo', 
+          desde: desdeFraccion, //+  titulo.cantidad - saldoTitulo 
+          hasta: desdeFraccion + saldoTitulo - 1,};
+        const apiDataTituloSaldoCedente = await API.graphql({ query: createTitulo, variables: { input: tituloSaldoCedente } });  
+        console.log('Saldo titulo para cedente',tituloSaldoCedente,tituloFraccionado)  
+      }
+
+      for(const titulo of titulos)
+      {
+        const found2 = titulosAsignados.findIndex( element => element == titulo.titulo)
+        if(found2 > -1 || tituloFraccionado == titulo.titulo)//titulo asignado o fraccionado
+        {
+          console.log('llegoo a crear titulo para cedente',titulo)
+
+          //Dejar inactivo el titulo asignado y/o partido
+          const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Inactivo'} } });
+        }
+        else
+        {
+        console.log('problema en actualizar titulo',titulo.tituloId)
+        //Desbloquear titulos restantes
+        const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
+        }
+  
+      }//fin loop titulos por operacion
+
+
+
+
+      //Esto no se puede hacer, ya que falta los desde - hasta
       //crear titulo a cedente si tiene saldo
       //preguntar si herederos cantidad > 0, entonces:
       const totalAccionesDelCedente_Aux = herederos.reduce(function(prev, current) {
@@ -685,7 +807,7 @@ export default function Operaciones() {
       }, 0);
 
       console.log('cuanto es el total', totalAccionesDelCedente_Aux)
-      
+/*      
       if(totalAccionesDelCedente_Aux > 0){
         let totalAccionesParaHerencia=0;
         let limiteTitulos = false;
@@ -720,7 +842,7 @@ export default function Operaciones() {
 
 
             }else{
-              console.log('problema en actulizar titulso',titulo.tituloId)
+              console.log('problema en actulizar titulo',titulo.tituloId)
               //Desbloquear titulos restantes
               const apiData = await API.graphql({ query: updateTitulo, variables: { input: {id: titulo.tituloId, estado: 'Activo'} } });
             }
@@ -731,7 +853,7 @@ export default function Operaciones() {
         
         }//fin loop titulos por operacion
       }//fin if con particion
-
+*/
 
       //Actualiza saldo cedente, Inactivar Cedente (solo si su saldo es cero) y Actualizar dato "Herederos" (true)
       let filterCedente = {
@@ -851,8 +973,22 @@ export default function Operaciones() {
       //await Promise.all(titulosFromAPI.map(async titulos => {
       //return titulos;
       //}))
-      setTitulos(titulosFromAPI);
+
+
+      //setTitulos(titulosFromAPI);
       
+      setTitulos(titulosFromAPI.sort(function (a, b) {
+        if (a.acciones > b.acciones) {
+          return 1;
+        }
+        if (a.acciones < b.acciones) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      }));
+      
+
     }
 
 

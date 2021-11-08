@@ -113,7 +113,7 @@ export default function PosesionEfectiva() {
         const operID = await API.graphql(graphqlOperation(createOperaciones, { input: operacion }))
 
         const transferir = titulos.map(function(e) {
-          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones, tituloId: e.id} ;
+          return {operacionID: operID.data.createOperaciones.id, titulo : e.titulo, acciones: e.acciones, tituloId: e.id, desde: e.desde, hasta: e.hasta} ;
         })
 
         Promise.all(

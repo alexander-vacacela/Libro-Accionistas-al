@@ -130,6 +130,8 @@ type Titulo @model @key(name: "byAccionista", fields: ["accionistaID"]) {
   estado: String
   idCedenteHereda: ID
   nombreCedenteHereda: String
+  desde: Int
+  hasta: Int
 }
 
 type Heredero @model {
@@ -176,6 +178,8 @@ type TituloPorOperacion @model @key(name: "PorOperacion", fields: ["operacionID"
   titulo : String!
   acciones: Int!
   accionesTransferidas: Int
+  desde: Int
+  hasta: Int
 }
 
 type HerederoPorOperacion @model {

@@ -120,7 +120,7 @@ export default function Donacion() {
 
 
         const transferir = titulosPorOper.map(function(e) {
-          return {operacionID: operID.data.createOperaciones.id, tituloId : e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas} ;
+          return {operacionID: operID.data.createOperaciones.id, tituloId : e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.accionesTransferidas, desde: e.desde, hasta: e.hasta} ;
         })
      
         console.log("grabar acciones", transferir)
@@ -276,7 +276,7 @@ console.log('filtrados',filteredTitulos)
 
 
   const transferir = filteredTitulos.map(function(e) {
-    return {operacionID: e.operacionID, tituloId: e.id, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.acciones } ;
+    return {operacionID: e.operacionID, tituloId: e.id, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.acciones, desde: e.desde , hasta: e.hasta } ;
   })
 
   settitulosPorOper(transferir)
@@ -351,7 +351,7 @@ const handleChangeCantidad = (event, item) => {
 console.log("titulos a transferir antes", titulosSelectos)
 
   const transferir = titulosPorOper.map(function(e) {
-    return {operacionID: e.operacionID, tituloId: e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.titulo == item.titulo ? event.target.value: e.accionesTransferidas} ;
+    return {operacionID: e.operacionID, tituloId: e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.titulo == item.titulo ? event.target.value: e.accionesTransferidas, desde: e.desde, hasta: e.hasta} ;
   })
 
   console.log("titulos a transferir", transferir)
