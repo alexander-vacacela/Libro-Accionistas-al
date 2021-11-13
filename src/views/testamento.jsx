@@ -90,6 +90,8 @@ export default function Testamento() {
 
   const [circular, setCircular] = useState(false);
 
+  const [cesionMayorCantidad, setCesionMayorCantidad] = useState(false);
+
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -342,21 +344,17 @@ async function onChangeCP(e) {
 }
 
 const handleChangeCantidad = (event, item) => {
-/*
-  const herederos = formHerederos.map(function(e) {
 
-    return {numeroHeredero:  e.numeroHeredero, operacionId : e.operacionId, herederoId: e.herederoId, nombre: e.nombre, cantidad: e.numeroHeredero==nroHeredero ? event.target.value : e.cantidad  }
-  })
-*/
-console.log("titulos a transferir antes", titulosSelectos)
+  const cantidad = event.target.value.replace(/[^0-9]/g, '');
+  if (cantidad > item.acciones)  
+    setCesionMayorCantidad(true)
+  else
+    setCesionMayorCantidad(false)
 
   const transferir = titulosPorOper.map(function(e) {
     return {operacionID: e.operacionID, tituloId: e.tituloId, titulo : e.titulo, acciones: e.acciones, accionesTransferidas: e.titulo == item.titulo ? event.target.value: e.accionesTransferidas, desde: e.desde, hasta: e.hasta} ;
   })
 
-  console.log("titulos a transferir", transferir)
-
-  //setTitulosSelectos(transferir)
   settitulosPorOper(transferir)
 
   const sum = transferir.reduce(function(prev, current) {
@@ -511,7 +509,7 @@ console.log("titulos a transferir antes", titulosSelectos)
                                     <ListItemText>{item.acciones}</ListItemText>
                                   </div>
                                   <div style={{flex: 2}}>                                   
-                                    <TextField size='small' type="number" defaultValue={item.acciones} inputProps={{ style: { textAlign: 'right' }}} onChange={(event)=>handleChangeCantidad(event,item)}/>
+                                    <TextField size='small' defaultValue={item.acciones} type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' , style: { textAlign: 'right' }}} onChange={(event)=>handleChangeCantidad(event,item)}/>
                                   </div>
                                 </div>
                             </ListItem>
@@ -574,6 +572,7 @@ console.log("titulos a transferir antes", titulosSelectos)
                     startIcon={<SaveIcon/>}                    
                     size='small'
                     onClick={addOperacion}
+                    disabled={total <= 0 || cesionMayorCantidad}
                 >
                     Solicitar Aprobación
                 </Button>

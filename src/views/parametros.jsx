@@ -32,7 +32,15 @@ export default function Parametros(){
 
     const [cantidadEmitido, setCantidadEmitido] = useState(0);
     const handleCantidadEmitidoChange = (event) => {
-        setCantidadEmitido(event.target.value);
+
+      setCantidadEmitido(event.target.value.replace(/[^0-9]/g, ''));
+    
+      //return null;
+/*
+      event.target.value < 0
+      ? setCantidadEmitido(0)
+      : setCantidadEmitido(event.target.value)
+*/
     };
     const classes = useStyles();
     const [circular, setCircular] = useState(false);
@@ -89,10 +97,10 @@ return(
             <Grid container>
                 <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
                     <TextField
-                        type="number"
+                        //type="number"
                         //required
                         //InputProps={{ inputProps: { min: 0, max: 10 } }}
-                        InputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        //InputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         id="outlined-required"
                         label="Total Emitido"
                         //defaultValue="0"

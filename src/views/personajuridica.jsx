@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { makeStyles, Paper, TextField, Button, Typography, MenuItem, Select, Divider, Grid, IconButton, InputLabel, Snackbar  } from '@material-ui/core';
 import { Controller, useForm } from "react-hook-form";
+import { useLocation } from 'react-router-dom'
 
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import CheckIcon from '@material-ui/icons/Check';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { API, Storage, graphqlOperation } from 'aws-amplify';
-import {createAccionista} from './../graphql/mutations';
+import {createAccionista, updateAccionista} from './../graphql/mutations';
 
 import { uuid } from 'uuidv4';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -86,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
     decevale: '',
     nacionalidad: '1',
     numero: '',
-    observaciónTelefono: '',
     paisBanco: '1',
     paisDireccion: '1',
     primerNombre: '',
@@ -115,6 +115,193 @@ const useStyles = makeStyles((theme) => ({
   };
   
 export default function PersonaJuridica() {
+
+  const tipoIdentificacion = [
+    {
+      label: "RUC",
+      value: "1",
+    },     
+  ];
+
+  const tipoIdentificacionPN = [
+    {
+        label: "Cédula",
+        value: "1",
+      },
+      {
+        label: "RUC",
+        value: "2",
+      },
+      {
+      label: "Pasaporte",
+      value: "3",
+      },  
+  ];
+
+  const nacionalidad = [
+    {
+      label: "Ecuatoriana",
+      value: "1",
+    },
+    {
+      label: "Peruana",
+      value: "2",
+    },
+    {
+        label: "Estadoudinense",
+        value: "3",
+      },        
+  ];
+
+  const pais = [
+    {
+      label: "Ecuador",
+      value: "1",
+    },
+    {
+      label: "Perú",
+      value: "2",
+    },
+    {
+        label: "Estados Unidos",
+        value: "3",
+      },        
+  ];
+
+  const provincia = [
+    {
+      label: "Pichincha",
+      value: "1",
+    },
+    {
+      label: "Guayas",
+      value: "2",
+    },
+    {
+        label: "Chimborazo",
+        value: "3",
+      },        
+  ];
+
+  const ciudad = [
+    {
+      label: "Quito",
+      value: "1",
+    },
+    {
+      label: "Guayaquil",
+      value: "2",
+    },
+    {
+        label: "Riobamba",
+        value: "3",
+      },        
+  ];
+
+  const banco = [
+    {
+      label: "Banco Pichincha",
+      value: "1",
+    },
+    {
+      label: "Banco Guayaquil",
+      value: "2",
+    },
+    {
+        label: "Banco Internacional",
+        value: "3",
+      },        
+      {
+        label: "Banco del Pacífico",
+        value: "4",
+      },
+      {
+        label: "Banco Bolivariano",
+        value: "5",
+      },
+      {
+        label: "Diners Club",
+        value: "6",
+      },
+      {
+        label: "Banco ProCredit",
+        value: "7",
+      },
+      {
+        label: "Banco General Rumiñahui",
+        value: "8",
+      },
+      {
+        label: "Produbanco",
+        value: "9",
+      },   
+      {
+        label: "Banco del Austro",
+        value: "10",
+      },                                      
+  ];
+
+  const tipoCuenta = [
+    {
+      label: "Cta Cte",
+      value: "1",
+    },
+    {
+      label: "Cta Aho",
+      value: "2",
+    },    
+  ];
+
+  const location = useLocation()
+  const { preloadedValue } = location.state ? {preloadedValue : 
+    { 
+      id:  location.state.preloadedValue.id,
+      razonSocial: location.state.preloadedValue.nombre,
+      tipoIdentificacion: tipoIdentificacion.find(o => o.label === location.state.preloadedValue.tipoIdentificacion).value,
+      identificacion : location.state.preloadedValue.identificacion, 
+      decevale: location.state.preloadedValue.decevale,       
+      apellidoMaterno: location.state.preloadedValue.pn_apellidoMaterno,
+      apellidoPaterno: location.state.preloadedValue.pn_apellidoPaterno,
+      banco: banco.find(o => o.label === location.state.preloadedValue.nombreBanco) ? banco.find(o => o.label === location.state.preloadedValue.nombreBanco).value : '1',
+      calle: location.state.preloadedValue.direccionCalle,
+      ciudadDireccion: ciudad.find(o => o.label === location.state.preloadedValue.direccionCiudad) ? ciudad.find(o => o.label === location.state.preloadedValue.direccionCiudad).value : '1',
+      cuenta: location.state.preloadedValue.cuentaBancaria,
+      email: location.state.preloadedValue.email1,
+      nacionalidad: nacionalidad.find(o => o.label === location.state.preloadedValue.paisNacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.paisNacionalidad).value : '1',
+      numero: location.state.preloadedValue.direccionNumero,
+      paisBanco: pais.find(o => o.label === location.state.preloadedValue.paisNacionalidad) ? pais.find(o => o.label === location.state.preloadedValue.paisNacionalidad).value : '1',
+      paisDireccion: pais.find(o => o.label === location.state.preloadedValue.direccionPais) ? pais.find(o => o.label === location.state.preloadedValue.direccionPais).value : '1',
+      pn_primerNombre: location.state.preloadedValue.pn_primerNombre,
+      provinciaDireccion: provincia.find(o => o.label === location.state.preloadedValue.direccionProvincia) ? provincia.find(o => o.label === location.state.preloadedValue.direccionProvincia).value : '1',
+      segundoNombre: location.state.preloadedValue.pn_segundoNombre,
+      telefono: location.state.preloadedValue.telefono1,
+      tipoCuenta: tipoCuenta.find(o => o.label === location.state.preloadedValue.tipoCuenta) ? tipoCuenta.find(o => o.label === location.state.preloadedValue.tipoCuenta).value : '1',
+      tipoIdentificacionConyugue: tipoIdentificacion.find(o => o.label === location.state.preloadedValue.conyugue_tipoIdentificacion) ? tipoIdentificacion.find(o => o.label === location.state.preloadedValue.conyugue_tipoIdentificacion).value : '1',
+      identificacionConyugue: location.state.preloadedValue.conyugue_identificacion,
+      nacionalidadConyugue : nacionalidad.find(o => o.label === location.state.preloadedValue.conyugue_nacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.conyugue_nacionalidad).value : '1',
+      nombreConyugue : location.state.preloadedValue.conyugue_nombre,
+      observacionTelefono: location.state.preloadedValue.obs1,
+      telefonoAux1: location.state.preloadedValue.telefono2,
+      observacionTelefonoAux1: location.state.preloadedValue.obs2,
+      telefonoAux2: location.state.preloadedValue.telefono3,
+      observacionTelefonoAux2: location.state.preloadedValue.obs3,
+      emailAux1: location.state.preloadedValue.email2,
+      emailAux2: location.state.preloadedValue.email3,
+
+      //docIdentidadPrincipal : formData.docIdentidadPrincipal,
+      //docCertificadoBancario: formData.docCertificadoBancario,
+      //docIdentidadConyugue : formData.docIdentidadConyugue,
+
+      tipoIdentificacionRepLegal : tipoIdentificacion.find(o => o.label === location.state.preloadedValue.repLegal_tipoIdentificacion) ? tipoIdentificacion.find(o => o.label === location.state.preloadedValue.repLegal_tipoIdentificacion).value : '1',
+      identificacionRepLegal : location.state.preloadedValue.repLegal_identificacion,
+      repLegal : location.state.preloadedValue.repLegal_nombre,
+      nacionalidadRepLegal : nacionalidad.find(o => o.label === location.state.preloadedValue.repLegal_nacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.repLegal_nacionalidad).value : '1',
+      telefonoRepLegal : location.state.preloadedValue.repLegal_telefono,
+      emailRepLegal : location.state.preloadedValue.repLegal_email,
+
+  }} : defaultValues;
+
+
     const classes = useStyles();
     const [countTelef, setCountTelef] = useState(1);
     const [countEmail, setCountEmail] = useState(1);
@@ -122,7 +309,7 @@ export default function PersonaJuridica() {
     const [formData, setFormData] = useState({
       docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: ''});
 
-    const { handleSubmit, reset, control } = useForm({ defaultValues });
+    const { handleSubmit, reset, control } = useForm({ defaultValues : preloadedValue});
     
     const [openSnack, setOpenSnack] = useState(false);
 
@@ -178,17 +365,13 @@ export default function PersonaJuridica() {
             
          };
 
-         addAccionista(accionista);
-         console.log('data',data);
-         console.log('accionista',accionista);
+         //addAccionista(accionista);
+         data.id ? editAccionista(data.id, accionista) : addAccionista(accionista);
+         //console.log('data',data);
+         //console.log('accionista',accionista);
     }
 
-    const tipoIdentificacion = [
-        {
-          label: "RUC",
-          value: "1",
-        },     
-      ];
+
       
       const generateSelectTipoIdentificacion = () => {
         return tipoIdentificacion.map((option) => {
@@ -200,21 +383,6 @@ export default function PersonaJuridica() {
         });
       };
 
-      const tipoIdentificacionPN = [
-        {
-            label: "Cédula",
-            value: "1",
-          },
-          {
-            label: "RUC",
-            value: "2",
-          },
-          {
-          label: "Pasaporte",
-          value: "3",
-          },  
-      ];
-      
       const generateSelectTipoIdentificacionPN = () => {
         return tipoIdentificacionPN.map((option) => {
           return (
@@ -224,24 +392,6 @@ export default function PersonaJuridica() {
           );
         });
       };
-
-
-
-
-      const nacionalidad = [
-        {
-          label: "Ecuatoriana",
-          value: "1",
-        },
-        {
-          label: "Peruana",
-          value: "2",
-        },
-        {
-            label: "Estadoudinense",
-            value: "3",
-          },        
-      ];
 
       const generateSelectNacionalidad = () => {
         return nacionalidad.map((option) => {
@@ -253,21 +403,6 @@ export default function PersonaJuridica() {
         });
       };
 
-      const pais = [
-        {
-          label: "Ecuador",
-          value: "1",
-        },
-        {
-          label: "Perú",
-          value: "2",
-        },
-        {
-            label: "Estados Unidos",
-            value: "3",
-          },        
-      ];
-
       const generateSelectPais = () => {
         return pais.map((option) => {
           return (
@@ -277,21 +412,6 @@ export default function PersonaJuridica() {
           );
         });
       };
-
-      const provincia = [
-        {
-          label: "Pichincha",
-          value: "1",
-        },
-        {
-          label: "Guayas",
-          value: "2",
-        },
-        {
-            label: "Chimborazo",
-            value: "3",
-          },        
-      ];
 
       const generateSelectProvincia = () => {
         return provincia.map((option) => {
@@ -303,21 +423,6 @@ export default function PersonaJuridica() {
         });
       };
 
-      const ciudad = [
-        {
-          label: "Quito",
-          value: "1",
-        },
-        {
-          label: "Guayaquil",
-          value: "2",
-        },
-        {
-            label: "Riobamba",
-            value: "3",
-          },        
-      ];
-
       const generateSelectCiudad = () => {
         return ciudad.map((option) => {
           return (
@@ -328,49 +433,6 @@ export default function PersonaJuridica() {
         });
       };
 
-      const banco = [
-        {
-          label: "Banco Pichincha",
-          value: "1",
-        },
-        {
-          label: "Banco Guayaquil",
-          value: "2",
-        },
-        {
-            label: "Banco Internacional",
-            value: "3",
-          },        
-          {
-            label: "Banco del Pacífico",
-            value: "4",
-          },
-          {
-            label: "Banco Bolivariano",
-            value: "5",
-          },
-          {
-            label: "Diners Club",
-            value: "6",
-          },
-          {
-            label: "Banco ProCredit",
-            value: "7",
-          },
-          {
-            label: "Banco General Rumiñahui",
-            value: "8",
-          },
-          {
-            label: "Produbanco",
-            value: "9",
-          },   
-          {
-            label: "Banco del Austro",
-            value: "10",
-          },                                      
-      ];
-
       const generateSelectBanco = () => {
         return banco.map((option) => {
           return (
@@ -380,17 +442,6 @@ export default function PersonaJuridica() {
           );
         });
       };
-
-      const tipoCuenta = [
-        {
-          label: "Cta Cte",
-          value: "1",
-        },
-        {
-          label: "Cta Aho",
-          value: "2",
-        },    
-      ];
 
       const generateSelectTipoCuenta = () => {
         return tipoCuenta.map((option) => {
@@ -414,6 +465,68 @@ export default function PersonaJuridica() {
             console.log('error creating accionista:', err)
         }        
       }
+
+      const editAccionista = async (idAccionista, accionista) => {
+        try {
+            //console.log("id", idAccionista);   
+            //console.log("direccionCalle", accionista.direccionCalle);
+            //const apiDataUpdateAccionista = await API.graphql({ query: updateAccionista, variables: { input: {id: idAccionista, direccionCalle: accionista.direccionCalle} } });
+            //const operID = await API.graphql(graphqlOperation(updateAccionista, { input: {id: idAccionista } }))
+            const operID  = await API.graphql({ query: updateAccionista, variables: { input: {id: idAccionista, 
+              
+              tipoIdentificacion: accionista.tipoIdentificacion,
+              identificacion: accionista.identificacion,
+              decevale: accionista.decevale,
+              nombre: accionista.pn_primerNombre.concat(' ',  accionista.segundoNombre == null ? '' :  accionista.segundoNombre,' ', accionista.apellidoPaterno,' ',  accionista.apellidoMaterno == null ? '' :  accionista.apellidoMaterno)  , 
+              direccionPais: accionista.direccionPais,
+              direccionProvincia: accionista.direccionProvincia,
+              direccionCiudad: accionista.direccionCiudad,
+              direccionCalle: accionista.direccionCalle,
+              direccionNumero: accionista.direccionNumero,
+              nombreBanco:  accionista.nombreBanco,
+              tipoCuenta: accionista.tipoCuenta,
+              cuentaBancaria: accionista.cuentaBancaria,
+              paisNacionalidad: accionista.paisNacionalidad,
+              pn_primerNombre: accionista.pn_primerNombre,
+              pn_segundoNombre: accionista.pn_segundoNombre,
+              pn_apellidoPaterno: accionista.pn_apellidoPaterno,
+              pn_apellidoMaterno: accionista.pn_apellidoMaterno,
+              pn_estadoCivil: accionista.pn_estadoCivil,
+              conyugue_tipoIdentificacion: accionista.conyugue_tipoIdentificacion,
+              conyugue_identificacion: accionista.conyugue_identificacion,
+              conyugue_nombre: accionista.conyugue_nombre,
+              conyugue_nacionalidad: accionista.conyugue_nacionalidad,
+              telefono1: accionista.telefono1,
+              obs1: accionista.obs1,
+              telefono2: accionista.telefono2,
+              obs2: accionista.obs2,
+              telefono3: accionista.telefono3,
+              obs3: accionista.obs3,
+              email1 : accionista.email1,
+              email2 : accionista.email2,
+              email3 : accionista.email3,
+              docIdentidadPrincipal : accionista.docIdentidadPrincipal,
+              docCertificadoBancario: accionista.docCertificadoBancario,
+              docIdentidadConyugue : accionista.docIdentidadConyugue,
+              repLegal_tipoIdentificacion: accionista.repLegal_tipoIdentificacion,
+              repLegal_identificacion: accionista.repLegal_identificacion,
+              repLegal_nombre: accionista.repLegal_nombre,
+              repLegal_nacionalidad: accionista.repLegal_nacionalidad,
+              repLegal_telefono: accionista.repLegal_telefono,
+              repLegal_email: accionista.repLegal_email
+            } } });
+
+            console.log('respuesta:', operID)
+            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+            reset(defaultValues);
+            setOpenSnack(true)
+            
+
+        } catch (err) {
+            console.log('error updating accionista:', err)
+        }        
+      }
+
 
       const limpiarForm = async () => {
             setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
@@ -778,7 +891,7 @@ export default function PersonaJuridica() {
                     <Divider className={classes.divider}/>
                     <div className={classes.formSection}>  
                         <Button size='small' onClick={limpiarForm} style={{textTransform: 'none'}} color='primary'>Limpiar</Button>
-                        <Button siza='small' onClick={handleSubmit(onSubmit)} variant='contained' color='primary' style={{textTransform: 'none'}}>Registrar Accionista</Button>
+                        <Button siza='small' onClick={handleSubmit(onSubmit)} variant='contained' color='primary' style={{textTransform: 'none'}}>{location.state ?  "Actualizar Accionista" :  "Registrar Accionista"}</Button>
                     </div>
                     <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
                       <Alert onClose={handleCloseSnack} severity="success">

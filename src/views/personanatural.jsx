@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
-import { makeStyles, Paper, TextField, Button, Typography, MenuItem, Select, Divider, Grid, IconButton, InputLabel, Snackbar  } from '@material-ui/core';
+import { makeStyles, Paper, TextField, Button, Typography, MenuItem, Select, Divider, Grid, IconButton, InputLabel, Snackbar   } from '@material-ui/core';
 import { Controller, useForm } from "react-hook-form";
+import { useLocation } from 'react-router-dom'
 
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import CheckIcon from '@material-ui/icons/Check';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { API, Storage, graphqlOperation } from 'aws-amplify';
-import {createAccionista} from './../graphql/mutations';
+import {createAccionista, updateAccionista} from './../graphql/mutations';
 
 import { uuid } from 'uuidv4';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
   }));
   
   const defaultValues = {
+    id: '',
     apellidoMaterno: '',
     apellidoPaterno: '',
     banco: '1',
@@ -88,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     observaciónTelefono: '',
     paisBanco: '1',
     paisDireccion: '1',
-    primerNombre: '',
+    pn_primerNombre: '',
     provinciaDireccion: '1',
     segundoNombre: '',
     telefono: '',
@@ -105,10 +107,201 @@ const useStyles = makeStyles((theme) => ({
     observacionTelefonoAux2: '',
     emailAux1: '',
     emailAux2: '',
-
+    docIdentidadPrincipal : '',
+    docCertificadoBancario: '',
+    docIdentidadConyugue : '',
   };
   
 export default function PersonaNatural() {
+
+
+  const tipoIdentificacion = [
+    {
+      label: "Cédula",
+      value: "1",
+    },
+    {
+      label: "RUC",
+      value: "2",
+    },
+    {
+    label: "Pasaporte",
+    value: "3",
+    },        
+  ];
+  const estadoCivil = [
+    {
+      label: "Soltero",
+      value: "1",
+    },
+    {
+      label: "Casado",
+      value: "2",
+    },
+    {
+      label: "Unión de Hecho",
+      value: "3",
+    },
+    {
+      label: "Divorciado",
+      value: "4",
+    },
+    {
+      label: "Viudo",
+      value: "5",
+    },
+  ];
+  const nacionalidad = [
+    {
+      label: "Ecuatoriana",
+      value: "1",
+    },
+    {
+      label: "Peruana",
+      value: "2",
+    },
+    {
+        label: "Estadoudinense",
+        value: "3",
+      },        
+  ];
+  const pais = [
+    {
+      label: "Ecuador",
+      value: "1",
+    },
+    {
+      label: "Perú",
+      value: "2",
+    },
+    {
+        label: "Estados Unidos",
+        value: "3",
+      },        
+  ];
+  const provincia = [
+    {
+      label: "Pichincha",
+      value: "1",
+    },
+    {
+      label: "Guayas",
+      value: "2",
+    },
+    {
+        label: "Chimborazo",
+        value: "3",
+      },        
+  ];
+  const ciudad = [
+    {
+      label: "Quito",
+      value: "1",
+    },
+    {
+      label: "Guayaquil",
+      value: "2",
+    },
+    {
+        label: "Riobamba",
+        value: "3",
+      },        
+  ];
+  const banco = [
+    {
+      label: "Banco Pichincha",
+      value: "1",
+    },
+    {
+      label: "Banco Guayaquil",
+      value: "2",
+    },
+    {
+        label: "Banco Internacional",
+        value: "3",
+      },        
+      {
+        label: "Banco del Pacífico",
+        value: "4",
+      },
+      {
+        label: "Banco Bolivariano",
+        value: "5",
+      },
+      {
+        label: "Diners Club",
+        value: "6",
+      },
+      {
+        label: "Banco ProCredit",
+        value: "7",
+      },
+      {
+        label: "Banco General Rumiñahui",
+        value: "8",
+      },
+      {
+        label: "Produbanco",
+        value: "9",
+      },   
+      {
+        label: "Banco del Austro",
+        value: "10",
+      },                                      
+  ];
+  const tipoCuenta = [
+    {
+      label: "Cta Cte",
+      value: "1",
+    },
+    {
+      label: "Cta Aho",
+      value: "2",
+    },    
+  ];
+
+
+  const location = useLocation()
+  const { preloadedValue } = location.state ? {preloadedValue : 
+    { 
+      id:  location.state.preloadedValue.id,
+      tipoIdentificacion: tipoIdentificacion.find(o => o.label === location.state.preloadedValue.tipoIdentificacion).value,
+      identificacion : location.state.preloadedValue.identificacion, 
+      decevale: location.state.preloadedValue.decevale,       
+      apellidoMaterno: location.state.preloadedValue.pn_apellidoMaterno,
+      apellidoPaterno: location.state.preloadedValue.pn_apellidoPaterno,
+      banco: banco.find(o => o.label === location.state.preloadedValue.nombreBanco) ? banco.find(o => o.label === location.state.preloadedValue.nombreBanco).value : '1',
+      calle: location.state.preloadedValue.direccionCalle,
+      ciudadDireccion: ciudad.find(o => o.label === location.state.preloadedValue.direccionCiudad) ? ciudad.find(o => o.label === location.state.preloadedValue.direccionCiudad).value : '1',
+      cuenta: location.state.preloadedValue.cuentaBancaria,
+      email: location.state.preloadedValue.email1,
+      estadoCivil: estadoCivil.find(o => o.label === location.state.preloadedValue.pn_estadoCivil) ? estadoCivil.find(o => o.label === location.state.preloadedValue.pn_estadoCivil).value : '1',
+      nacionalidad: nacionalidad.find(o => o.label === location.state.preloadedValue.paisNacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.paisNacionalidad).value : '1',
+      numero: location.state.preloadedValue.direccionNumero,
+      paisBanco: pais.find(o => o.label === location.state.preloadedValue.paisNacionalidad) ? pais.find(o => o.label === location.state.preloadedValue.paisNacionalidad).value : '1',
+      paisDireccion: pais.find(o => o.label === location.state.preloadedValue.direccionPais) ? pais.find(o => o.label === location.state.preloadedValue.direccionPais).value : '1',
+      pn_primerNombre: location.state.preloadedValue.pn_primerNombre,
+      provinciaDireccion: provincia.find(o => o.label === location.state.preloadedValue.direccionProvincia) ? provincia.find(o => o.label === location.state.preloadedValue.direccionProvincia).value : '1',
+      segundoNombre: location.state.preloadedValue.pn_segundoNombre,
+      telefono: location.state.preloadedValue.telefono1,
+      tipoCuenta: tipoCuenta.find(o => o.label === location.state.preloadedValue.tipoCuenta) ? tipoCuenta.find(o => o.label === location.state.preloadedValue.tipoCuenta).value : '1',
+      tipoIdentificacionConyugue: tipoIdentificacion.find(o => o.label === location.state.preloadedValue.conyugue_tipoIdentificacion) ? tipoIdentificacion.find(o => o.label === location.state.preloadedValue.conyugue_tipoIdentificacion).value : '1',
+      identificacionConyugue: location.state.preloadedValue.conyugue_identificacion,
+      nacionalidadConyugue : nacionalidad.find(o => o.label === location.state.preloadedValue.conyugue_nacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.conyugue_nacionalidad).value : '1',
+      nombreConyugue : location.state.preloadedValue.conyugue_nombre,
+      observacionTelefono: location.state.preloadedValue.obs1,
+      telefonoAux1: location.state.preloadedValue.telefono2,
+      observacionTelefonoAux1: location.state.preloadedValue.obs2,
+      telefonoAux2: location.state.preloadedValue.telefono3,
+      observacionTelefonoAux2: location.state.preloadedValue.obs3,
+      emailAux1: location.state.preloadedValue.email2,
+      emailAux2: location.state.preloadedValue.email3,
+      docIdentidadPrincipal : location.state.preloadedValue.docIdentidadPrincipal,
+      docCertificadoBancario: location.state.preloadedValue.docCertificadoBancario,
+      docIdentidadConyugue : location.state.preloadedValue.docIdentidadConyugue,
+  }} : defaultValues;
+
+  
     const classes = useStyles();
     const [countTelef, setCountTelef] = useState(1);
     const [countEmail, setCountEmail] = useState(1);
@@ -117,39 +310,38 @@ export default function PersonaNatural() {
     const [formData, setFormData] = useState({
       docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: ''});
 
-    const { handleSubmit, reset, control } = useForm({ defaultValues });
+    const { handleSubmit, reset, control } = useForm({ defaultValues : preloadedValue});
     
     const [openSnack, setOpenSnack] = useState(false);
 
     const onSubmit = (data) => {
-        const accionista = { 
-            tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacion).label ,
+        const accionista = {                    
+            tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacion) ? tipoIdentificacion.find(o => o.value === data.tipoIdentificacion).label : '',
             identificacion: data.identificacion,
             decevale: data.decevale,
-            nombre: data.primerNombre.concat(' ',  data.segundoNombre == null ? '' :  data.segundoNombre,' ', data.apellidoPaterno,' ',  data.apellidoMaterno == null ? '' :  data.apellidoMaterno)  , 
-            direccionPais: pais.find(o => o.value === data.paisDireccion).label,
-            direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion).label,
-            direccionCiudad: ciudad.find(o => o.value === data.ciudadDireccion).label ,
+            nombre: data.pn_primerNombre.concat(' ',  data.segundoNombre == null ? '' :  data.segundoNombre,' ', data.apellidoPaterno,' ',  data.apellidoMaterno == null ? '' :  data.apellidoMaterno)  , 
+            direccionPais: pais.find(o => o.value === data.paisDireccion) ? pais.find(o => o.value === data.paisDireccion).label : '',
+            direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion) ? provincia.find(o => o.value === data.provinciaDireccion).label : '',
+            direccionCiudad: ciudad.find(o => o.value === data.ciudadDireccion) ? ciudad.find(o => o.value === data.ciudadDireccion).label : '',
             direccionCalle: data.calle,
             direccionNumero: data.numero,
-            nombreBanco:  banco.find(o => o.value === data.banco).label,
-            tipoCuenta: tipoCuenta.find(o => o.value === data.tipoCuenta).label, 
+            nombreBanco:  banco.find(o => o.value === data.banco) ? banco.find(o => o.value === data.banco).label : '',
+            tipoCuenta: tipoCuenta.find(o => o.value === data.tipoCuenta) ? tipoCuenta.find(o => o.value === data.tipoCuenta).label : '', 
             cuentaBancaria: data.cuenta,
-            paisNacionalidad: nacionalidad.find(o => o.value === data.nacionalidad).label, 
+            paisNacionalidad: nacionalidad.find(o => o.value === data.nacionalidad) ? nacionalidad.find(o => o.value === data.nacionalidad).label : '', 
             cantidadAcciones: 0,
             tipoAcciones: 'D',
             estado: 'Activo',
             tipoPersona: 'PN',
-            pn_primerNombre: data.primerNombre,
+            pn_primerNombre: data.pn_primerNombre,
             pn_segundoNombre: data.segundoNombre,
             pn_apellidoPaterno: data.apellidoPaterno,
             pn_apellidoMaterno: data.apellidoMaterno,
-            pn_estadoCivil: estadoCivil.find(o => o.value === data.estadoCivil).label, 
-            conyugue_tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacionConyugue).label ,
+            pn_estadoCivil: estadoCivil.find(o => o.value === data.estadoCivil) ? estadoCivil.find(o => o.value === data.estadoCivil).label : '', 
+            conyugue_tipoIdentificacion: tipoIdentificacion.find(o => o.value === data.tipoIdentificacionConyugue) ? tipoIdentificacion.find(o => o.value === data.tipoIdentificacionConyugue).label : '',
             conyugue_identificacion: data.identificacionConyugue,
             conyugue_nombre: data.nombreConyugue,
-            conyugue_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadConyugue).label,           
-
+            conyugue_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadConyugue) ? nacionalidad.find(o => o.value === data.nacionalidadConyugue).label : '',           
             telefono1: data.telefono,
             obs1: data.observacionTelefono,
             telefono2: countTelef > 1 ? data.telefonoAux1 : '',
@@ -165,25 +357,13 @@ export default function PersonaNatural() {
 
          };
 
-         addAccionista(accionista);
+         // console.log('data',data);
+         data.id ? editAccionista(data.id, accionista) : addAccionista(accionista);
+         
+
          //console.log('data',data);
          //console.log('accionista',accionista);
     }
-
-    const tipoIdentificacion = [
-        {
-          label: "Cédula",
-          value: "1",
-        },
-        {
-          label: "RUC",
-          value: "2",
-        },
-        {
-        label: "Pasaporte",
-        value: "3",
-        },        
-      ];
       
       const generateSelectTipoIdentificacion = () => {
         return tipoIdentificacion.map((option) => {
@@ -196,28 +376,6 @@ export default function PersonaNatural() {
       };
 
 
-    const estadoCivil = [
-        {
-          label: "Soltero",
-          value: "1",
-        },
-        {
-          label: "Casado",
-          value: "2",
-        },
-        {
-          label: "Unión de Hecho",
-          value: "3",
-        },
-        {
-          label: "Divorciado",
-          value: "4",
-        },
-        {
-          label: "Viudo",
-          value: "5",
-        },
-      ];
       
       const generateSelectEstadoCivil = () => {
         return estadoCivil.map((option) => {
@@ -229,20 +387,7 @@ export default function PersonaNatural() {
         });
       };
 
-      const nacionalidad = [
-        {
-          label: "Ecuatoriana",
-          value: "1",
-        },
-        {
-          label: "Peruana",
-          value: "2",
-        },
-        {
-            label: "Estadoudinense",
-            value: "3",
-          },        
-      ];
+
 
       const generateSelectNacionalidad = () => {
         return nacionalidad.map((option) => {
@@ -254,20 +399,7 @@ export default function PersonaNatural() {
         });
       };
 
-      const pais = [
-        {
-          label: "Ecuador",
-          value: "1",
-        },
-        {
-          label: "Perú",
-          value: "2",
-        },
-        {
-            label: "Estados Unidos",
-            value: "3",
-          },        
-      ];
+
 
       const generateSelectPais = () => {
         return pais.map((option) => {
@@ -279,20 +411,7 @@ export default function PersonaNatural() {
         });
       };
 
-      const provincia = [
-        {
-          label: "Pichincha",
-          value: "1",
-        },
-        {
-          label: "Guayas",
-          value: "2",
-        },
-        {
-            label: "Chimborazo",
-            value: "3",
-          },        
-      ];
+
 
       const generateSelectProvincia = () => {
         return provincia.map((option) => {
@@ -304,20 +423,7 @@ export default function PersonaNatural() {
         });
       };
 
-      const ciudad = [
-        {
-          label: "Quito",
-          value: "1",
-        },
-        {
-          label: "Guayaquil",
-          value: "2",
-        },
-        {
-            label: "Riobamba",
-            value: "3",
-          },        
-      ];
+
 
       const generateSelectCiudad = () => {
         return ciudad.map((option) => {
@@ -329,48 +435,6 @@ export default function PersonaNatural() {
         });
       };
 
-      const banco = [
-        {
-          label: "Banco Pichincha",
-          value: "1",
-        },
-        {
-          label: "Banco Guayaquil",
-          value: "2",
-        },
-        {
-            label: "Banco Internacional",
-            value: "3",
-          },        
-          {
-            label: "Banco del Pacífico",
-            value: "4",
-          },
-          {
-            label: "Banco Bolivariano",
-            value: "5",
-          },
-          {
-            label: "Diners Club",
-            value: "6",
-          },
-          {
-            label: "Banco ProCredit",
-            value: "7",
-          },
-          {
-            label: "Banco General Rumiñahui",
-            value: "8",
-          },
-          {
-            label: "Produbanco",
-            value: "9",
-          },   
-          {
-            label: "Banco del Austro",
-            value: "10",
-          },                                      
-      ];
 
       const generateSelectBanco = () => {
         return banco.map((option) => {
@@ -382,16 +446,6 @@ export default function PersonaNatural() {
         });
       };
 
-      const tipoCuenta = [
-        {
-          label: "Cta Cte",
-          value: "1",
-        },
-        {
-          label: "Cta Aho",
-          value: "2",
-        },    
-      ];
 
       const generateSelectTipoCuenta = () => {
         return tipoCuenta.map((option) => {
@@ -413,6 +467,63 @@ export default function PersonaNatural() {
 
         } catch (err) {
             console.log('error creating accionista:', err)
+        }        
+      }
+
+
+      const editAccionista = async (idAccionista, accionista) => {
+        try {
+            console.log("id", idAccionista);   
+            console.log("direccionCalle", accionista.direccionCalle);
+            //const apiDataUpdateAccionista = await API.graphql({ query: updateAccionista, variables: { input: {id: idAccionista, direccionCalle: accionista.direccionCalle} } });
+            //const operID = await API.graphql(graphqlOperation(updateAccionista, { input: {id: idAccionista } }))
+            const operID  = await API.graphql({ query: updateAccionista, variables: { input: {id: idAccionista, 
+              
+              tipoIdentificacion: accionista.tipoIdentificacion,
+              identificacion: accionista.identificacion,
+              decevale: accionista.decevale,
+              nombre: accionista.pn_primerNombre.concat(' ',  accionista.segundoNombre == null ? '' :  accionista.segundoNombre,' ', accionista.apellidoPaterno,' ',  accionista.apellidoMaterno == null ? '' :  accionista.apellidoMaterno)  , 
+              direccionPais: accionista.direccionPais,
+              direccionProvincia: accionista.direccionProvincia,
+              direccionCiudad: accionista.direccionCiudad,
+              direccionCalle: accionista.direccionCalle,
+              direccionNumero: accionista.direccionNumero,
+              nombreBanco:  accionista.nombreBanco,
+              tipoCuenta: accionista.tipoCuenta,
+              cuentaBancaria: accionista.cuentaBancaria,
+              paisNacionalidad: accionista.paisNacionalidad,
+              pn_primerNombre: accionista.pn_primerNombre,
+              pn_segundoNombre: accionista.pn_segundoNombre,
+              pn_apellidoPaterno: accionista.pn_apellidoPaterno,
+              pn_apellidoMaterno: accionista.pn_apellidoMaterno,
+              pn_estadoCivil: accionista.pn_estadoCivil,
+              conyugue_tipoIdentificacion: accionista.conyugue_tipoIdentificacion,
+              conyugue_identificacion: accionista.conyugue_identificacion,
+              conyugue_nombre: accionista.conyugue_nombre,
+              conyugue_nacionalidad: accionista.conyugue_nacionalidad,
+              telefono1: accionista.telefono1,
+              obs1: accionista.obs1,
+              telefono2: accionista.telefono2,
+              obs2: accionista.obs2,
+              telefono3: accionista.telefono3,
+              obs3: accionista.obs3,
+              email1 : accionista.email1,
+              email2 : accionista.email2,
+              email3 : accionista.email3,
+              docIdentidadPrincipal : accionista.docIdentidadPrincipal,
+              docCertificadoBancario: accionista.docCertificadoBancario,
+              docIdentidadConyugue : accionista.docIdentidadConyugue
+           
+            } } });
+
+            console.log('respuesta:', operID)
+            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+            reset(defaultValues);
+            setOpenSnack(true)
+            
+
+        } catch (err) {
+            console.log('error updating accionista:', err)
         }        
       }
 
@@ -486,7 +597,7 @@ export default function PersonaNatural() {
                                         required: 'Requerido'
                                       }}
                                     render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                        <TextField  size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null}  style={{height:37, width:150}}/>
+                                        <TextField size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null}  style={{height:37, width:150}}/>
                                     )}
                                      />
                                         &nbsp;&nbsp;
@@ -495,7 +606,7 @@ export default function PersonaNatural() {
                                     name={"decevale"}
                                     control={control}
                                     render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                        <TextField  size='small' onChange={onChange} value={value} label={"Decevale"} variant='outlined' error={!!error} helperText={error ? error.message : null} style={{height:37, width:100}} />
+                                        <TextField  size='small' onChange={onChange} value={value} label={"Decevale"} variant='outlined' error={!!error} helperText={error ? error.message : null} style={{height:37, width:100}} />                                        
                                     )}
                                      />                                     
                                 </div>
@@ -532,7 +643,7 @@ export default function PersonaNatural() {
                             </div>                                
                             <div className={classes.formSection}>
                                 <Controller
-                                name={"primerNombre"}
+                                name={"pn_primerNombre"}
                                 control={control}
                                 rules={{required: 'Requerido'}}
                                 render={({ field: { onChange, value }, fieldState: { error }, }) => (
@@ -544,7 +655,6 @@ export default function PersonaNatural() {
                                 render={({ field: { onChange, value } }) => (
                                     <TextField size='small' onChange={onChange} value={value} label={"Segundo Nombre"}  variant='outlined'/>
                                 )} />
-
                                 <Controller
                                 name={"apellidoPaterno"}
                                 control={control}
@@ -812,7 +922,7 @@ export default function PersonaNatural() {
                     <Divider className={classes.divider}/>
                     <div className={classes.formSection}>  
                         <Button size='small' onClick={limpiarForm} style={{textTransform: 'none'}} color='primary'>Limpiar</Button>
-                        <Button siza='small' onClick={handleSubmit(onSubmit)} variant='contained' color='primary' style={{textTransform: 'none'}}>Registrar Accionista</Button>
+                        <Button siza='small' onClick={handleSubmit(onSubmit)} variant='contained' color='primary' style={{textTransform: 'none'}}>{location.state ?  "Actualizar Accionista" :  "Registrar Accionista"}</Button>
                     </div>
                     <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
                       <Alert onClose={handleCloseSnack} severity="success">

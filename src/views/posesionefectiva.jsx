@@ -447,7 +447,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 1)}
                 />
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,1)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,1)}/>}
               </div>
                 { CountHeredero > 1 &&
                 <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>
@@ -464,7 +464,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 2)}
                 />                
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,2)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,2)}/>}
               </div>  }              
                 { CountHeredero > 2 &&
               <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>                
@@ -480,7 +480,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 3)}
                 />
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,3)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,3)}/>}
               </div>  }        
                 { CountHeredero > 3 &&
               <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>                
@@ -496,7 +496,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 4)}
                 />  
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,4)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,4)}/>}
               </div>  }        
                 { CountHeredero > 4 &&     
               <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>                  
@@ -512,7 +512,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 5)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,5)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,5)}/>}
               </div>  }   
 
               { CountHeredero > 5 &&     
@@ -529,7 +529,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 6)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,6)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,6)}/>}
               </div>  }   
               
 
@@ -547,7 +547,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 7)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,7)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,7)}/>}
               </div>  }   
               
               { CountHeredero > 7 &&     
@@ -564,7 +564,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 8)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,8)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,8)}/>}
               </div>  }   
               
               { CountHeredero > 8 &&     
@@ -581,7 +581,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 9)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,9)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,9)}/>}
               </div>  }   
               
               { CountHeredero > 9 &&     
@@ -598,7 +598,7 @@ const handleChangeCantidad = (event, nroHeredero) => {
                   onChange={(option, value) => handleClickCesionario(option, value, 10)}
                 />   
                 &nbsp;&nbsp;&nbsp;
-                {particion && <TextField size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,10)}/>}
+                {particion && <TextField type="number" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}} size='small' disabled={!particion} variant='outlined' label="Cantidad" defaultValue="0" style={{marginTop:7}} onChange={(event)=>handleChangeCantidad(event,10)}/>}
               </div>  }   
               
 
@@ -663,7 +663,8 @@ const handleChangeCantidad = (event, nroHeredero) => {
                     startIcon={<SaveIcon/>}                    
                     size='small'
                     onClick={addOperacion}
-                    disabled={total - formHerederos.length > 0 && particion ? totalAccionesHerencia < 0 ?true:false : 0}
+                    //disabled={total - formHerederos.length > 0 && particion ? totalAccionesHerencia < 0 ? true : false : 0}
+                    disabled = {(total - totalAccionesHerencia < 0 && particion) || (isNaN(total - totalAccionesHerencia) && particion)}
                 >
                     Solicitar aprobación
                 </Button>

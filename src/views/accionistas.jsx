@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API,Storage } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { listAccionistas, listTitulos, listOperaciones,getParametro, listHerederos } from '../graphql/queries';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
@@ -243,6 +243,23 @@ function QuickSearchToolbar(props) {
             //fetchTitulosPorHeredar(cellValues.row);
             }
           } color='primary'><PageviewIcon /></IconButton>
+        }
+      },
+
+      {
+        field: "Edit",
+        width: 100,
+        renderCell: (cellValues) => {
+          
+
+          return <Link to={{
+            pathname: cellValues.row.tipoPersona == "PN" ? "/personanatural" : "/personajuridica",
+            state: {
+              preloadedValue: cellValues.row,
+            },
+          }} >Editar</Link>;
+
+
         }
       },
 
