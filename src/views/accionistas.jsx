@@ -386,7 +386,8 @@ function QuickSearchToolbar(props) {
         };
     
         const apiData = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
-        const titulosFromAPI = apiData.data.listTitulos.items;        
+        const titulosFromAPI = apiData.data.listTitulos.items;       
+                
         setTitulos(titulosFromAPI);
         setAccionistaSeleccionado(row)
 
@@ -909,11 +910,12 @@ function QuickSearchToolbar(props) {
                     <Typography variant='caption' style={{flex:2, fontWeight:'bold'}}>
                       Estado
                     </Typography>   
-                  </div>                               
+                  </div>                                
                 </ListSubheader>            
                 }> 
-                {titulos.map(item => (
-                  <ListItem  key={item.id}>  
+                {
+                titulos.sort((a,b) => (parseInt(a.titulo) > parseInt(b.titulo)) ? 1 : ((parseInt(b.titulo) > parseInt(a.titulo)) ? -1 : 0)).map(item => (
+                  <ListItem  key={item.id}>
                     <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'100%', paddingLeft:'100px'}}>                                                            
                       <ListItemText style={{flex:2}}>{item.fechaCompra}</ListItemText>                                
                       <ListItemText style={{flex:1}}>{item.titulo}</ListItemText>

@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyles,ListItem, ListItemText, ListSubheader,ListItemIcon,
-  List,IconButton,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Checkbox,Snackbar,CircularProgress} from '@material-ui/core';
+  List,IconButton,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Checkbox,Snackbar,CircularProgress,Chip} from '@material-ui/core';
 
 
 
@@ -164,7 +164,7 @@ export default function Testamento() {
 
     const filter = {
       estado: {
-        eq: 'Activo'
+        ne: 'Inactivo'
       }
     };
     const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 1000} });
@@ -453,6 +453,9 @@ const handleChangeCantidad = (event, item) => {
                   renderInput={(params) => <TextField {...params} label="Cedente" margin="normal" variant='outlined'/>}
                   onChange={(option, value) => handleClickCedente(option, value)}
                 />
+
+{valCedente.estado ==  'Bloqueado' && <Chip label="Bloqueado" color="secondary" /> }
+
                 <Autocomplete
                   value={valCesionario}
                   size='small'

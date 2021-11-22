@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { makeStyles, Paper, Divider, Grid, Typography,TextField,Button,withStyles,ListItem, ListItemText, ListSubheader,ListItemIcon,
-  List,IconButton,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Checkbox,Snackbar,CircularProgress} from '@material-ui/core';
+  List,IconButton,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Checkbox,Snackbar,CircularProgress, Chip } from '@material-ui/core';
 
 
 
@@ -16,6 +16,7 @@ import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 import { uuid } from 'uuidv4';
+import { Label } from '@material-ui/icons';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -170,7 +171,7 @@ export default function Cesion() {
 
     const filter = {
       estado: {
-        eq: 'Activo'
+        ne: 'Inactivo'
       }
     };
     const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 1000} });
@@ -464,8 +465,11 @@ async function eliminarDocumento(doc) {
                   getOptionLabel={(option) => option.nombre}
                   style={{ width: 'calc(100%)'}}
                   renderInput={(params) => <TextField {...params} label="Cedente" margin="normal" variant='outlined'/>}
-                  onChange={(option, value) => handleClickCedente(option, value)}
+                  onChange={(option, value) => handleClickCedente(option, value)}                  
                 />
+
+                {valCedente.estado ==  'Bloqueado' && <Chip label="Bloqueado" color="secondary" /> }
+                
                 <Autocomplete
                   value={valCesionario}
                   size='small'

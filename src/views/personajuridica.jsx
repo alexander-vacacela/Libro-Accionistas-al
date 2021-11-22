@@ -112,6 +112,9 @@ const useStyles = makeStyles((theme) => ({
     nacionalidadRepLegal : '1',
     telefonoRepLegal : '',
     emailRepLegal : '',
+    docIdentidadPrincipal : '',
+    docCertificadoBancario: '',
+    docIdentidadConyugue : '',
   };
   
 export default function PersonaJuridica() {
@@ -288,16 +291,16 @@ export default function PersonaJuridica() {
       emailAux1: location.state.preloadedValue.email2,
       emailAux2: location.state.preloadedValue.email3,
 
-      //docIdentidadPrincipal : formData.docIdentidadPrincipal,
-      //docCertificadoBancario: formData.docCertificadoBancario,
-      //docIdentidadConyugue : formData.docIdentidadConyugue,
-
       tipoIdentificacionRepLegal : tipoIdentificacion.find(o => o.label === location.state.preloadedValue.repLegal_tipoIdentificacion) ? tipoIdentificacion.find(o => o.label === location.state.preloadedValue.repLegal_tipoIdentificacion).value : '1',
       identificacionRepLegal : location.state.preloadedValue.repLegal_identificacion,
       repLegal : location.state.preloadedValue.repLegal_nombre,
       nacionalidadRepLegal : nacionalidad.find(o => o.label === location.state.preloadedValue.repLegal_nacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.repLegal_nacionalidad).value : '1',
       telefonoRepLegal : location.state.preloadedValue.repLegal_telefono,
       emailRepLegal : location.state.preloadedValue.repLegal_email,
+
+      docIdentidadPrincipal : location.state.preloadedValue.docIdentidadPrincipal,
+      docCertificadoBancario: location.state.preloadedValue.docCertificadoBancario,
+      docIdentidadConyugue : location.state.preloadedValue.docIdentidadConyugue,
 
   }} : defaultValues;
 
@@ -307,7 +310,10 @@ export default function PersonaJuridica() {
     const [countEmail, setCountEmail] = useState(1);
 
     const [formData, setFormData] = useState({
-      docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: ''});
+      docIdentidadPrincipal: location.state ?  location.state.preloadedValue.docIdentidadPrincipal != null ? location.state.preloadedValue.docIdentidadPrincipal : '' : '', 
+      docCertificadoBancario: location.state ?  location.state.preloadedValue.docCertificadoBancario != null ? location.state.preloadedValue.docCertificadoBancario : '' :'', 
+      docIdentidadConyugue: location.state ?  location.state.preloadedValue.docIdentidadConyugue != null ? location.state.preloadedValue.docIdentidadConyugue : '' : ''});
+  
 
     const { handleSubmit, reset, control } = useForm({ defaultValues : preloadedValue});
     
@@ -362,6 +368,10 @@ export default function PersonaJuridica() {
             repLegal_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadRepLegal).label,   
             repLegal_telefono: data.telefonoRepLegal,
             repLegal_email: data.emailRepLegal,
+
+            docIdentidadPrincipal : formData.docIdentidadPrincipal,
+            docCertificadoBancario: formData.docCertificadoBancario,
+            docIdentidadConyugue : formData.docIdentidadConyugue,
             
          };
 
@@ -513,7 +523,10 @@ export default function PersonaJuridica() {
               repLegal_nombre: accionista.repLegal_nombre,
               repLegal_nacionalidad: accionista.repLegal_nacionalidad,
               repLegal_telefono: accionista.repLegal_telefono,
-              repLegal_email: accionista.repLegal_email
+              repLegal_email: accionista.repLegal_email,
+              docIdentidadPrincipal : accionista.docIdentidadPrincipal,
+              docCertificadoBancario: accionista.docCertificadoBancario,
+              docIdentidadConyugue : accionista.docIdentidadConyugue              
             } } });
 
             console.log('respuesta:', operID)

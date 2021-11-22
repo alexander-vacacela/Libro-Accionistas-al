@@ -261,6 +261,16 @@ export default function PersonaNatural() {
   ];
 
 
+  
+  
+
+//cargar los documentos
+
+//setFormData({ ...formData, docIdentidadPrincipal: location.state.preloadedValue.docIdentidadPrincipal });
+
+
+
+//
   const location = useLocation()
   const { preloadedValue } = location.state ? {preloadedValue : 
     { 
@@ -301,18 +311,24 @@ export default function PersonaNatural() {
       docIdentidadConyugue : location.state.preloadedValue.docIdentidadConyugue,
   }} : defaultValues;
 
+
+  const classes = useStyles();
+  const [countTelef, setCountTelef] = useState(1);
+  const [countEmail, setCountEmail] = useState(1);
+  const [conyugue, setConyugue] = useState(false);
+
+  const [formData, setFormData] = useState({
+    docIdentidadPrincipal: location.state ?  location.state.preloadedValue.docIdentidadPrincipal != null ? location.state.preloadedValue.docIdentidadPrincipal : '' : '', 
+    docCertificadoBancario: location.state ?  location.state.preloadedValue.docCertificadoBancario != null ? location.state.preloadedValue.docCertificadoBancario : '' :'', 
+    docIdentidadConyugue: location.state ?  location.state.preloadedValue.docIdentidadConyugue != null ? location.state.preloadedValue.docIdentidadConyugue : '' : ''});
   
-    const classes = useStyles();
-    const [countTelef, setCountTelef] = useState(1);
-    const [countEmail, setCountEmail] = useState(1);
-    const [conyugue, setConyugue] = useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
 
-    const [formData, setFormData] = useState({
-      docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: ''});
+  const { handleSubmit, reset, control } = useForm({ defaultValues : location.state ? preloadedValue: defaultValues});
 
-    const { handleSubmit, reset, control } = useForm({ defaultValues : preloadedValue});
-    
-    const [openSnack, setOpenSnack] = useState(false);
+  //location.state ? setFormData({ ...formData, docIdentidadPrincipal: location.state.preloadedValue.docIdentidadPrincipal }) :
+  //setFormData({ ...formData, docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' });
+
 
     const onSubmit = (data) => {
         const accionista = {                    
@@ -475,6 +491,10 @@ export default function PersonaNatural() {
         try {
             console.log("id", idAccionista);   
             console.log("direccionCalle", accionista.direccionCalle);
+            console.log("segundoNombre", accionista.segundoNombre);
+            console.log("apellidoPaterno", accionista.apellidoPaterno);
+            console.log("apellidoMaterno", accionista.apellidoMaterno);
+
             //const apiDataUpdateAccionista = await API.graphql({ query: updateAccionista, variables: { input: {id: idAccionista, direccionCalle: accionista.direccionCalle} } });
             //const operID = await API.graphql(graphqlOperation(updateAccionista, { input: {id: idAccionista } }))
             const operID  = await API.graphql({ query: updateAccionista, variables: { input: {id: idAccionista, 
@@ -482,7 +502,7 @@ export default function PersonaNatural() {
               tipoIdentificacion: accionista.tipoIdentificacion,
               identificacion: accionista.identificacion,
               decevale: accionista.decevale,
-              nombre: accionista.pn_primerNombre.concat(' ',  accionista.segundoNombre == null ? '' :  accionista.segundoNombre,' ', accionista.apellidoPaterno,' ',  accionista.apellidoMaterno == null ? '' :  accionista.apellidoMaterno)  , 
+              nombre: accionista.pn_primerNombre.concat(' ',  accionista.pn_segundoNombre == null ? '' :  accionista.pn_segundoNombre,' ', accionista.pn_apellidoPaterno == null ? '' :   accionista.pn_apellidoPaterno,' ',  accionista.pn_apellidoMaterno == null ? '' :  accionista.pn_apellidoMaterno)  , 
               direccionPais: accionista.direccionPais,
               direccionProvincia: accionista.direccionProvincia,
               direccionCiudad: accionista.direccionCiudad,
@@ -601,14 +621,16 @@ export default function PersonaNatural() {
                                     )}
                                      />
                                         &nbsp;&nbsp;
+                                    {location.state  &&
                                     <Controller
                                     id={"decevale"}
                                     name={"decevale"}
                                     control={control}
                                     render={({ field: { onChange, value }, fieldState: { error }, }) => (
-                                        <TextField  size='small' onChange={onChange} value={value} label={"Decevale"} variant='outlined' error={!!error} helperText={error ? error.message : null} style={{height:37, width:100}} />                                        
+                                        <TextField disabled='true' size='small' onChange={onChange} value={value} label={"Decevale"} variant='outlined' error={!!error} helperText={error ? error.message : null} style={{height:37, width:100}} />                                        
                                     )}
-                                     />                                     
+                                     />    
+                                    }                                 
                                 </div>
 
                                 <div>
