@@ -16,5 +16,23 @@
         "libroaccionistasdbe6011c": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-libroaccionistas-prod-115753-authRole",
+      "UnauthRoleArn": "arn:aws:iam::413681662563:role/amplify-libroaccionistas-prod-115753-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::413681662563:role/amplify-libroaccionistas-prod-115753-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-libroaccionistas-prod-115753-deployment",
+      "UnauthRoleName": "amplify-libroaccionistas-prod-115753-unauthRole",
+      "StackName": "amplify-libroaccionistas-prod-115753",
+      "StackId": "arn:aws:cloudformation:us-east-2:413681662563:stack/amplify-libroaccionistas-prod-115753/58135af0-4bb5-11ec-8779-0a8d83e99dd4",
+      "AmplifyAppId": "d1uap272r7bnzf"
+    },
+    "categories": {
+      "auth": {
+        "libroaccionistasdbe6011c": {}
+      }
+    }
   }
 }

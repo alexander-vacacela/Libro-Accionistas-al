@@ -109,7 +109,15 @@ export default function Header(props){
     let user = Auth.user.username;
     return user;
     }
-
+/*
+  async function signOut() {
+    try {
+        await Auth.signOut();
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+  }
+*/
   return (
 
 <div className={classes.root}>

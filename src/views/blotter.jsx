@@ -264,9 +264,16 @@ export default function Operaciones() {
     });
   };
 
+  function getUser() {
+    //console.log("AUTH.USER",Auth)
+    let user = Auth.user.username;
+    return user;
+    }
+
   useEffect(() => {
     fetchOperaciones("Pendiente");
-    let user = Auth.user;     
+    getUser();
+    const user = getUser();
     setUserName(user.username);
   }, [operaciones.length, count]);
  
