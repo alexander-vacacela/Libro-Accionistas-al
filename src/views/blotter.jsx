@@ -289,7 +289,7 @@ export default function Operaciones() {
       
   };
 
-    const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter},  });
+    const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter , limit: 10000},  });
     const operacionesFromAPI = apiData.data.listOperaciones.items;
     //console.log('revisar operaciones',operacionesFromAPI);
     setOperaciones(operacionesFromAPI);
@@ -573,7 +573,7 @@ export default function Operaciones() {
           ne: 'Inactivo'
         }
       };
-      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filter, limit: 1000} });
+      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filter, limit: 10000} });
       const titulosCedenteFromAPI = apiDataTitulosCedente.data.listTitulos.items;
       console.log('busca titulos cedente',titulosCedenteFromAPI)
       let totalAccionesCedente = 0;
@@ -588,7 +588,7 @@ export default function Operaciones() {
           ne: 'Inactivo'
         }
       };
-      const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
+      const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 10000} });
       const titulosCesionarioFromAPI = apiDataTitulosCesionario.data.listTitulos.items;
       console.log('busca titulos cedente',titulosCesionarioFromAPI)
       let totalAccionesCesionario= 0;
@@ -626,7 +626,7 @@ export default function Operaciones() {
           eq: 'Herencia'
         }
       };
-      const apiDataTitulosHerederoAnt = await API.graphql({ query: listTitulos, variables: { filter: filterH, limit : 1000} });
+      const apiDataTitulosHerederoAnt = await API.graphql({ query: listTitulos, variables: { filter: filterH, limit : 10000} });
       const titulosHerederoFromAPIAnt = apiDataTitulosHerederoAnt.data.listTitulos.items;
 
       Promise.all(
@@ -764,7 +764,7 @@ export default function Operaciones() {
             ne: 'Inactivo'
           }
         };
-        const apiDataTitulosHeredero = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 1000} });
+        const apiDataTitulosHeredero = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 10000} });
         const titulosHerederoFromAPI = apiDataTitulosHeredero.data.listTitulos.items;
         console.log('busca titulos heredero',titulosHerederoFromAPI)
         //const totalAccionesHeredero = titulosHerederoFromAPI.reduce(function(prev, current) {
@@ -891,7 +891,7 @@ export default function Operaciones() {
           ne: 'Inactivo'
         }
       };
-      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filterCedente, limit : 1000} });
+      const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filterCedente, limit : 10000} });
       const titulosCedenteFromAPI = apiDataTitulosCedente.data.listTitulos.items;
       //const totalAccionesDelCedente = titulosCedenteFromAPI.map(item => parseInt(item.acciones)).reduce((prev, next) => prev + next);
       const totalAccionesDelCedente = titulosCedenteFromAPI.reduce(function(prev, current) {
@@ -972,7 +972,7 @@ export default function Operaciones() {
         }
       };
   
-      const apiData = await API.graphql({ query: listHerederoPorOperacions, variables: { filter: filter} });
+      const apiData = await API.graphql({ query: listHerederoPorOperacions, variables: { filter: filter, limit: 10000} });
       const herederosFromAPI = apiData.data.listHerederoPorOperacions.items;
  
       console.log('busca herederos por Operacion',herederosFromAPI)
@@ -993,7 +993,7 @@ export default function Operaciones() {
         }
       };
   
-      const apiData = await API.graphql({ query: listTituloPorOperacions, variables: { filter: filter} });
+      const apiData = await API.graphql({ query: listTituloPorOperacions, variables: { filter: filter, limit: 10000} });
       console.log('titulos I',apiData)
       const titulosFromAPI = apiData.data.listTituloPorOperacions.items;
       console.log('titulos II',titulosFromAPI)
