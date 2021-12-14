@@ -389,6 +389,26 @@ export default function Operaciones() {
     }
 
 
+    const handleActualizarDocumentos = async() => {
+
+      setCircular(true);
+      const operacion = { ...formData }
+  
+      const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, cs: operacion.cs, cg: operacion.cg, ci: operacion.ci, es: operacion.es, cp: operacion.cp, } } });
+  
+      setFormData({ cs: '', cg: '', ci: '', es: '', cp: ''})        
+      setCircular(false);
+      setOpenRevisar(false);     
+      setAnular(false);     
+      setCount(0);
+      setTransferencia([]);
+      setTitulos([]);
+      fetchOperaciones("Aprobada");
+      setRechazo(false); 
+      setMotivosRechazo([]);
+  
+      }
+  
 
 
     const handleAnularOperacion = async() => {
@@ -1379,7 +1399,7 @@ export default function Operaciones() {
                   Documentación
                 </Typography>
                 <div>
-                {estado == 'Rechazada' && !anular &&
+                {(estado == 'Rechazada' || estado == 'Aprobada') && !anular &&
                   <label htmlFor="icon-button-fileCS">
                     <Input id="icon-button-fileCS" type="file" onChange={onChangeCS}/>
                     <IconButton color="primary" aria-label="upload picture" component="span">
@@ -1394,7 +1414,7 @@ export default function Operaciones() {
                 </div>
                 {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
-                  {estado == 'Rechazada' && !anular && 
+                  {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCG">
                     <Input id="icon-button-fileCG" type="file" onChange={onChangeCG}/>
                     <IconButton color="primary" aria-label="upload picture" component="span">
@@ -1410,7 +1430,7 @@ export default function Operaciones() {
                 }
                 {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
-                  {estado == 'Rechazada' && !anular && 
+                  {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCI">
                     <Input id="icon-button-fileCI" type="file" onChange={onChangeCI}/>
                     <IconButton color="primary" aria-label="upload picture" component="span">
@@ -1426,7 +1446,7 @@ export default function Operaciones() {
                 }
                 {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
-                  {estado == 'Rechazada' && !anular && 
+                  {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileES">
                     <Input id="icon-button-fileES" type="file" onChange={onChangeES}/>
                     <IconButton color="primary" aria-label="upload picture" component="span">
@@ -1442,7 +1462,7 @@ export default function Operaciones() {
                 }
                 {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
-                  {estado == 'Rechazada' && !anular && 
+                  {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCP">
                     <Input id="icon-button-fileCP" type="file" onChange={onChangeCP}/>
                     <IconButton color="primary" aria-label="upload picture" component="span">
@@ -1499,6 +1519,13 @@ export default function Operaciones() {
               Volver a Solicitar Aprobación
             </Button>
             }
+
+            {!anular && estado == 'Aprobada' &&
+            <Button onClick={handleActualizarDocumentos} color="secondary" variant='contained'>
+              Actualizar documentos
+            </Button>
+            }
+
           </div>            
         </DialogActions>
       </Dialog>
