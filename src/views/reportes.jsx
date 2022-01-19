@@ -70,6 +70,23 @@ const today = new Date();
 const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
 
 
+const dateNow = new Date(); // Creating a new date object with the current date and time
+const year = dateNow.getFullYear(); // Getting current year from the created Date object
+const monthWithOffset = dateNow.getUTCMonth() + 1; // January is 0 by default in JS. Offsetting +1 to fix date for calendar.
+const month = // Setting current Month number from current Date object
+  monthWithOffset.toString().length < 2 // Checking if month is < 10 and pre-prending 0 to adjust for date input.
+    ? `0${monthWithOffset}`
+    : monthWithOffset;
+const date =
+  dateNow.getUTCDate().toString().length < 2 // Checking if date is < 10 and pre-prending 0 if not to adjust for date input.
+    ? `0${dateNow.getUTCDate()}`
+    : dateNow.getUTCDate();
+
+const materialDateInput = `${year}-${month}-${date}`; // combining to format for defaultValue or value attribute of material <TextField>
+
+
+
+
 const people = [
     { name: "Keanu Reeves", profession: "Actor" },
     { name: "Lionel Messi", profession: "Football Player" },
@@ -87,6 +104,17 @@ export default function Reportes() {
   const handleChangeEstadoListado = (event) => {
     setEstadoListado(event.target.value);
   };
+
+  const [transferenciasDesde, setTransferenciasDesde] = useState(materialDateInput);
+  const [transferenciasHasta, setTransferenciasHasta] = useState(materialDateInput);  
+
+  const handleChangeDateTrasnferenciasDesde = e => {
+    setTransferenciasDesde(e.target.value);
+  };
+  const handleChangeDateTrasnferenciasHasta = e => {
+    setTransferenciasHasta(e.target.value);
+  };
+  
 
 
   const exportPDFLibroAccionistas = async() => {
@@ -259,30 +287,33 @@ export default function Reportes() {
         if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) < new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return -1;
         return 0;
       });
-      
-      //console.log(finalmente);
 
-    //const sortedFinalmente = finalmente.sort((a, b) => b.cedente - a.cedente)
+      const sd = new Date("2021-11-15T00:00:00.000Z").getTime();
+      const ed = new Date("2021-11-16T00:00:00.000Z").getTime();
 
+      var dateHasta = new Date(transferenciasHasta);
+      dateHasta.setDate(dateHasta.getDate() + 1);
 
-    //console.log("QUE SERA 1", sortedFinalmente)
-     // console.log("QUE SERA 2", filterItems)
-    //console.log("QUE SERA", a3)
+      const result = finalmente.filter(d => {var time = new Date(+d.fecha.split("-")[2],d.fecha.split("-")[1] - 1, +d.fecha.split("-")[0]).getTime();
+                             return (new Date(transferenciasDesde).getTime() < time && time < new Date(dateHasta).getTime());
+                            });
 /*
-    const posesionEfectiva = operacionesFromAPI2.map(function(elt) {
-        return {
-        fecha : for (var id in operacionesFromAPI) { obj3[attrname] = obj1[attrname]; } ,
-        operacion : '', 
-        cedente: '', 
-        acciones : elt.cantidad, 
-        cesionario : elt.nombre,};
-      })
+      console.log("desde ", new Date(transferenciasDesde).getTime());
+      console.log("hasta ", new Date(transferenciasHasta).getTime());
+
+      console.log("desde ", sd);
+      console.log("hasta ", ed);
+
+      console.log("Finalmente ", finalmente);
+
+      console.log("Resultado ", result);
 */
+
 
     const title = "Reporte de Transferencias";
     const headers = [["Fecha", "Transferencia", "Cedente", "Acciones","Cesionario"]];
 
-    const data = finalmente.map(elt=> [elt.fecha, elt.operacion, elt.cedente, elt.operacion == 'Posesión Efectiva' ? elt.cantidad : elt.acciones, elt.operacion == 'Posesión Efectiva' ? elt.nombre : elt.cesionario]);
+    const data = result.map(elt=> [elt.fecha, elt.operacion, elt.cedente, elt.operacion == 'Posesión Efectiva' ? elt.cantidad : elt.acciones, elt.operacion == 'Posesión Efectiva' ? elt.nombre : elt.cesionario]);
 
 
     let content = {
@@ -426,11 +457,14 @@ export default function Reportes() {
                     label="Desde"
                     //type="datetime-local"
                     type="date"
-                    defaultValue={Date.now()}
+                    defaultValue={transferenciasDesde}
+                    value={transferenciasDesde}
+                    onChange={handleChangeDateTrasnferenciasDesde}
                     //className={classes.textField}
                     variant="standard"
                     InputLabelProps={{
                         shrink: true,
+                        required: true
                     }}
                 />
             </FormControl>
@@ -441,7 +475,9 @@ export default function Reportes() {
                     label="Hasta"
                     //type="datetime-local"
                     type="date"
-                    defaultValue={Date.now()}
+                    defaultValue={transferenciasHasta}
+                    value={transferenciasHasta}
+                    onChange={handleChangeDateTrasnferenciasHasta}                                        
                     //className={classes.textField}
                     variant="standard"
                     InputLabelProps={{
