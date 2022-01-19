@@ -6,8 +6,9 @@ import PeopleIcon from '@material-ui/icons/People';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import SettingsIcon from '@material-ui/icons/Settings';
+import DescriptionIcon from '@material-ui/icons/Description';
 
-import { reportListItems, secondaryListItems } from './listitems';
+import { secondaryListItems } from './listitems';
 import clsx from 'clsx';
 import { useHistory, useLocation } from 'react-router';
 import logo from '../images/Unacem.png';
@@ -73,6 +74,11 @@ export default function Sidebar(props){
             path: "/logout",
             icon: <AttachMoneyIcon />
         },
+        {
+          label: "Reportes",
+          path: "/reportes",
+          icon: <DescriptionIcon />
+      },        
     ];
 
     
@@ -110,8 +116,6 @@ export default function Sidebar(props){
                 </List>
                 <Divider />
                 <List>{secondaryListItems}</List>
-                <Divider />
-                <List>{reportListItems}</List>
                 <Divider />
                 <ListItem 
                   button
