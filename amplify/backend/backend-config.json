@@ -39,12 +39,33 @@
           "additionalAuthenticationProviders": []
         }
       }
+    },
+    "LibroApiQLDB": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "crearRegistro",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
     "imagestorage": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
+    }
+  },
+  "function": {
+    "crearRegistro": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   }
 }

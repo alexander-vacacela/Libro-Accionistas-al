@@ -291,7 +291,17 @@ export default function Operaciones() {
 
     const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter , limit: 10000},  });
     const operacionesFromAPI = apiData.data.listOperaciones.items;
-    //console.log('revisar operaciones',operacionesFromAPI);
+
+    console.log('revisar operaciones I',operacionesFromAPI);
+
+    operacionesFromAPI.sort(function (b, a) {
+      if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) > new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return 1;
+      if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) < new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return -1;
+      return 0;
+    });
+
+    console.log('revisar operaciones II',operacionesFromAPI);
+
     setOperaciones(operacionesFromAPI);
     if(count === 0)
       {      
@@ -484,10 +494,51 @@ export default function Operaciones() {
     
         }
     
+        //const { getLicence } = require('../qldb/regitro');
+        //const { getQldbDriver } = require('../qldb/connectToLedger');
+        
+        const handleAprobarOperacion3Prueba = async() => {
 
+          try{
 
+            actualizarAccionista('pruebaNro1', 'Coco Lucho', 22, 'Activo');
+/*            const miInit = { body: {
+              Name : 'Matt2',
+              Colour : 'Black',
+            } };
+            const data = await API.put('LibroApiQLDB','/registro',miInit )
+            console.log("Data API", data);
+            console.log("Data Lenght", data.length)  
+*/            
+          }catch (err){
+              console.log('error', err)
+          }
 
-      
+        }
+  
+
+        const actualizarAccionista = async(id, nombre, acciones, estado) => {
+          try{
+            const miInit = { body: {
+              id : id,
+              nombre : nombre,
+              cantidadAcciones : acciones,
+              estado : estado,
+            } };
+            const data = await API.put('LibroApiQLDB','/registro',miInit )
+            console.log("Data API", data);
+            console.log("Data Lenght", data.length)
+            //if (data.length == 0){
+              //Buscar datos
+            //  const data2 = await API.post('LibroApiQLDB','/registro',miInit )
+            //}
+
+          }catch (err){
+              console.log('error', err)
+          }
+
+        }
+
 
 
     const handleAprobarOperacion2 = async() => {
@@ -511,7 +562,7 @@ export default function Operaciones() {
         let tituloCedente = {}
         //si la cantidad de acciones a transferir es la misma: crear el mismo titulo al  cesionario
         if(titulo.acciones==titulo.accionesTransferidas){
-          console.log('Son iguales')
+          //console.log('Son iguales')
           tituloCesionario = {
             accionistaID: transferencia.idCesionario,
             titulo: titulo.titulo,
@@ -531,8 +582,8 @@ export default function Operaciones() {
           //incrementar secuencial de titulos
           const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
           const secuen2 = await apiDataUpdate(num);
-          console.log('Update Secuencial',secuen2)
-          console.log('Son diferentes')
+          //console.log('Update Secuencial',secuen2)
+          //console.log('Son diferentes')
           tituloCesionario = {
             accionistaID:transferencia.idCesionario,
             titulo : num,
@@ -575,10 +626,10 @@ export default function Operaciones() {
       };
       const apiDataTitulosCedente = await API.graphql({ query: listTitulos, variables: { filter: filter, limit: 10000} });
       const titulosCedenteFromAPI = apiDataTitulosCedente.data.listTitulos.items;
-      console.log('busca titulos cedente',titulosCedenteFromAPI)
+      //console.log('busca titulos cedente',titulosCedenteFromAPI)
       let totalAccionesCedente = 0;
       titulosCedenteFromAPI.map(titulo => {totalAccionesCedente = totalAccionesCedente + titulo.acciones})
-      console.log('total acciones cedente',totalAccionesCedente)
+      //console.log('total acciones cedente',totalAccionesCedente)
 
       filter = {
         accionistaID: {
@@ -590,20 +641,27 @@ export default function Operaciones() {
       };
       const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 10000} });
       const titulosCesionarioFromAPI = apiDataTitulosCesionario.data.listTitulos.items;
-      console.log('busca titulos cedente',titulosCesionarioFromAPI)
+      //console.log('busca titulos cesionario',titulosCesionarioFromAPI)
       let totalAccionesCesionario= 0;
       titulosCesionarioFromAPI.map(titulo => {totalAccionesCesionario = totalAccionesCesionario + titulo.acciones})
-      console.log('total acciones cesionario',totalAccionesCesionario)
+      //console.log('total acciones cesionario',totalAccionesCesionario)
 
       const apiDataUpdateCedente = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCedente, cantidadAcciones: totalAccionesCedente, estado: totalAccionesCedente== 0 ? 'Inactivo' : 'Activo' } } });
       const apiDataUpdateCesionario = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCesionario, cantidadAcciones: totalAccionesCesionario } } });
 
-      console.log('Aprobar operacion y actualizar Fecha', transferencia.id)
+      //console.log('Aprobar operacion y actualizar Fecha', transferencia.id)
       //actualizar estado y fechaAprobacion de operacion aprobada
       const today = new Date();
       const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
       const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
       console.log(' Pasó Aprobar operacion y actualizar Fecha', apiDataUpdateOper)
+
+      actualizarAccionista(transferencia.idCedente, transferencia.cedente, totalAccionesCedente, totalAccionesCedente== 0 ? 'Inactivo' : 'Activo');
+      console.log(' Pasó QLDB Cedente', transferencia.idCedente, transferencia.cedente, totalAccionesCedente, totalAccionesCedente== 0 ? 'Inactivo' : 'Activo')
+      actualizarAccionista(transferencia.idCesionario, transferencia.cesionario, totalAccionesCesionario, 'Activo');
+      console.log(' Pasó QLDB Cesionario', transferencia.idCesionario, transferencia.cesionario, totalAccionesCesionario)
+
+
 
     }
     else if(transferencia.operacion == "Posesión Efectiva")
@@ -1194,7 +1252,7 @@ export default function Operaciones() {
 
               <DataGrid              
                   disableColumnMenu
-                  sortModel={ [{field: 'fecha', sort: 'desc',}]}
+                  //sortModel={ [{field: 'fecha', sort: 'desc',}]}
                   style={{backgroundColor:'white'}}
                   density="compact"             
                   autoHeight='true'

@@ -85,16 +85,6 @@ const date =
 const materialDateInput = `${year}-${month}-${date}`; // combining to format for defaultValue or value attribute of material <TextField>
 
 
-
-
-const people = [
-    { name: "Keanu Reeves", profession: "Actor" },
-    { name: "Lionel Messi", profession: "Football Player" },
-    { name: "Cristiano Ronaldo", profession: "Football Player" },
-    { name: "Jack Nicklaus", profession: "Golf Player" },
-  ];
-
-
 export default function Reportes() {
 
   const classes = useStyles();
@@ -115,6 +105,33 @@ export default function Reportes() {
     setTransferenciasHasta(e.target.value);
   };
   
+  const [accionistas, setAccionistas] = useState([]);
+  const [valAccionista,setValAccionista]=useState({})    
+
+  const handleClickAccionista = (option, value) => {  
+    if(value)
+    {
+      setValAccionista(value)
+    }
+    else {
+      setValAccionista({})
+    }
+  }
+
+  useEffect(() => {
+    fetchAccionistas();
+  }, [])
+
+  async function fetchAccionistas() {
+
+    const apiData = await API.graphql({ query: listAccionistas , variables:{limit:1000}});
+    const accionistasFromAPI = apiData.data.listAccionistas.items;
+    //await Promise.all(accionistasFromAPI.map(async accionista => {
+    //return accionista;
+    //}))
+    setAccionistas(apiData.data.listAccionistas.items);    
+  }
+
 
 
   const exportPDFLibroAccionistas = async() => {
@@ -259,12 +276,15 @@ export default function Reportes() {
              { operacion: {eq:'Posesión Efectiva'} },
              { operacion: {eq:'Donación'} },
              { operacion: {eq:'Testamento'} }]
-
     };
   
+
+
+  console.log("Accionista", valAccionista);
+  console.log("Filtro", filter);
+
     const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter , limit: 10000},  });
     const operacionesFromAPI = apiData.data.listOperaciones.items;
-  
 
     const apiData2 = await API.graphql({ query: listHerederoPorOperacions , variables: {  limit: 10000},  });
     const operacionesFromAPI2 = apiData2.data.listHerederoPorOperacions.items;
@@ -275,7 +295,15 @@ export default function Reportes() {
           el.operacion != 'Posesión Efectiva'
         );        
 
-    const finalmente = [...operacionesSinPosesionEfectivas, ...posisionEfectiva]
+    let finalmente = [...operacionesSinPosesionEfectivas, ...posisionEfectiva]
+
+    
+    if (valAccionista.id){
+      const finalmente3 = finalmente.filter((id) => id.idCedente == valAccionista.id || id.idCesionario == valAccionista.id);
+      console.log("Operaciones", finalmente3);  
+      finalmente = finalmente3;
+    }
+
 
     /*
     var from = $("#datepicker").val().split("-")
@@ -323,11 +351,15 @@ export default function Reportes() {
       body: data
     };
 
+    //console.log("Valor accioinsta", valAccionista) ;
+
+
     doc.addImage(logo,"JPEG",700,20,80,30)    
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     doc.save("ReporteTransferencias.pdf")
-    
+
+
   }
 
 
@@ -485,7 +517,19 @@ export default function Reportes() {
                     }}
                 />
             </FormControl>                        
-                    
+
+            <Autocomplete
+                value={valAccionista}
+                size='small'
+                //key={operacion}
+                id="combo-box-accionista"
+                options={accionistas}
+                getOptionLabel={(option) => option.nombre ? option.nombre : ""}
+                style={{ width: 'calc(100%)'}}
+                renderInput={(params) => <TextField {...params} label="Accionista" margin="normal"  variant="outlined"  />}
+                onChange={(option, value) => handleClickAccionista(option, value)}
+              />
+
             <Button                
                 size="small"
                 variant="contained"

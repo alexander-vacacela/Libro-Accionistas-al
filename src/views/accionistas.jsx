@@ -401,11 +401,30 @@ function QuickSearchToolbar(props) {
 
         };
         const apiDataOper = await API.graphql({ query: listOperaciones, variables: { filter: filterOper, limit : 1000} });
-        const OperacionesFromAPI = apiDataOper.data.listOperaciones.items;        
+        const OperacionesFromAPI = apiDataOper.data.listOperaciones.items;  
+        
+        OperacionesFromAPI.sort(function (b, a) {
+          if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) > new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return 1;
+          if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) < new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return -1;
+          return 0;
+        });        
+
         setOperaciones(OperacionesFromAPI);
 
         setOpenTitulos(true)
         console.log('titulos', titulosFromAPI)
+
+        //Historia, buscar por data.id
+        const myInit = { // OPTIONAL
+          queryStringParameters: {  // OPTIONAL
+              identificacion: row.identificacion,
+          },
+        };
+
+        console.log('Parametro',myInit);
+        const historia = await API.get('LibroApiQLDB','/registro/otro',   myInit    );
+        console.log('Historia',historia);
+
       }
 
       //async function fetchTitulosPorHeredar(row) {
@@ -592,7 +611,8 @@ function QuickSearchToolbar(props) {
               <Tab label="Info" {...a11yProps(0)} />
               <Tab label="Documentos" {...a11yProps(1)} />
               <Tab label="Títulos" {...a11yProps(2)} />
-              <Tab label="Historial" {...a11yProps(3)} />
+              <Tab label="Operaciones" {...a11yProps(3)} />
+              <Tab label="Historial" {...a11yProps(4)} />
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>

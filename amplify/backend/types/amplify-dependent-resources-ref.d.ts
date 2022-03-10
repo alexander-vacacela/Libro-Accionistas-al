@@ -14,12 +14,25 @@ export type AmplifyDependentResourcesAttributes = {
         "libroaccionistas": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
+        },
+        "LibroApiQLDB": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
         }
     },
     "storage": {
         "imagestorage": {
             "BucketName": "string",
             "Region": "string"
+        }
+    },
+    "function": {
+        "crearRegistro": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     }
 }
