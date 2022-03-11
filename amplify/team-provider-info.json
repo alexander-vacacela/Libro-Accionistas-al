@@ -19,7 +19,7 @@
       "function": {
         "crearRegistro": {
           "deploymentBucketName": "amplify-amplifyf7cdc7b192f54-staging-195641-deployment",
-          "s3Key": "amplify-builds/crearRegistro-7a732b593651794b6d59-build.zip"
+          "s3Key": "amplify-builds/crearRegistro-46596d6b554470565350-build.zip"
         }
       }
     }
