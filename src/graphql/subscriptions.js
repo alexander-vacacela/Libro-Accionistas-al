@@ -946,6 +946,7 @@ export const onCreateParametro = /* GraphQL */ `
       id
       moneda
       cantidadEmitida
+      valorNominal
       createdAt
       updatedAt
     }
@@ -957,6 +958,7 @@ export const onUpdateParametro = /* GraphQL */ `
       id
       moneda
       cantidadEmitida
+      valorNominal
       createdAt
       updatedAt
     }
@@ -968,6 +970,382 @@ export const onDeleteParametro = /* GraphQL */ `
       id
       moneda
       cantidadEmitida
+      valorNominal
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAsamblea = /* GraphQL */ `
+  subscription OnCreateAsamblea {
+    onCreateAsamblea {
+      id
+      tipo
+      fecha
+      hora
+      junta
+      lugar
+      link
+      ordenDia
+      estado
+      email
+      registrados
+      quorum
+      acciones
+      participacion
+      capital
+      acta
+      votaciones
+      horaAperturaQuorum
+      horaCierreQuorum
+      cierreQuorum
+      presentes
+      presentesCapital
+      presentesPorcentajePersona
+      presentesPorcentajeCapital
+      ausentes
+      ausentesCapital
+      ausentesPorcentajePersona
+      ausentesPorcentajeCapital
+      representados
+      representadosCapital
+      representadosPorcentajePersona
+      representadosPorcentajeCapital
+      totalpresentes
+      totalcapitalpresentes
+      totalporcentajePersona
+      totalporcentajeCapital
+      votacionTema1
+      votacionTema2
+      votacionTema3
+      votacionTema4
+      votacionTema5
+      votacionTema6
+      votacionTema7
+      votacionTema8
+      votacionTema9
+      votacionTema10
+      votacionTema11
+      votacionTema12
+      votacionTema13
+      votacionTema14
+      votacionTema15
+      votacionResultado1
+      votacionResultado2
+      votacionResultado3
+      votacionResultado4
+      votacionResultado5
+      votacionResultado6
+      votacionResultado7
+      votacionResultado8
+      votacionResultado9
+      votacionResultado10
+      votacionResultado11
+      votacionResultado12
+      votacionResultado13
+      votacionResultado14
+      votacionResultado15
+      habilitanteTema1
+      habilitanteTema2
+      habilitanteTema3
+      habilitanteTema4
+      habilitanteTema5
+      habilitanteTema6
+      habilitanteTema7
+      habilitanteTema8
+      habilitanteTema9
+      habilitanteTema10
+      habilitanteTema11
+      habilitanteTema12
+      habilitanteTema13
+      habilitanteTema14
+      habilitanteTema15
+      rutaGrabacion
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAsamblea = /* GraphQL */ `
+  subscription OnUpdateAsamblea {
+    onUpdateAsamblea {
+      id
+      tipo
+      fecha
+      hora
+      junta
+      lugar
+      link
+      ordenDia
+      estado
+      email
+      registrados
+      quorum
+      acciones
+      participacion
+      capital
+      acta
+      votaciones
+      horaAperturaQuorum
+      horaCierreQuorum
+      cierreQuorum
+      presentes
+      presentesCapital
+      presentesPorcentajePersona
+      presentesPorcentajeCapital
+      ausentes
+      ausentesCapital
+      ausentesPorcentajePersona
+      ausentesPorcentajeCapital
+      representados
+      representadosCapital
+      representadosPorcentajePersona
+      representadosPorcentajeCapital
+      totalpresentes
+      totalcapitalpresentes
+      totalporcentajePersona
+      totalporcentajeCapital
+      votacionTema1
+      votacionTema2
+      votacionTema3
+      votacionTema4
+      votacionTema5
+      votacionTema6
+      votacionTema7
+      votacionTema8
+      votacionTema9
+      votacionTema10
+      votacionTema11
+      votacionTema12
+      votacionTema13
+      votacionTema14
+      votacionTema15
+      votacionResultado1
+      votacionResultado2
+      votacionResultado3
+      votacionResultado4
+      votacionResultado5
+      votacionResultado6
+      votacionResultado7
+      votacionResultado8
+      votacionResultado9
+      votacionResultado10
+      votacionResultado11
+      votacionResultado12
+      votacionResultado13
+      votacionResultado14
+      votacionResultado15
+      habilitanteTema1
+      habilitanteTema2
+      habilitanteTema3
+      habilitanteTema4
+      habilitanteTema5
+      habilitanteTema6
+      habilitanteTema7
+      habilitanteTema8
+      habilitanteTema9
+      habilitanteTema10
+      habilitanteTema11
+      habilitanteTema12
+      habilitanteTema13
+      habilitanteTema14
+      habilitanteTema15
+      rutaGrabacion
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAsamblea = /* GraphQL */ `
+  subscription OnDeleteAsamblea {
+    onDeleteAsamblea {
+      id
+      tipo
+      fecha
+      hora
+      junta
+      lugar
+      link
+      ordenDia
+      estado
+      email
+      registrados
+      quorum
+      acciones
+      participacion
+      capital
+      acta
+      votaciones
+      horaAperturaQuorum
+      horaCierreQuorum
+      cierreQuorum
+      presentes
+      presentesCapital
+      presentesPorcentajePersona
+      presentesPorcentajeCapital
+      ausentes
+      ausentesCapital
+      ausentesPorcentajePersona
+      ausentesPorcentajeCapital
+      representados
+      representadosCapital
+      representadosPorcentajePersona
+      representadosPorcentajeCapital
+      totalpresentes
+      totalcapitalpresentes
+      totalporcentajePersona
+      totalporcentajeCapital
+      votacionTema1
+      votacionTema2
+      votacionTema3
+      votacionTema4
+      votacionTema5
+      votacionTema6
+      votacionTema7
+      votacionTema8
+      votacionTema9
+      votacionTema10
+      votacionTema11
+      votacionTema12
+      votacionTema13
+      votacionTema14
+      votacionTema15
+      votacionResultado1
+      votacionResultado2
+      votacionResultado3
+      votacionResultado4
+      votacionResultado5
+      votacionResultado6
+      votacionResultado7
+      votacionResultado8
+      votacionResultado9
+      votacionResultado10
+      votacionResultado11
+      votacionResultado12
+      votacionResultado13
+      votacionResultado14
+      votacionResultado15
+      habilitanteTema1
+      habilitanteTema2
+      habilitanteTema3
+      habilitanteTema4
+      habilitanteTema5
+      habilitanteTema6
+      habilitanteTema7
+      habilitanteTema8
+      habilitanteTema9
+      habilitanteTema10
+      habilitanteTema11
+      habilitanteTema12
+      habilitanteTema13
+      habilitanteTema14
+      habilitanteTema15
+      rutaGrabacion
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAccionistasxJunta = /* GraphQL */ `
+  subscription OnCreateAccionistasxJunta {
+    onCreateAccionistasxJunta {
+      id
+      asambleaID
+      accionistaID
+      identificacion
+      nombre
+      acciones
+      estado
+      presente
+      horaLlegada
+      representanteNombre
+      representanteDocumento
+      representanteDI
+      votacion1
+      votacion2
+      votacion3
+      votacion4
+      votacion5
+      votacion6
+      votacion7
+      votacion8
+      votacion9
+      votacion10
+      votacion11
+      votacion12
+      votacion13
+      votacion14
+      votacion15
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAccionistasxJunta = /* GraphQL */ `
+  subscription OnUpdateAccionistasxJunta {
+    onUpdateAccionistasxJunta {
+      id
+      asambleaID
+      accionistaID
+      identificacion
+      nombre
+      acciones
+      estado
+      presente
+      horaLlegada
+      representanteNombre
+      representanteDocumento
+      representanteDI
+      votacion1
+      votacion2
+      votacion3
+      votacion4
+      votacion5
+      votacion6
+      votacion7
+      votacion8
+      votacion9
+      votacion10
+      votacion11
+      votacion12
+      votacion13
+      votacion14
+      votacion15
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAccionistasxJunta = /* GraphQL */ `
+  subscription OnDeleteAccionistasxJunta {
+    onDeleteAccionistasxJunta {
+      id
+      asambleaID
+      accionistaID
+      identificacion
+      nombre
+      acciones
+      estado
+      presente
+      horaLlegada
+      representanteNombre
+      representanteDocumento
+      representanteDI
+      votacion1
+      votacion2
+      votacion3
+      votacion4
+      votacion5
+      votacion6
+      votacion7
+      votacion8
+      votacion9
+      votacion10
+      votacion11
+      votacion12
+      votacion13
+      votacion14
+      votacion15
       createdAt
       updatedAt
     }

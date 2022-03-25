@@ -200,4 +200,120 @@ type Parametro @model {
   id: ID!
   moneda: String
   cantidadEmitida: Int
+  valorNominal: Float
+}
+
+type Asamblea @model {
+  id: ID!
+  tipo: String
+  fecha: String
+  hora: String
+  junta: String
+  lugar: String
+  link: String
+  ordenDia: String
+  estado: String
+  email: String
+  registrados: Int
+  quorum: Int
+  acciones: Int
+  participacion: Float
+  capital: Float
+  acta: String  
+  votaciones: Int
+  horaAperturaQuorum: String
+  horaCierreQuorum: String
+  cierreQuorum: Boolean
+  presentes : Int
+  presentesCapital : Float
+  presentesPorcentajePersona : Float
+  presentesPorcentajeCapital : Float
+  ausentes : Int
+  ausentesCapital : Float
+  ausentesPorcentajePersona : Float
+  ausentesPorcentajeCapital : Float
+  representados: Int
+  representadosCapital : Float
+  representadosPorcentajePersona : Float
+  representadosPorcentajeCapital : Float
+  totalpresentes : Int
+  totalcapitalpresentes: Float
+  totalporcentajePersona: Float
+  totalporcentajeCapital: Float
+  votacionTema1: String
+  votacionTema2: String
+  votacionTema3: String
+  votacionTema4: String
+  votacionTema5: String
+  votacionTema6: String
+  votacionTema7: String
+  votacionTema8: String
+  votacionTema9: String
+  votacionTema10: String
+  votacionTema11: String
+  votacionTema12: String
+  votacionTema13: String
+  votacionTema14: String
+  votacionTema15: String
+  votacionResultado1: Boolean
+  votacionResultado2: Boolean
+  votacionResultado3: Boolean
+  votacionResultado4: Boolean
+  votacionResultado5: Boolean
+  votacionResultado6: Boolean
+  votacionResultado7: Boolean
+  votacionResultado8: Boolean
+  votacionResultado9: Boolean
+  votacionResultado10: Boolean
+  votacionResultado11: Boolean
+  votacionResultado12: Boolean
+  votacionResultado13: Boolean
+  votacionResultado14: Boolean
+  votacionResultado15: Boolean
+  habilitanteTema1: String
+  habilitanteTema2: String
+  habilitanteTema3: String
+  habilitanteTema4: String
+  habilitanteTema5: String
+  habilitanteTema6: String
+  habilitanteTema7: String
+  habilitanteTema8: String
+  habilitanteTema9: String
+  habilitanteTema10: String
+  habilitanteTema11: String
+  habilitanteTema12: String
+  habilitanteTema13: String
+  habilitanteTema14: String
+  habilitanteTema15: String
+  rutaGrabacion: String
+}
+
+type AccionistasxJunta @model @key(name: "byAsamblea", fields: ["asambleaID"]) {
+  id: ID!
+  asambleaID: ID!
+  accionistaID: ID!
+  identificacion: String!
+  nombre : String!
+  acciones: Int!
+  estado: String
+  presente: Boolean
+  horaLlegada: String
+  representanteNombre: String
+  representanteDocumento: String
+  representanteDI: String
+  votacion1: Boolean
+  votacion2: Boolean
+  votacion3: Boolean
+  votacion4: Boolean
+  votacion5: Boolean
+  votacion6: Boolean
+  votacion7: Boolean
+  votacion8: Boolean
+  votacion9: Boolean
+  votacion10: Boolean
+  votacion11: Boolean
+  votacion12: Boolean
+  votacion13: Boolean
+  votacion14: Boolean
+  votacion15: Boolean
 }

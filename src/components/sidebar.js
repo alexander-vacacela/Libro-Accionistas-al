@@ -66,7 +66,7 @@ export default function Sidebar(props){
         },
         {
           label: "Asambleas",
-          path: "/logout",
+          path: "/asambleas",
           icon: <GroupWorkIcon />
         },
         {

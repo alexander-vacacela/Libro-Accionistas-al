@@ -31,17 +31,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Parametros(){
 
     const [cantidadEmitido, setCantidadEmitido] = useState(0);
+    const [valorNominal, setValorNominal] = useState(0);
     const handleCantidadEmitidoChange = (event) => {
 
       setCantidadEmitido(event.target.value.replace(/[^0-9]/g, ''));
     
-      //return null;
-/*
-      event.target.value < 0
-      ? setCantidadEmitido(0)
-      : setCantidadEmitido(event.target.value)
-*/
     };
+
+    const handleValorNominalChange = (event) => {
+
+      setValorNominal(event.target.value.replace(/[^0-9.]/g, ''));
+    
+    };
+
+    
     const classes = useStyles();
     const [circular, setCircular] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
@@ -61,6 +64,7 @@ export default function Parametros(){
 
         console.log('parametrosFromAPI', parametrosFromAPI)
         setCantidadEmitido(parametrosFromAPI.cantidadEmitida);
+        setValorNominal(parametrosFromAPI.valorNominal);
     }
 
     //const apiDataUpdate =  async(nuevoSecuencial) => await API.graphql({ query: updateNumeroSecuencial, variables: { input: {id: '1', numerotitulo: nuevoSecuencial} } });
@@ -72,7 +76,7 @@ export default function Parametros(){
     
             setCircular(true);
     
-            const operID = await API.graphql({ query: updateParametro, variables: { input: {id: '1', cantidadEmitida: cantidadEmitido} } });
+            const operID = await API.graphql({ query: updateParametro, variables: { input: {id: '1', cantidadEmitida: cantidadEmitido, valorNominal: valorNominal } } });
     
             setCircular(false);
             setOpenSnack(true)
@@ -95,17 +99,19 @@ return(
       <div className={classes.appBarSpacer} />
         <Paper variant="outlined" className={classes.paper}>
             <Grid container>
-                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal',}}>
                     <TextField
-                        //type="number"
-                        //required
-                        //InputProps={{ inputProps: { min: 0, max: 10 } }}
-                        //InputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         id="outlined-required"
                         label="Total Emitido"
-                        //defaultValue="0"
                         value={cantidadEmitido}
                         onChange={handleCantidadEmitidoChange}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required"
+                        label="Valor Nominal"
+                        value={valorNominal}
+                        onChange={handleValorNominalChange}
                     /> 
                     <Button onClick={addCantidadEmitida} size='small' variant='contained' color='primary' style={{marginLeft:20}}>Grabar</Button>
                 </Grid>     

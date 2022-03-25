@@ -19,6 +19,7 @@ import Testamento from './views/testamento';
 import Donacion from './views/donacion';
 import Parametros from './views/parametros';
 import Reportes from './views/reportes';
+import Asambleas from './views/asambleas';
 
 function App() {
 
@@ -40,8 +41,8 @@ function App() {
           <Layout>
             <Switch>
 
-              <Route path="/pdf">
-                <Pdf />
+              <Route path="/asambleas">
+                <Asambleas />
               </Route>  
               <Route path="/reportes">
                 <Reportes />

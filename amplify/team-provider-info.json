@@ -34,11 +34,18 @@
       "UnauthRoleName": "amplify-libroaccionistas-prod-115753-unauthRole",
       "StackName": "amplify-libroaccionistas-prod-115753",
       "StackId": "arn:aws:cloudformation:us-east-2:413681662563:stack/amplify-libroaccionistas-prod-115753/58135af0-4bb5-11ec-8779-0a8d83e99dd4",
-      "AmplifyAppId": "d1uap272r7bnzf"
+      "AmplifyAppId": "d1uap272r7bnzf",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-libroaccionistas-prod-115753-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
         "libroaccionistasdbe6011c": {}
+      },
+      "function": {
+        "crearRegistro": {
+          "deploymentBucketName": "amplify-libroaccionistas-prod-115753-deployment",
+          "s3Key": "amplify-builds/crearRegistro-46596d6b554470565350-build.zip"
+        }
       }
     }
   }
