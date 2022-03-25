@@ -19,9 +19,11 @@ import DevicesOutlinedIcon from '@material-ui/icons/DevicesOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 import { uuid } from 'uuidv4';
-import { createAccionistasxJunta, createAsamblea, updateAccionistasxJunta, updateAsamblea } from '../graphql/mutations';
+import { createAccionistasxJunta, createAsamblea, deleteAccionistasxJunta, updateAccionistasxJunta, updateAsamblea } from '../graphql/mutations';
 import MuiAlert from '@material-ui/lab/Alert';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -167,6 +169,16 @@ export default function Asambleas() {
         setRefrescar(!refrescar);
 
     };
+
+    const eliminarAccionistaJunta = (id) => async() => {
+        
+        console.log("Eliminar Accionista", id)
+        const updatePresencia = await API.graphql({ query: deleteAccionistasxJunta , variables: { input: {id: id} } });
+        console.log("updatePresencia", updatePresencia)
+        setRefrescar(!refrescar);
+
+    };
+
 
     function getParticipacion(params) {
         return `${params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido || ''} `;
@@ -1326,19 +1338,19 @@ export default function Asambleas() {
                       <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'10px'}}>
                         Acciones
                       </Typography>
-                      <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'0px'}}>
+                      <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'10px'}}>
                         Participación
                       </Typography>
                       <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'0px'}}>
                         Presente
                       </Typography>    
-                      <Typography variant='caption' style={{flex:2, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'20px'}}>
+                      <Typography variant='caption' style={{flex:2, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'10px'}}>
                         Representante
                       </Typography>                                    
                       <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:''}}>
                         Identif.Rep.
                       </Typography> 
-                      <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:''}}>
+                      <Typography variant='caption' style={{flex:1, fontWeight:'bold', display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'60px'}}>
                         Doc
                       </Typography> 
 
@@ -1358,7 +1370,7 @@ export default function Asambleas() {
                   items.sort((a,b) => (a.nombre > b.nombre) ? 1 : ((b.nombre > a.nombre) ? -1 : 0)).map(item => (
                     <ListItem  key={item.id}
                     //button onClick={handleTogglePresente(item.id, !item.presente)}
-                    style={{paddingTop:'0px', paddingBottom:'0px'}}
+                    style={{paddingTop:'0px', paddingBottom:'0px'}}                  
                     >
                       <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'100%', }}>                                                            
                         <ListItemText style={{flex:6,}}> <small>{item.nombre}</small>  </ListItemText>                                
@@ -1379,6 +1391,7 @@ export default function Asambleas() {
                         </ListItemIcon>    
                         <ListItemText style={{flex:2, display:'flex', alignItems:'flex-start', justifyContent:'flex-start'}}><small>{item.representanteNombre}</small></ListItemText>                    
                         <ListItemText style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:''}}> <small>{item.representanteDocumento}</small>  </ListItemText>                                
+
                         <ListItemIcon style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'0px'}}>
                             {item.representanteDI &&
                             <IconButton edge="end" aria-label="delete" onClick={() => getPictureID(item.representanteDI)}>
@@ -1386,6 +1399,13 @@ export default function Asambleas() {
                             </IconButton>
                             }
                         </ListItemIcon>
+                        <ListItemIcon style={{flex:1, display:'flex', alignItems:'flex-end', justifyContent:'flex-end', paddingRight:'0px'}}>
+                            <IconButton id='123456789' edge="end" aria-label="delete2" onClick={eliminarAccionistaJunta(item.id)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </ListItemIcon>
+
+
                       </div>
                     </ListItem>))}                    
                 </List>
@@ -1393,7 +1413,7 @@ export default function Asambleas() {
 
               <TabPanel value={value} index={1}>
 
-                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '20px' }}>
+                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '0px' }}>
                     <Box display="flex" flexDirection='column' >
                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom align="center">
                             Quorum
@@ -1402,6 +1422,14 @@ export default function Asambleas() {
                             {accionistasxJuntas.filter(o => o.presente  === true ).length}
                         </Typography>
                     </Box>
+                    <Box display="flex" flexDirection='column' >
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom align="center">
+                            Acciones Quorum
+                        </Typography>
+                        <Typography variant="h5" component="div" align="center">
+                        {(accionistasxJuntas.filter(o => o.presente  === true ).reduce((a, b) => +a + +b.acciones, 0))}
+                        </Typography>
+                    </Box>                       
                     <Box display="flex" flexDirection='column' >
                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom align="center">
                             Capital Quorum
@@ -1420,15 +1448,15 @@ export default function Asambleas() {
                     </Box>   
                     <Box display="flex" flexDirection='column' >
                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom align="center">
-                            % Quorum
+                            % Accionistas
                         </Typography>
                         <Typography variant="h5" component="div" align="center">
                         {((accionistasxJuntas.filter(o => o.presente  === true ).length / accionistas.length) * 100.00).toFixed(8)}
                         </Typography>
                     </Box>  
                 </div>
-                
-                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '20px' }}>
+               <Divider/> 
+                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '0px' }}>
                     <Box>
                         <Typography variant="subtitle2" align="center">
                         Presentes
@@ -1437,6 +1465,14 @@ export default function Asambleas() {
                         {accionistasxJuntas.filter(o => o.presente  === true && (o.representanteNombre === "undefined" || o.representanteNombre === "" || o.representanteNombre === null  )  ).length}
                         </Typography>
                     </Box>
+                    <Box>
+                        <Typography variant="subtitle2" align="center">
+                        Acciones Presentes
+                        </Typography>                
+                        <Typography variant="body2" align="center">
+                        {(accionistasxJuntas.filter(o => o.presente  === true && (o.representanteNombre === "undefined" || o.representanteNombre === "" || o.representanteNombre === null  )).reduce((a, b) => +a + +b.acciones, 0))}
+                        </Typography>
+                    </Box>                    
                     <Box>
                         <Typography variant="subtitle2" align="center">
                         Capital Presentes
@@ -1462,8 +1498,8 @@ export default function Asambleas() {
                         </Typography>
                     </Box>                                                            
                 </div>
-
-                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '20px' }}>
+                <Divider/> 
+                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '0px' }}>
                     <Box>
                         <Typography variant="subtitle2" align="center">
                         Representados
@@ -1472,6 +1508,14 @@ export default function Asambleas() {
                         {accionistasxJuntas.filter(o => o.presente  === true && o.representanteNombre).length}
                         </Typography>
                     </Box>
+                    <Box>
+                        <Typography variant="subtitle2" align="center">
+                        Acciones Representados
+                        </Typography>                
+                        <Typography variant="body2" align="center">
+                        {(accionistasxJuntas.filter(o => o.presente  === true && o.representanteNombre).reduce((a, b) => +a + +b.acciones, 0))}
+                        </Typography>
+                    </Box>                    
                     <Box>
                         <Typography variant="subtitle2" align="center">
                         Capital Representados
@@ -1497,8 +1541,8 @@ export default function Asambleas() {
                         </Typography>
                     </Box>                                                            
                 </div>
-
-                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '20px' }}>
+                <Divider/> 
+                <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-around', width:'100%', marginBottom: '0px' }}>
                     <Box>
                         <Typography variant="subtitle2" align="center">
                         Ausentes
@@ -1507,6 +1551,14 @@ export default function Asambleas() {
                         {accionistas.length - accionistasxJuntas.filter(o => o.presente  === true ).length}
                         </Typography>
                     </Box>
+                    <Box>
+                        <Typography variant="subtitle2" align="center">
+                        Acciones Ausentes
+                        </Typography>                
+                        <Typography variant="body2" align="center">
+                        {((cantidadEmitido) - (accionistasxJuntas.filter(o => o.presente  === true ).reduce((a, b) => +a + +b.acciones, 0)))}
+                        </Typography>
+                    </Box>                    
                     <Box>
                         <Typography variant="subtitle2" align="center">
                         Capital Ausentes
@@ -1532,9 +1584,7 @@ export default function Asambleas() {
                         </Typography>
                     </Box>                                                            
                 </div>
-
-
-
+                <Divider/> 
                 <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', width:'100%', marginTop: '0px' }}>
                     <div style={{ width:'100px', height: '100px' }}>
                         <Typography variant='body2'>
