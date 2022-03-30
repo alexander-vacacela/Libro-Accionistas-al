@@ -184,9 +184,9 @@ function QuickSearchToolbar(props) {
         width: 100,
       },      
       {
-        field: 'nombre',
+        field: 'nombre2',
         headerName: 'Nombre',
-        width: 180,
+        width: 250,
         flex: 1 ,
       },
       {
@@ -344,6 +344,13 @@ function QuickSearchToolbar(props) {
       //await Promise.all(accionistasFromAPI.map(async accionista => {
       //return accionista;
       //}))
+
+      //const accionistas = accionistasFromAPI.map( accionista => accionista)
+      //accionistasFromAPI.map(obj=> ({ ...obj, nombre2 : obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre }))
+
+      accionistasFromAPI.forEach(function (obj) {
+        obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
+      });
 
       setAccionistas(accionistasFromAPI);
       setRows(accionistasFromAPI);
