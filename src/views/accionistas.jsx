@@ -168,7 +168,7 @@ function QuickSearchToolbar(props) {
     const [estado, setEstado] = useState('Activo');
 
     function getParticipacion(params) {
-      return `${params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido || ''} `;
+      return `${(params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido).toFixed(8) || ''} `;
     }
 
     const columns = [
@@ -181,7 +181,7 @@ function QuickSearchToolbar(props) {
       {
         field: 'decevale',
         headerName: 'Decevale',
-        width: 100,
+        width: 90,
       },      
       {
         field: 'nombre2',
@@ -192,7 +192,7 @@ function QuickSearchToolbar(props) {
       {
         field: 'paisNacionalidad',
         headerName: 'Nacionalidad',
-        width: 130,
+        width: 110,
       },      
       {
         field: 'cantidadAcciones',
@@ -204,13 +204,13 @@ function QuickSearchToolbar(props) {
         field: 'participacion',
         headerName: 'Participación',
         type: 'number',
-        width: 120,
+        width: 100,
         valueGetter: getParticipacion,
       },             
       {
         field: 'tipoAcciones',
         headerName: 'Tipo',
-        width: 90,
+        width: 70,
         renderCell: (cellValues) => {
           return cellValues.row.tipoAcciones == "D" ? 
           <Tooltip title="Desmaterializadas" >
@@ -233,7 +233,7 @@ function QuickSearchToolbar(props) {
       
       {
         field: "Info",
-        width: 100,
+        width: 70,
         renderCell: (cellValues) => {
           //return <IconButton  disabled={cellValues.row.cantidadAcciones > 0 ? false : true} onClick={() =>  
           return <IconButton  onClick={() =>  
@@ -248,7 +248,7 @@ function QuickSearchToolbar(props) {
 
       {
         field: "Edit",
-        width: 100,
+        width: 80,
         renderCell: (cellValues) => {
           
 
@@ -262,7 +262,7 @@ function QuickSearchToolbar(props) {
 
         }
       },
-
+/*
       {
         field: "Herederos",
         width: 100,
@@ -275,7 +275,7 @@ function QuickSearchToolbar(props) {
           : null
         }
       },
-
+*/
         /*
         {
           field: "Operaciones",
@@ -349,7 +349,8 @@ function QuickSearchToolbar(props) {
       //accionistasFromAPI.map(obj=> ({ ...obj, nombre2 : obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre }))
 
       accionistasFromAPI.forEach(function (obj) {
-        obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
+        //obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
+        obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
       });
 
       setAccionistas(accionistasFromAPI);
