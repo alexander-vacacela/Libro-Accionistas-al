@@ -122,7 +122,7 @@ export default function Header(props){
 
 <div className={classes.root}>
 
-<AppBar  className={clsx(classes.appBar, props.open && classes.appBarShift)}>
+<AppBar position="absolute" className={clsx(classes.appBar, props.open && classes.appBarShift)}>
     <Toolbar className={classes.toolBar}>
 
     <div className={classes.leftToolbar}>

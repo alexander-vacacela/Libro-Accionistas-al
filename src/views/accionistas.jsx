@@ -197,8 +197,9 @@ function QuickSearchToolbar(props) {
       {
         field: 'cantidadAcciones',
         headerName: 'Acciones',
-        type: 'number',
+        //type: 'number',
         width: 120,
+        align: "right",
       },             
       {
         field: 'participacion',
@@ -353,7 +354,17 @@ function QuickSearchToolbar(props) {
         obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
       });
 
-      setAccionistas(accionistasFromAPI);
+      setAccionistas(accionistasFromAPI.sort(function (a, b) {
+        if (a.nombre2 > b.nombre2) {
+          return 1;
+        }
+        if (a.nombre2 < b.nombre2) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      }));
+
       setRows(accionistasFromAPI);
       /*
       if(count === 0)
