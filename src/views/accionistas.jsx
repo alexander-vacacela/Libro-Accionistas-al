@@ -195,10 +195,15 @@ function QuickSearchToolbar(props) {
         width: 110,
       },      
       {
+        field: 'direccionPais',
+        headerName: 'Residencia',
+        width: 110,
+      },            
+      {
         field: 'cantidadAcciones',
         headerName: 'Acciones',
         //type: 'number',
-        width: 120,
+        width: 100,
         align: "right",
       },             
       {

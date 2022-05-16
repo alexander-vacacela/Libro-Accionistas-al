@@ -751,6 +751,32 @@ export const getParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -768,6 +794,32 @@ export const listParametros = /* GraphQL */ `
         moneda
         cantidadEmitida
         valorNominal
+        baseImponible
+        noResidente
+        IGdesde1
+        IGhasta1
+        FBretencion1
+        FEretencion1
+        IGdesde2
+        IGhasta2
+        FBretencion2
+        FEretencion2
+        IGdesde3
+        IGhasta3
+        FBretencion3
+        FEretencion3
+        IGdesde4
+        IGhasta4
+        FBretencion4
+        FEretencion4
+        IGdesde5
+        IGhasta5
+        FBretencion5
+        FEretencion5
+        IGdesde6
+        IGhasta6
+        FBretencion6
+        FEretencion6
         createdAt
         updatedAt
       }
@@ -1036,6 +1088,134 @@ export const listAccionistasxJuntas = /* GraphQL */ `
         votacion13
         votacion14
         votacion15
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDividendos = /* GraphQL */ `
+  query GetDividendos($id: ID!) {
+    getDividendos(id: $id) {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDividendos = /* GraphQL */ `
+  query ListDividendos(
+    $filter: ModelDividendosFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDividendos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        periodo
+        dividendo
+        porcentajeRepartir
+        dividendoRepartir
+        fechaCorte
+        fechaPago
+        estado
+        retencion
+        idDividendoOrigen
+        saldoDividendo
+        saldoPorcentajeDividendo
+        entregado
+        porEntregar
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDividendosAccionista = /* GraphQL */ `
+  query GetDividendosAccionista($id: ID!) {
+    getDividendosAccionista(id: $id) {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDividendosAccionistas = /* GraphQL */ `
+  query ListDividendosAccionistas(
+    $filter: ModelDividendosAccionistaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDividendosAccionistas(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        idAccionista
+        tipoIdentificacion
+        identificacion
+        nombre
+        direccionPais
+        paisNacionalidad
+        cantidadAcciones
+        participacion
+        tipoAcciones
+        estado
+        tipoPersona
+        decevale
+        idDividendo
+        periodo
+        dividendo
+        baseImponible
+        retencion
+        dividendoRecibido
+        estadoDividendo
+        documento
+        solicitado
+        fechaSolicitud
+        HoraSolicitud
+        fechaPago
         createdAt
         updatedAt
       }

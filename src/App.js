@@ -20,6 +20,7 @@ import Donacion from './views/donacion';
 import Parametros from './views/parametros';
 import Reportes from './views/reportes';
 import Asambleas from './views/asambleas';
+import Dividendos from './views/dividendos';
 
 function App() {
 
@@ -40,7 +41,9 @@ function App() {
         <div>            
           <Layout>
             <Switch>
-
+            <Route path="/dividendos">
+                <Dividendos />
+              </Route>  
               <Route path="/asambleas">
                 <Asambleas />
               </Route>  

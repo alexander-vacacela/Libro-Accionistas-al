@@ -1103,6 +1103,32 @@ export const createParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -1118,6 +1144,32 @@ export const updateParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -1133,6 +1185,32 @@ export const deleteParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -1526,6 +1604,189 @@ export const deleteAccionistasxJunta = /* GraphQL */ `
       votacion13
       votacion14
       votacion15
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDividendos = /* GraphQL */ `
+  mutation CreateDividendos(
+    $input: CreateDividendosInput!
+    $condition: ModelDividendosConditionInput
+  ) {
+    createDividendos(input: $input, condition: $condition) {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDividendos = /* GraphQL */ `
+  mutation UpdateDividendos(
+    $input: UpdateDividendosInput!
+    $condition: ModelDividendosConditionInput
+  ) {
+    updateDividendos(input: $input, condition: $condition) {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDividendos = /* GraphQL */ `
+  mutation DeleteDividendos(
+    $input: DeleteDividendosInput!
+    $condition: ModelDividendosConditionInput
+  ) {
+    deleteDividendos(input: $input, condition: $condition) {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDividendosAccionista = /* GraphQL */ `
+  mutation CreateDividendosAccionista(
+    $input: CreateDividendosAccionistaInput!
+    $condition: ModelDividendosAccionistaConditionInput
+  ) {
+    createDividendosAccionista(input: $input, condition: $condition) {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDividendosAccionista = /* GraphQL */ `
+  mutation UpdateDividendosAccionista(
+    $input: UpdateDividendosAccionistaInput!
+    $condition: ModelDividendosAccionistaConditionInput
+  ) {
+    updateDividendosAccionista(input: $input, condition: $condition) {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDividendosAccionista = /* GraphQL */ `
+  mutation DeleteDividendosAccionista(
+    $input: DeleteDividendosAccionistaInput!
+    $condition: ModelDividendosAccionistaConditionInput
+  ) {
+    deleteDividendosAccionista(input: $input, condition: $condition) {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
       createdAt
       updatedAt
     }

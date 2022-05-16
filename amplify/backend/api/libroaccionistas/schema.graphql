@@ -201,6 +201,32 @@ type Parametro @model {
   moneda: String
   cantidadEmitida: Int
   valorNominal: Float
+  baseImponible: Float
+  noResidente: Float
+  IGdesde1: Float
+  IGhasta1: Float
+  FBretencion1: Float
+  FEretencion1: Float
+  IGdesde2: Float
+  IGhasta2: Float
+  FBretencion2: Float
+  FEretencion2: Float
+  IGdesde3: Float
+  IGhasta3: Float
+  FBretencion3: Float
+  FEretencion3: Float
+  IGdesde4: Float
+  IGhasta4: Float
+  FBretencion4: Float
+  FEretencion4: Float
+  IGdesde5: Float
+  IGhasta5: Float
+  FBretencion5: Float
+  FEretencion5: Float
+  IGdesde6: Float
+  IGhasta6: Float
+  FBretencion6: Float
+  FEretencion6: Float  
 }
 
 type Asamblea @model {
@@ -316,4 +342,50 @@ type AccionistasxJunta @model @key(name: "byAsamblea", fields: ["asambleaID"]) {
   votacion13: Boolean
   votacion14: Boolean
   votacion15: Boolean
+}
+
+type Dividendos @model {
+  id: ID!  
+  periodo: String
+  dividendo: Float
+  porcentajeRepartir: Float
+  dividendoRepartir: Float
+  fechaCorte: String
+  fechaPago: String
+  estado: String
+  retencion: Float
+  idDividendoOrigen: ID
+  saldoDividendo: Float
+  saldoPorcentajeDividendo: Float
+  entregado: Float
+  porEntregar: Float
+  
+}
+
+type DividendosAccionista @model {
+  id: ID!  
+  idAccionista: ID!
+  tipoIdentificacion:  String!
+  identificacion: String!
+  nombre: String!
+  direccionPais: String
+  paisNacionalidad: String
+  cantidadAcciones: Int
+  participacion: Float
+  tipoAcciones: String
+  estado: String!
+  tipoPersona: String!
+  decevale: String
+  idDividendo: ID!
+  periodo: String
+  dividendo: Float
+  baseImponible: Float
+  retencion: Float
+  dividendoRecibido: Float
+  estadoDividendo: String
+  documento: String
+  solicitado: Boolean
+  fechaSolicitud: String
+  HoraSolicitud: String
+  fechaPago: String
 }

@@ -71,7 +71,7 @@ export default function Sidebar(props){
         },
         {
             label: "Dividendos",
-            path: "/logout",
+            path: "/dividendos",
             icon: <AttachMoneyIcon />
         },
         {

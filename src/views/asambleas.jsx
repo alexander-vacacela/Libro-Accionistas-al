@@ -1386,7 +1386,7 @@ export default function Asambleas() {
                                 tabIndex={-1}
                                 disableRipple
                                 inputProps={{ 'aria-labelledby': `checkbox-list-label-${item.id}` }}
-                                
+                                disabled={asambleaSeleccionada.estado == "Realizada" ? true : false}
                             />
                         </ListItemIcon>    
                         <ListItemText style={{flex:2, display:'flex', alignItems:'flex-start', justifyContent:'flex-start'}}><small>{item.representanteNombre}</small></ListItemText>                    
@@ -1715,6 +1715,7 @@ export default function Asambleas() {
                                         tabIndex={-1}
                                         disableRipple
                                         inputProps={{ 'aria-labelledby': `checkbox-list-label-${item.id}` }}
+                                        disabled={asambleaSeleccionada.estado == "Realizada" ? true : false}
                                     />
                                 </ListItemIcon>    
 

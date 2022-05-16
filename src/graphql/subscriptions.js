@@ -947,6 +947,32 @@ export const onCreateParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -959,6 +985,32 @@ export const onUpdateParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -971,6 +1023,32 @@ export const onDeleteParametro = /* GraphQL */ `
       moneda
       cantidadEmitida
       valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
       createdAt
       updatedAt
     }
@@ -1346,6 +1424,171 @@ export const onDeleteAccionistasxJunta = /* GraphQL */ `
       votacion13
       votacion14
       votacion15
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDividendos = /* GraphQL */ `
+  subscription OnCreateDividendos {
+    onCreateDividendos {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDividendos = /* GraphQL */ `
+  subscription OnUpdateDividendos {
+    onUpdateDividendos {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDividendos = /* GraphQL */ `
+  subscription OnDeleteDividendos {
+    onDeleteDividendos {
+      id
+      periodo
+      dividendo
+      porcentajeRepartir
+      dividendoRepartir
+      fechaCorte
+      fechaPago
+      estado
+      retencion
+      idDividendoOrigen
+      saldoDividendo
+      saldoPorcentajeDividendo
+      entregado
+      porEntregar
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDividendosAccionista = /* GraphQL */ `
+  subscription OnCreateDividendosAccionista {
+    onCreateDividendosAccionista {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDividendosAccionista = /* GraphQL */ `
+  subscription OnUpdateDividendosAccionista {
+    onUpdateDividendosAccionista {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDividendosAccionista = /* GraphQL */ `
+  subscription OnDeleteDividendosAccionista {
+    onDeleteDividendosAccionista {
+      id
+      idAccionista
+      tipoIdentificacion
+      identificacion
+      nombre
+      direccionPais
+      paisNacionalidad
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      decevale
+      idDividendo
+      periodo
+      dividendo
+      baseImponible
+      retencion
+      dividendoRecibido
+      estadoDividendo
+      documento
+      solicitado
+      fechaSolicitud
+      HoraSolicitud
+      fechaPago
       createdAt
       updatedAt
     }
