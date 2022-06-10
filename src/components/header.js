@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import { useHistory, useLocation } from 'react-router';
 
 import {  AppBar, Toolbar, Typography, makeStyles, Button, MenuItem, Menu, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
@@ -16,10 +16,14 @@ import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 
 import {Auth} from 'aws-amplify';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 /*
 const usuario = async() => await Auth.currentUserInfo()
 console.log('USUARIO', usuario)
 */
+
+import logo from '../images/Unacem.png';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -80,6 +84,7 @@ export default function Header(props){
 
   const openPerfil = Boolean(anchorElPerfil);
 
+  //const [cart, setCart] = useState([]);
 
   const handleMenu = (event) => {
       setAnchorElPerfil(event.currentTarget);
@@ -104,11 +109,19 @@ export default function Header(props){
   const handleCloseAccionistas = () => {
     setAnchorElAccionista(null);
   };
-
+/*
   function getUser() {
     let user = Auth.user.username;
     return user;
     }
+*/
+    function getUser() {
+      //console.log("AUTH.USER",Auth.user);
+      let user 
+      if(Auth.user != null) user = Auth.user.username;
+      return user;
+      }
+
 /*
   async function signOut() {
     try {
@@ -118,13 +131,51 @@ export default function Header(props){
     }
   }
 */
+
+ const logOut = () => {
+   Auth.signOut();
+   //setUserName("");
+   //history.push('/blotter');
+   //userHasAuthenticated(false);
+   //setCart([...cart, 1]);
+   //window.location.reload();
+  }
+
+  const [userName, setUserName] = useState("");
+  const [perfil, setPerfil] = useState();
+  
+  useEffect(() => {
+    //fetchOperaciones("Pendiente");
+    //getUser();
+    const user = getUser();
+    //setUserName(user.username);
+    setUserName(user);
+
+    //console.log("QUE HAY", Auth.user.signInUserSession.accessToken.payload['cognito:groups'][0]);
+    setPerfil(Auth.user ? Auth.user.signInUserSession.accessToken.payload['cognito:groups'][0] : "");
+/*
+    if(typeof(Auth.user) !== 'undefined')
+    {
+      if( Auth.user.signInUserSession != null)
+      {
+        console.log("DATA USER", Auth.user.signInUserSession);
+        //setPerfil(Auth.user.signInUserSession.accessToken.payload['cognito:groups'][0]);              
+      }
+    }
+*/
+
+    //window.location.reload();
+  }, [userName]);
+
+
+
   return (
 
 <div className={classes.root}>
 
 <AppBar position="absolute" className={clsx(classes.appBar, props.open && classes.appBarShift)}>
     <Toolbar className={classes.toolBar}>
-
+    {perfil != "Accionista" &&
     <div className={classes.leftToolbar}>
       <IconButton
           edge="start"
@@ -138,10 +189,22 @@ export default function Header(props){
           Libro de Accionistas{location.pathname.replace('/', ' / ') }
       </Typography>
     </div>
+}
+
+{perfil === "Accionista" &&
+
+
+  <Typography variant='caption'  noWrap className={classes.title}>
+          Portal de Accionistas Unacem
+    </Typography>
+  
+
+}
 
   <div className={classes.rightToolbar}>
 
-    <Button                
+    {perfil != "Accionista" &&
+    <Button
         variant="contained"
         color="primary"
         className={classes.button}
@@ -152,10 +215,14 @@ export default function Header(props){
     >
         +  Cesión
     </Button>
+    }
 
+{perfil != "Accionista" &&
     <Button aria-controls="menu-operaciones" aria-haspopup="true" onClick={handleClickOperaciones} color='primary' size='small' style={{textTransform: 'none'}}>
         +  Operaciones
     </Button>
+}
+
     <Menu
         id="menu-operaciones"
         anchorEl={anchorEl}
@@ -201,9 +268,11 @@ export default function Header(props){
         </MenuItem>
     </Menu>
 
+{perfil != "Accionista" &&
     <Button aria-controls="menu-accionista" aria-haspopup="true" onClick={handleClickAccionistas} color='primary' size='small' style={{textTransform: 'none'}}>
         +  Accionista
     </Button>
+}
     <Menu
         id="menu-accionista"
         anchorEl={anchorElAccionista}
@@ -251,9 +320,14 @@ export default function Header(props){
       onClose={handleClose}
     >
       <MenuItem onClick={handleClose}>Mi perfil</MenuItem>
-      <MenuItem onClick={handleClose}>Salir</MenuItem>
+      <MenuItem >
+      <AmplifySignOut />
+      </MenuItem>
     </Menu>
-      <div><Typography color='primary'> <small> {getUser()} </small> </Typography></div>
+
+    {perfil != "Accionista" &&
+      <div><Typography color='primary'> <small> {userName} </small> </Typography></div>
+    }
   </div>
 
     </Toolbar>

@@ -536,7 +536,96 @@ export default function PersonaJuridica() {
       {
         label: "Banco del Austro",
         value: "10",
-      },                                      
+      },    
+      
+      {
+        label: "Banco Capital",
+        value: "11",
+      },       
+      {
+        label: "Banco Comercial de Manabi",
+        value: "12",
+      },       
+      {
+        label: "CoopNacional",
+        value: "13",
+      },       
+      {
+        label: "DelBank",
+        value: "14",
+      },       
+      {
+        label: "D-Miro",
+        value: "15",
+      },  
+      {
+        label: "Banco Finca",
+        value: "16",
+      },      
+      {
+        label: "Banco Litoral",
+        value: "17",
+      },    
+      {
+        label: "Banco Loja",
+        value: "18",
+      },          
+      {
+        label: "Banco Machala",
+        value: "19",
+      },   
+      {
+        label: "Banco Solidario",
+        value: "20",
+      },    
+      {
+        label: "Banco Sudamericano",
+        value: "21",
+      },    
+      {
+        label: "Banco VisionFund Ecuador",
+        value: "22",
+      },           
+      { label: "CAJA CENTRAL - FINANCOOP",value: "23",},
+      { label: "COOPERATIVA CAMARA DE COMERCIO DE AMBATO",value: "24",},
+      { label: "COOPERATIVA MUSHUC RUNA LTDA.",value: "25",},
+      { label: "COOPERATIVA PADRE JULIAN LORENTE LTDA.",value: "26",},
+      { label: "COOPERATIVA 15 DE ABRIL LTDA.",value: "27",},
+      { label: "COOPERATIVA 23 DE JULIO",value: "28",},
+      { label: "COOPERATIVA 29 DE OCTUBRE",value: "29",},
+      { label: "COOPERATIVA ANDALUCIA",value: "30",},
+      { label: "COOPERATIVA COOPROGRESO",value: "31",},
+      { label: "COOPERATIVA 9 DE OCTUBRE LTDA",value: "32",},
+      { label: "COOPERATIVA COTOCOLLAO",value: "33",},
+      { label: "COOPERATIVA ONCE DE JUNIO",value: "34",},
+      { label: "COOPERATIVA DE LA PEQUEÑA EMPRESA CACPE BIBLIAN LTDA.",value: "35",},
+      { label: "COOPERATIVA DESARROLLO DE LOS PUEBLOS",value: "36",},
+      { label: "COOPERATIVA EL SAGRARIO",value: "37",},
+      { label: "COOPERATIVA LA DOLOROSA LTDA.",value: "38",},
+      { label: "COOPERATIVA OSCUS",value: "39",},
+      { label: "COOPERATIVA RIOBAMBA",value: "40",},
+      { label: "COOPERATIVA SAN FRANCISCO",value: "41",},
+      { label: "COOPERATIVA SANTA ANA LTDA.",value: "42",},
+      { label: "COOPERATIVA TULCAN",value: "43",},
+      { label: "COOPERATIVA ALIANZA DEL VALLE LTDA.",value: "44",},
+      { label: "COOPERATIVA ATUNTAQUI LTDA.",value: "45",},
+      { label: "COOPERATIVA PEQUEÑA EMPRESA DE COTOPAXI LTDA. (CACPECO)",value: "46",},
+      { label: "COOPERATIVA COMERCIO LTDA.",value: "47",},
+      { label: "COOPERATIVA CONSTRUCCION COMERCIO Y PRODUCCIÓN LTDA",value: "48",},
+      { label: "COOPERATIVA DE LA PEQUEÑA EMPRESA DE PASTAZA",value: "49",},
+      { label: "COOPERATIVA GUARANDA LTDA.",value: "50",},
+      { label: "COOPERATIVA JARDIN AZUAYO",value: "51",},
+      { label: "COOPERATIVA JUVENTUD ECUATORIANA PROGRESISTA LTDA.",value: "52",},
+      { label: "COOPERATIVA MANUEL ESTEBAN GODOY ORTEGA LTDA. COOPMEGO",value: "53",},
+      { label: "COOPERATIVA PABLO MUÑOZ VEGA.",value: "54",},
+      { label: "COOPERATIVA PREVISION AHORRO Y DESARROLLO - COOPAD",value: "55",},
+      { label: "COOPERATIVA SANTA ROSA LTDA.",value: "56",},
+      { label: "COOPERATIVA CALCETA LTDA.",value: "57",},
+      { label: "COOPERATIVA CHONE LTDA.",value: "58",},
+      { label: "COOPERATIVA DE LA PEQUEÑA EMPRESA DE LOJA CACPE LOJA LTDA.",value: "59",},
+      { label: "COOPERATIVA SAN FRANCISCO DE ASIS LTDA.",value: "60",},
+      { label: "COOPERATIVA SAN JOSE LTDA.",value: "61",},      
+
   ];
 
   const tipoCuenta = [

@@ -21,27 +21,52 @@ import Parametros from './views/parametros';
 import Reportes from './views/reportes';
 import Asambleas from './views/asambleas';
 import Dividendos from './views/dividendos';
+import AccionistaDashboard from './views/accionista-dashboard'
 
 function App() {
 
     const [authState, setAuthState] = useState();
     const [user, setUser] = useState();
+    const [perfil, setPerfil] = useState();
   
     useEffect(() => {
 
         return onAuthUIStateChange((nextAuthState, authData) => {
 
-            setAuthState(nextAuthState);
+            setAuthState(nextAuthState);            
             setUser(authData)
+            
+            if(typeof(authData) !== 'undefined')
+            {
+              if(authData.signInUserSession != null)
+              {
+                //console.log("DATA USER", authData.signInUserSession);
+                setPerfil(authData.signInUserSession.accessToken.payload['cognito:groups'][0]);              
+              }
+            }
+            //setPerfil((typeof(authData.signInUserSession) !== 'undefined')  ? authData.signInUserSession.accessToken.payload['cognito:groups'][0] : "");
         });
     }, []);
     
 
-    return authState === AuthState.SignedIn && user ? (
+    return authState === AuthState.SignedIn && user ? perfil === "Accionista" ? (
+      <div>            
+      <Layout>
+        <Switch>
+          <Route path="/accionistadashboard">
+            <AccionistaDashboard />
+          </Route>                
+          <Route path="/">
+            <Redirect to="/accionistadashboard" />
+          </Route>
+        </Switch>
+      </Layout>
+    </div>
+    ) : (
         <div>            
           <Layout>
-            <Switch>
-            <Route path="/dividendos">
+            <Switch>             
+              <Route path="/dividendos">
                 <Dividendos />
               </Route>  
               <Route path="/asambleas">

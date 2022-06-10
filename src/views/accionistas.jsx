@@ -23,6 +23,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import FiberNewOutlined from '@material-ui/icons/FiberNewOutlined';
 
+//import GridViewIcon from '@material-ui/icons/GridView';
+import BorderAllIcon from '@material-ui/icons/BorderAll';
+import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -161,6 +164,8 @@ function QuickSearchToolbar(props) {
 
   export default function Accionistas() {
 
+    const [consultaDetallada, setConsultaDetallada] = useState(false);
+
     const [cantidadEmitido, setCantidadEmitido] = useState(1);
     const [openTitulos, setOpenTitulos] = useState(false);
     const handleClose = () => setOpenTitulos(false);
@@ -171,7 +176,51 @@ function QuickSearchToolbar(props) {
       return `${(params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido).toFixed(8) || ''} `;
     }
 
-    const columns = [
+    let columns = []
+    if(consultaDetallada){
+      columns = [
+        {  field: 'tipoIdentificacion', headerName: 'Tipo Id', width: 100,},
+        {
+          field: 'identificacion',
+          headerName: 'Identificacion',
+          width: 100,
+        },
+        {
+          field: 'decevale',
+          headerName: 'Decevale',
+          width: 100,
+        },    
+        {  field: 'nombre', headerName: 'Nombre', width: 100,},
+        {  field: 'direccionCalle', headerName: 'Calle', width: 100,},
+        {  field: 'direccionNumero', headerName: 'Numero', width: 100,},
+        {  field: 'nombreBanco', headerName: 'Banco', width: 100,},
+        {  field: 'tipoCuenta', headerName: 'Tipo Cta', width: 100,},
+        {  field: 'cuentaBancaria', headerName: 'Cuenta', width: 100,},
+        {  field: 'paisNacionalidad', headerName: 'Nacionalidad', width: 100,},
+        {  field: 'cantidadAcciones', headerName: 'Acciones', width: 100, align: "right",},
+        {  field: 'participacion', headerName: 'Participacion', width: 100,type: 'number',valueGetter: getParticipacion,},
+        {  field: 'tipoAcciones', headerName: 'Tipo Acciones', width: 100,},
+        {  field: 'pn_estadoCivil', headerName: 'E. Civil', width: 100,},
+        {  field: 'telefono1', headerName: 'Telef 1', width: 100,},
+        {  field: 'obs1', headerName: 'Obs Tel 1', width: 100,},
+        {  field: 'telefono2', headerName: 'Telef 2', width: 100,},
+        {  field: 'obs2', headerName: 'Obs Tel 2', width: 100,},
+        {  field: 'telefono3', headerName: 'Telef 3', width: 100,},
+        {  field: 'obs3', headerName: 'Obs Tel 1', width: 100,},
+        {  field: 'email1', headerName: 'Email1', width: 100,},
+        {  field: 'email2', headerName: 'Email2', width: 100,},
+        {  field: 'email3', headerName: 'Email3', width: 100,},
+        {  field: 'tipoPersona', headerName: 'Persona', width: 100,},
+        {  field: 'repLegal_tipoIdentificacion', headerName: 'RL Tipo Id', width: 100,},
+        {  field: 'repLegal_identificacion', headerName: 'RL Id', width: 100,},
+        {  field: 'repLegal_nombre', headerName: 'RL Nombre', width: 100,},
+        {  field: 'repLegal_nacionalidad', headerName: 'RL Nacionalidad', width: 100,},
+        {  field: 'repLegal_telefono', headerName: 'RL Telef', width: 100,},
+        {  field: 'repLegal_email', headerName: 'RL Email', width: 100,},
+      ]
+
+    }else{
+    columns = [
       //{ field: 'id', headerName: 'Nro', width: 80, type: 'number',},
       {
         field: 'identificacion',
@@ -296,7 +345,7 @@ function QuickSearchToolbar(props) {
           }
         },*/
     ];
-    
+  }
 
     const [accionistas, setAccionistas] = useState([]);
     const [searchText, setSearchText] = useState('');
@@ -597,11 +646,23 @@ function QuickSearchToolbar(props) {
               onChange={handleChange}     
 
             >
+
             <FormControlLabel value="Activo" control={<Radio color="secondary" size="small" />} label={<span style={{ fontSize: '0.8rem' }}>Activos</span>} />
             <FormControlLabel value="Bloqueado" control={<Radio color="secondary" size="small" />} label={<span style={{ fontSize: '0.8rem' }}>Bloqueados</span>} />
             <FormControlLabel value="Inactivo" control={<Radio color="secondary" size="small" />} label={<span style={{ fontSize: '0.8rem' }}>Inactivos</span>} />
+
+<IconButton color={consultaDetallada ? "default" : "primary"}  onClick={() => {setConsultaDetallada(false)} }>
+  <BorderAllIcon/>
+</IconButton>
+<IconButton color={consultaDetallada ? "primary" : "default"}  onClick={() => {setConsultaDetallada(true)} }>
+  <ViewColumnIcon/>
+</IconButton>
+
             </RadioGroup>
           </FormControl>
+
+
+
           <DataGrid
             style={{backgroundColor:'white'}}
             //sortModel={ [{field: 'cantidadAcciones', sort: 'desc',}]}

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import { ListItem, ListItemIcon, ListItemText, makeStyles, Drawer, List, Divider} from '@material-ui/core';
  
+import {Auth} from 'aws-amplify';
+
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import PeopleIcon from '@material-ui/icons/People';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DescriptionIcon from '@material-ui/icons/Description';
+import WebIcon from '@material-ui/icons/Web';
 
 import { secondaryListItems } from './listitems';
 import clsx from 'clsx';
@@ -45,6 +48,7 @@ import logo from '../images/Unacem.png';
      }));
  
 
+
 export default function Sidebar(props){
 
     const open = props.open;
@@ -81,10 +85,20 @@ export default function Sidebar(props){
       },        
     ];
 
-    
+    const [perfil, setPerfil] = useState();
+    useEffect(() => {
+ 
+      //console.log("QUE HAY", Auth.user.signInUserSession.accessToken.payload['cognito:groups'][0]);
+      setPerfil(Auth.user ? Auth.user.signInUserSession.accessToken.payload['cognito:groups'][0] : "");
+  
+    }, [perfil]);
+
 
     return (
-        <div>              
+      
+<div>              
+{perfil != "Accionista" &&
+<div>
             <Drawer
                 variant="permanent"
                 anchor='left'
@@ -100,7 +114,7 @@ export default function Sidebar(props){
                     }}
 
             >
-                    <img src={logo} alt="Logo" width='40' height='40' style={{marginLeft:15, marginTop:10, marginBottom:10}}/>
+            <img src={logo} alt="Logo" width='40' height='40' style={{marginLeft:15, marginTop:10, marginBottom:10}}/>
 
                 <List>
                     {menuItems.map(item => (
@@ -115,6 +129,7 @@ export default function Sidebar(props){
                     ))}
                 </List>
                 <Divider />
+
                 <List>{secondaryListItems}</List>
                 <Divider />
                 <ListItem 
@@ -126,8 +141,23 @@ export default function Sidebar(props){
                   <ListItemText primary="Configuración" />
                 </ListItem>   
 
-            </Drawer>            
+                <Divider />
+                                  
+                <ListItem 
+                  button
+                  onClick={()=>history.push('/accionistadashboard')} >
+                  <ListItemIcon>
+                    <WebIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Portal" />
+                </ListItem>   
+
+
+            </Drawer>   
+            </div>
+                    }
         </div>
+
     )
 }
 
