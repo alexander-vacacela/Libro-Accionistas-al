@@ -74,10 +74,22 @@ app.listen(3000, function() {
 app.get('/registro', function(req, res) {
 
   const driver = new qldb.QldbDriver(LEDGER, myConfig);
+
+  const query = req.query;
+  // or
+  // const query = req.apiGateway.event.queryStringParameters
+  /*
+  res.json({
+    event: query.id, // to view all event data
+    query: query
+  });
+*/
+  //console.log("PARAMETRO identificacion ", req.query.identificacion);      
+  
   driver
     .executeLambda(async (txn) => {
       return txn.execute(
-        "SELECT * FROM Favourite"
+        "SELECT * FROM _ql_committed_Accionista WHERE data.id = ?",query.id
       );
     })
     .then((result) => {
@@ -115,7 +127,7 @@ app.get('/registro/*', function(req, res) {
   //const identificacion = req.params.identificacion;
   //const accionista = req.body;
   //const identificacion = '590037933';
-  const query = req.query.identificacion;
+  const query = req.body;
   // or
   // const query = req.apiGateway.event.queryStringParameters  
 
@@ -124,7 +136,7 @@ app.get('/registro/*', function(req, res) {
       return txn.execute(
         //"SELECT * FROM history(Accionista)",
         "SELECT * FROM history(Accionista) WHERE data.id = ?",
-        query,
+        query.identificacion,
       );
     })
     .then((result) => {

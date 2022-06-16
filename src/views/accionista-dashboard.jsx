@@ -86,6 +86,8 @@ export default function Accionistadashboard() {
 
     const[refrescar, setRefrescar]=useState(false);
 
+    const[hash, setHash]=useState('');
+
     const columns = [
         {
           field: 'tipo',
@@ -537,6 +539,7 @@ setDividendos(accionistaCalculo);
         
         fetchDividendos();
   
+        consultarHashAccionista();
         
 
       }, [refrescar,accionistasxJuntas.length]);
@@ -615,8 +618,13 @@ setDividendos(accionistaCalculo);
 
         doc.setFontSize(8);
         doc.setTextColor(150);
-        const texto6 = "Fuente de Información plataforma de accionistas Unacem https://main.d1uap272r7bnzf.amplifyapp.com/"
-        doc.text(texto6, 95, 500);            
+
+        const texto6 = "Hash " + hash;
+        doc.text(texto6,95, 480);            
+
+
+        const texto7 = "Fuente de Información plataforma de accionistas Unacem https://main.d1uap272r7bnzf.amplifyapp.com/"
+        doc.text(texto7, 95, 500);            
 
         
 //        doc.autoTable(content);
@@ -691,6 +699,26 @@ setDividendos(accionistaCalculo);
     const handleChangeNombreRepresentante = (event) => { setNombreRepresentante(event.target.value); };
     const handleChangeIdentificacionRepresentante = (event) => { setIdentificacionRepresentante(event.target.value); };
 
+
+    const consultarHashAccionista = async() => {
+      try{
+
+        const miInit = { // OPTIONAL
+          queryStringParameters: {  // OPTIONAL
+            id : accionista[0].id,
+          },
+      };
+
+        console.log("Data API Parameter", miInit);
+        const data = await API.get('LibroApiQLDB','/registro',miInit )
+        console.log("Data API", data[0].hash);
+        setHash(data[0].hash)
+
+      }catch (err){
+          console.log('error', err)
+      }
+
+    }
 
 
 
@@ -847,6 +875,13 @@ setDividendos(accionistaCalculo);
               <Button onClick={handleCloseRegistroAsamblea} color="primary" style={{textTransform: 'none'}}>
                 Salir
               </Button>
+
+              <Button onClick={consultarHashAccionista} color="primary" style={{textTransform: 'none'}}>
+                Prueba
+              </Button>
+
+              
+
             </DialogActions>
           </Dialog>
   
