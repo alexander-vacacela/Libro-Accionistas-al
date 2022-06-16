@@ -44,7 +44,7 @@
       "function": {
         "crearRegistro": {
           "deploymentBucketName": "amplify-libroaccionistas-prod-115753-deployment",
-          "s3Key": "amplify-builds/crearRegistro-46596d6b554470565350-build.zip"
+          "s3Key": "amplify-builds/crearRegistro-354b344c66436247517a-build.zip"
         }
       }
     }

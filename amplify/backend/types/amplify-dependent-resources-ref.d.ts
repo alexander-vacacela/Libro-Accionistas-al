@@ -15,7 +15,7 @@ export type AmplifyDependentResourcesAttributes = {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         },
-        "LibroApiQLDB": {
+        "apiQLDBprod": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"

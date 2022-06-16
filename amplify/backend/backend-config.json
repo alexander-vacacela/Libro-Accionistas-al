@@ -40,7 +40,7 @@
         }
       }
     },
-    "LibroApiQLDB": {
+    "apiQLDBprod": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [

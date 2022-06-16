@@ -9,6 +9,10 @@ See the License for the specific language governing permissions and limitations 
 //import { LEDGER_NAME_PROD, LEDGER_NAME_STAG, LEDGER_NAME_DEV, ENV_PROD, ENV_STAG, ENV_DEV } from "./Constants";
 
 const LEDGER_NAME_PROD = "prodLibroLedger";
+//const LEDGER_NAME_STAG = "prodLibroLedger";
+//const LEDGER_NAME_DEV = "prodLibroLedger";
+
+//const LEDGER_NAME_PROD = "myLedgerPrueba";
 const LEDGER_NAME_STAG = "myLedgerPrueba";
 const LEDGER_NAME_DEV = "myLedgerPrueba";
 
@@ -60,6 +64,11 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "*")  
+  res.header("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS")
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, X-Token")
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000")  
+  res.header("Access-Control-Allow-Origin", "http://localhost")  
+  res.header("Access-Control-Allow-Origin", "https://localhost")  
   next()
 });
 /*
@@ -81,11 +90,12 @@ app.get('/registro', function(req, res) {
   /*
   res.json({
     event: query.id, // to view all event data
-    query: query
+    query: query,
+    hash: LEDGER,
   });
 */
   //console.log("PARAMETRO identificacion ", req.query.identificacion);      
-  
+ 
   driver
     .executeLambda(async (txn) => {
       return txn.execute(
@@ -98,6 +108,57 @@ app.get('/registro', function(req, res) {
       //console.log("The result List is ", JSON.stringify(resultList, null, 2));      
       res.send(JSON.stringify(resultList, null, 2));
 
+    })
+    .then((result) => {
+      driver.close();
+    });
+
+  
+  //const response = await getLicence("xxx");
+
+  // Add your code here
+  /*
+  const people =[
+    {name : 'Jorge Yamashiro', age : 45},
+    {name : 'Jenny Garcia', age : 40},
+
+  ]
+  //res.json({success: 'get call succeed!', url: req.url});
+  res.json({success: 'get call succeed!', people});
+*/
+
+});
+
+
+
+app.get('/crearRegistro-prod', function(req, res) {
+
+  const driver = new qldb.QldbDriver("prodLibroLedger", myConfig);
+
+  const query = req.query;
+  // or
+  // const query = req.apiGateway.event.queryStringParameters
+  /*
+  res.json({
+    event: query.id, // to view all event data
+    query: query,
+    hash: LEDGER,
+  });
+*/
+  //console.log("PARAMETRO identificacion ", req.query.identificacion);      
+ 
+  driver
+    .executeLambda(async (txn) => {
+      return txn.execute(
+        "SELECT * FROM _ql_committed_Accionista WHERE data.id = ?",query.id
+      );
+    })
+    .then((result) => {
+      const resultList = result.getResultList();
+      //Pretty print the result list
+      //console.log("The result List is ", JSON.stringify(resultList, null, 2));      
+      res.send(JSON.stringify(resultList, null, 2));
+      res.status("200");
     })
     .then((result) => {
       driver.close();

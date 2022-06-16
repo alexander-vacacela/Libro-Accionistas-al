@@ -533,13 +533,15 @@ setDividendos(accionistaCalculo);
         fetchParametros();
         fetchPerfilUsuario(user);
 
+        consultarHashAccionista();
+
         fetchAsambleas();
         
         fetchAccionistasxAsambleas();
         
         fetchDividendos();
   
-        consultarHashAccionista();
+
         
 
       }, [refrescar,accionistasxJuntas.length]);
@@ -710,7 +712,8 @@ setDividendos(accionistaCalculo);
       };
 
         console.log("Data API Parameter", miInit);
-        const data = await API.get('LibroApiQLDB','/registro',miInit )
+        //const data = await API.get('LibroApiQLDB','/registro',miInit )
+        const data = await API.get('apiQLDBprod','/crearRegistro-prod',miInit )
         console.log("Data API", data[0].hash);
         setHash(data[0].hash)
 
