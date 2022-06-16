@@ -63,12 +63,20 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 // Enable CORS for all methods
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "*")  
+  //res.header("Access-Control-Allow-Headers", "*") 
+
+  //res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Max-Age", "1800");
+  res.header("Access-Control-Allow-Headers", "content-type");
+  res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
+
+  /* 
   res.header("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS")
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, X-Token")
   res.header("Access-Control-Allow-Origin", "http://localhost:3000")  
   res.header("Access-Control-Allow-Origin", "http://localhost")  
-  res.header("Access-Control-Allow-Origin", "https://localhost")  
+  res.header("Access-Control-Allow-Origin", "https://localhost")  */
   next()
 });
 /*
@@ -158,7 +166,7 @@ app.get('/crearRegistro-prod', function(req, res) {
       //Pretty print the result list
       //console.log("The result List is ", JSON.stringify(resultList, null, 2));      
       res.send(JSON.stringify(resultList, null, 2));
-      res.status("200");
+      //res.status("200");
     })
     .then((result) => {
       driver.close();
