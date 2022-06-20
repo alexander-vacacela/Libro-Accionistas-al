@@ -21,6 +21,7 @@
     "jsbi": "^3.1.2",
     "jspdf": "^2.5.0",
     "jspdf-autotable": "^3.5.23",
+    "qrcode.react": "^3.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.15.4",

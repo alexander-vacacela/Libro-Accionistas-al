@@ -124,8 +124,9 @@ function App() {
             <AmplifySignIn
               hideSignUp="true" 
               slot="sign-in" 
-              headerText="Libro de Accionistas"
-              submitButtonText="Iniciar Sesión"            
+              headerText="Libro de Accionistas"              
+              submitButtonText="Iniciar Sesión"  
+                  
               />
           </AmplifyAuthenticator>
         </AmplifyAuthContainer>

@@ -11,10 +11,15 @@ import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-g
 
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import QRcode from 'qrcode.react'
 
 import logo from '../images/logoUNACEMmedMarco.jpg';
 import fondo from '../images/Cert1.jpg';
-import QRcode from '../images/QRcode.png';
+//import QRcode from '../images/QRcode.png';
+import marco from '../images/Recurso 1.png'
+import fondoUnacem from '../images/Recurso 2.png'
+import logoSolo from '../images/Recurso 3.png'
+import logoCompleto from '../images/Recurso 4.png'
 
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
@@ -40,12 +45,17 @@ import FiberNewOutlined from '@material-ui/icons/FiberNewOutlined';
 import Grid from '@material-ui/core/Grid';
 
 import {Card, CardContent, Typography,  Button, ListItem, ListItemText, ListSubheader, List, Tooltip, Chip, 
-  FormControl, RadioGroup, FormControlLabel, Radio, Box, Tabs, Tab,
+  FormControl, RadioGroup, FormControlLabel, Radio, Box, Tabs, Tab, Snackbar,
   Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle, ListItemIcon,} from '@material-ui/core';
 
 import { uuid } from 'uuidv4';
 
 import { styled } from '@material-ui//styles';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
   const defaultTheme = createTheme();
   const useStyles = makeStyles(
@@ -73,6 +83,9 @@ import { styled } from '@material-ui//styles';
   
   
 export default function Accionistadashboard() {
+
+    const [openSnack, setOpenSnack] = useState(false);
+    const [contador, setContador] = useState(1);
 
     const [rows, setRows] = useState([]);
     const [openRegistroAsamblea, setOpenRegistroAsamblea] = useState(false);
@@ -528,6 +541,10 @@ setDividendos(accionistaCalculo);
 
       useEffect(() => {
 
+        if(contador == 1) {
+          setOpenSnack(true)
+          setContador(2)
+        }
         const user = getUser();
         setUserName(user);
         fetchParametros();
@@ -545,6 +562,13 @@ setDividendos(accionistaCalculo);
         
 
       }, [refrescar,accionistasxJuntas.length]);
+
+      const handleCloseSnack = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpenSnack(false);
+      };
 
       function getUser() {
         //console.log("AUTH.USER",Auth.user);
@@ -571,6 +595,9 @@ setDividendos(accionistaCalculo);
   
 
       const exportPDFCertificado = async() => {
+
+        let base64Image = document.getElementById('qrcode').toDataURL()
+
         const unit = "pt";
         const size = "A4"; // Use A1, A2, A3 or A4
         //const orientation = "portrait"; // portrait or landscape
@@ -581,52 +608,83 @@ setDividendos(accionistaCalculo);
     
         doc.setFontSize(12);
       
-        const title = "Unacem Ecuador S.A." ;
+        const title = "UNACEM ECUADOR S.A." ;
 
-        doc.addImage(fondo,"JPEG",0,3,840,590)    
+        doc.addImage(marco,"JPEG",0,3,840,590)    
+        doc.addImage(fondoUnacem,"JPEG",90,90,663,413)    
+        doc.addImage(logoSolo,"JPEG",420,120,30,30)
 
-        doc.addImage(logo,"JPEG",668,93,80,30)
+        //doc.addImage(QRcode,"PNG",95,430,80,80)
+        doc.addImage(base64Image,"png",95,430,80,80)        
+        doc.addImage(logoCompleto,"PNG",590,450,150,50)
 
-        doc.addImage(QRcode,"PNG",667,420,80,80)
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(100);
+        doc.setFontSize(34);
+        doc.text(title, 230, 200);
 
-        doc.setFontSize(24);
-        doc.text(title, 320, 150);
-
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(137, 34, 28);
         doc.setFontSize(12);
-        doc.text("Capital Suscrito y Autorizado USD 1,717,204.32", 310, 170);
+        doc.text("CAPITAL SUSCRITO Y AUTORIZADO USD 1,717,204.32", 280, 215);
 
-        doc.setFontSize(10);
-        const texto1 = "Este Certificado acredita que";
-        doc.text(texto1, 370, 250);            
+        doc.setTextColor(100);
+        doc.setFontSize(11);
+        const texto1 = "ESTE CERTIFICADO ACREDITA QUE";
+        doc.text(texto1, 340, 250);            
         
-        const texto2 = accionista[0].nombre + " con Identificacion " + accionista[0].tipoIdentificacion + " " + accionista[0].identificacion;
-        doc.text(texto2, 270, 270);            
+        //const texto2 = accionista[0].nombre + " con Identificacion " + accionista[0].tipoIdentificacion + " " + accionista[0].identificacion;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        const texto2 = accionista[0].nombre 
+        doc.text(texto2, 220, 290);            
       
-        const texto3 = "es propietario de " + accionista[0].cantidadAcciones + " acciones" ;
-        doc.text(texto3, 340, 290);    
+        doc.setDrawColor(100);
+        doc.setLineWidth(0.5);
+        doc.line(150, 300, 690, 300);
 
-        const texto4 = "con todos los derechos y obligaciones que le corresponden a la Ley y los Estatutos Sociales de la Compañia." ;
-        doc.text(texto4, 190, 310);    
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        const texto3 = "ES PROPIETARIO DE " + accionista[0].cantidadAcciones + " ACCIONES DE US$ 0.04 CENTAVOS DE DOLAR" ;
+        doc.text(texto3, 230, 320);    
+
+        const texto4 = "DE LOS ESTADOS UNIDOS DE AMERICA, CON TODOS LOS DERECHOS Y OBLIGACIONES " ;
+        doc.text(texto4, 190, 340);    
+
+        const texto5 = "QUE LE CORRESPONDEN A LA LEY Y LOS ESTATUTOS SOCIALES DE LA COMPAÑIA." ;
+        doc.text(texto5, 200, 360);    
+
+
+        doc.setDrawColor(137, 34, 28);
+        doc.setLineWidth(0.5);
+        doc.line(250, 382, 590, 382);
 
         //const texto5 = "Expedido el 08 de Junio del 2022" ;
-        const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Deciembre"];
+        const months = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
 
         const d = new Date();
         
-        const texto5 = "Expedido el " + d.getDate() + " de " + months[d.getMonth()] + " del " + d.getFullYear();
-        //const texto5 = "Expedido el " + d.getDate() + " de " + months[d.getMonth()] + " del " + d.getFullYear() + " a las " + d.getHours() + ":" + ('0'+d.getMinutes()).slice(-2) + " horas.";
-        doc.text(texto5, 350, 350);    
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(137, 34, 28);
+        //const texto6 = "EXPEDIDO EL " + d.getDate() + " DE " + months[d.getMonth()] + " DEL " + d.getFullYear();
+        const texto6 = "EXPEDIDO EL " + d.getDate() + " DE " + months[d.getMonth()] + " DEL " + d.getFullYear() + " A LAS " + d.getHours() + ":" + ('0'+d.getMinutes()).slice(-2) + ".";
+        doc.text(texto6, 280, 400);    
 
+        doc.setDrawColor(137, 34, 28);
+        doc.setLineWidth(0.5);
+        doc.line(250, 410, 590, 410);
 
+        doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(150);
+        //const texto7 = hash;
+        //doc.text(texto7,195, 480);            
+        
+        const texto8 = "Fuente de Información plataforma de accionistas Unacem"
+        doc.text(texto8, 195, 490);            
 
-        const texto6 = "Hash " + hash;
-        doc.text(texto6,95, 480);            
-
-
-        const texto7 = "Fuente de Información plataforma de accionistas Unacem https://main.d1uap272r7bnzf.amplifyapp.com/"
-        doc.text(texto7, 95, 500);            
+        const texto9 = "https://main.d1uap272r7bnzf.amplifyapp.com/"
+        doc.text(texto9, 195, 500);            
 
         
 //        doc.autoTable(content);
@@ -638,6 +696,10 @@ setDividendos(accionistaCalculo);
 */    
     
         doc.save("CertificadoAccionistas.pdf")
+
+        //const pdf = new File([doc.output("blob")], "filename.pdf", {  type: "pdf" }),
+        //data = new FormData();      
+        //data.append("file", pdf);        
         
       }
     
@@ -731,8 +793,8 @@ setDividendos(accionistaCalculo);
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card variant="outlined">
+          <Grid item xs={12} sm={4}>
+            <Card variant="outlined" style={{height:"110px"}}>
                 <CardContent>
                     <Typography variant="body2" style={{ fontWeight: 600 }}>
                     {accionista.length > 0 && accionista[0].nombre}
@@ -745,8 +807,8 @@ setDividendos(accionistaCalculo);
             </Card>              
           </Grid>
 
-          <Grid item xs={3}>
-            <Card variant="outlined">
+          <Grid item xs={12} sm={2}>
+            <Card variant="outlined" style={{height:"110px"}}>
                 <CardContent>
                     <Typography variant="body2">
                         Acciones
@@ -758,10 +820,10 @@ setDividendos(accionistaCalculo);
             </Card>              
           </Grid>
 
-          <Grid item xs={3}>
-            <Card variant="outlined">
+          <Grid item xs={12} sm={2}>
+            <Card variant="outlined" style={{height:"110px"}}>
                 <CardContent>
-                    <Typography variant="body2">
+                    <Typography variant="body2" >
                         Capital (USD)
                     </Typography>
                     <Typography variant="h5" component="div">
@@ -771,8 +833,8 @@ setDividendos(accionistaCalculo);
             </Card>              
           </Grid>
 
-          <Grid item xs={2}>
-            <Card variant="outlined">
+          <Grid item xs={12} sm={2}>
+            <Card variant="outlined" style={{height:"110px"}}>
                 <CardContent>
                     <Typography variant="body2">
                         Participación (%)
@@ -780,6 +842,15 @@ setDividendos(accionistaCalculo);
                     <Typography variant="h5" component="div">
                     {accionista.length > 0 && (accionista[0].cantidadAcciones * 100 / cantidadEmitido).toFixed(8)}
                     </Typography>
+                </CardContent>
+            </Card>              
+          </Grid>
+
+
+          <Grid item xs={12} sm={2}>
+            <Card variant="outlined" style={{height:"110px"}}>
+                <CardContent>
+                  <QRcode value = {'https://production.dnyw5qmklx2h.amplifyapp.com/?id='+ userName} id = 'qrcode' size={75}/>
                 </CardContent>
             </Card>              
           </Grid>
@@ -809,6 +880,7 @@ setDividendos(accionistaCalculo);
             </Card>              
           </Grid>
 
+{false &&
           <Grid item xs={12}>
             <Card variant="outlined">
                 <CardContent>
@@ -830,7 +902,7 @@ setDividendos(accionistaCalculo);
                 </CardContent>
             </Card>              
           </Grid>
-
+}
 
 
           <Dialog open={openRegistroAsamblea} onClose={handleCloseRegistroAsamblea} aria-labelledby="form-dialog-title"    >          
@@ -878,17 +950,23 @@ setDividendos(accionistaCalculo);
               <Button onClick={handleCloseRegistroAsamblea} color="primary" style={{textTransform: 'none'}}>
                 Salir
               </Button>
-
-              <Button onClick={consultarHashAccionista} color="primary" style={{textTransform: 'none'}}>
-                Prueba
-              </Button>
-
-              
+            
 
             </DialogActions>
           </Dialog>
   
-
+      <Snackbar message="Hola" open={openSnack} autoHideDuration={20000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top',horizontal: 'center'}}>
+        <Alert onClose={handleCloseSnack} severity="info">
+          <h1>Bienvenidos al Portal de Accionistas de Unacem.</h1>
+          <h3>  Señores Accionistas:
+Bienvenidos a la plataforma de representación de acciones en formato electrónico de UNACEM ECUADOR S.A. Sus acciones permanecen en estatus desmaterializado, conforme lo indica la Ley de Modernización a la Ley de Compañías.
+El sistema al que usted está accediendo es una tecnología de registro o archivo de información virtual tokenizada, los datos se encuentran en bloques organizados cronológicamente, la información es distribuida, encriptada y verificable en tiempo real.
+Este portal permitirá que sus transacciones sean más eficientes debido al ahorro en costos y tiempos, son seguras porque los registros distribuidos permiten verificación y aseguran su autenticidad, su identidad está protegida criptográficamente y el sistema es completamente transparente.
+Puede acceder a la información de sus acciones en cualquier momento, haciendo uso de las credenciales que le han sido asignadas.
+En UNACEM ECUADOR S.A. estamos comprometidos con la innovación y la eficiencia, por eso desarrollamos este aplicativo digital que le permitirá tener un canal de comunicación amplio y directo.
+¡Continuamos construyendo oportunidades juntos!</h3>
+        </Alert>
+      </Snackbar>
 
       </Grid>
     </main>

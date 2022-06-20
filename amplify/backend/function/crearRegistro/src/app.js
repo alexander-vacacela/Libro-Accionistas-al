@@ -141,7 +141,7 @@ app.get('/registro', function(req, res) {
 
 app.get('/crearRegistro-prod', function(req, res) {
 
-  const driver = new qldb.QldbDriver("prodLibroLedger", myConfig);
+  const driver = new qldb.QldbDriver(LEDGER, myConfig);
 
   const query = req.query;
   // or

@@ -193,11 +193,12 @@ export default function Header(props){
 
 {perfil === "Accionista" &&
 
-
-  <Typography variant='caption'  noWrap className={classes.title}>
-          Portal de Accionistas Unacem
+  <div style={{ display: 'flex', flexDirection: 'row', alignItems:'center' }}>
+    <img src={logo} alt="Logo" width='40' height='40' style={{position:"fixed", left:20, zIndex:100, marginLeft:0, paddingLeft:0, marginRight:15, marginTop:0, marginBottom:0, }}/>
+    <Typography variant='caption'  noWrap className={classes.title}>
+          Portal de Accionistas 
     </Typography>
-  
+  </div>
 
 }
 
@@ -329,6 +330,8 @@ export default function Header(props){
       <div><Typography color='primary'> <small> {userName} </small> </Typography></div>
     }
   </div>
+
+
 
     </Toolbar>
 </AppBar>
