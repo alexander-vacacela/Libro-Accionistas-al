@@ -20,6 +20,7 @@ import marco from '../images/Recurso 1.png'
 import fondoUnacem from '../images/Recurso 2.png'
 import logoSolo from '../images/Recurso 3.png'
 import logoCompleto from '../images/Recurso 4.png'
+import bienvenida from '../images/Comunicado.jpeg'
 
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
@@ -76,7 +77,10 @@ function Alert(props) {
       },
       button: {
           borderRadius: 20,
-        }
+        },
+        myAlert: {
+          backgroundColor: "#808080"
+        }        
     }),
     { defaultTheme },
   );
@@ -955,16 +959,21 @@ setDividendos(accionistaCalculo);
             </DialogActions>
           </Dialog>
   
-      <Snackbar message="Hola" open={openSnack} autoHideDuration={20000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top',horizontal: 'center'}}>
-        <Alert onClose={handleCloseSnack} severity="info">
-          <h1>Bienvenidos al Portal de Accionistas de Unacem.</h1>
-          <h3>  Señores Accionistas:
-Bienvenidos a la plataforma de representación de acciones en formato electrónico de UNACEM ECUADOR S.A. Sus acciones permanecen en estatus desmaterializado, conforme lo indica la Ley de Modernización a la Ley de Compañías.
-El sistema al que usted está accediendo es una tecnología de registro o archivo de información virtual tokenizada, los datos se encuentran en bloques organizados cronológicamente, la información es distribuida, encriptada y verificable en tiempo real.
-Este portal permitirá que sus transacciones sean más eficientes debido al ahorro en costos y tiempos, son seguras porque los registros distribuidos permiten verificación y aseguran su autenticidad, su identidad está protegida criptográficamente y el sistema es completamente transparente.
-Puede acceder a la información de sus acciones en cualquier momento, haciendo uso de las credenciales que le han sido asignadas.
-En UNACEM ECUADOR S.A. estamos comprometidos con la innovación y la eficiencia, por eso desarrollamos este aplicativo digital que le permitirá tener un canal de comunicación amplio y directo.
-¡Continuamos construyendo oportunidades juntos!</h3>
+      <Snackbar message="Hola" open={openSnack} autoHideDuration={15000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top',horizontal: 'center'}}>
+
+
+
+        <Alert onClose={handleCloseSnack} icon={false} severity="info" className={classes.myAlert} >
+          <Box
+            component="img"
+            sx={{
+              height: 550,
+              width: 550,
+              maxHeight: { xs: 330, md: 550 },
+              maxWidth: { xs: 350, md: 550 },
+            }}
+            src={bienvenida}
+          />
         </Alert>
       </Snackbar>
 
