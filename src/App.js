@@ -120,13 +120,17 @@ function App() {
     ) : (
       <div style={{backgroundColor:"white",  backgroundImage: `url(${logo})`, backgroundRepeat: "no-repeat"}}>         
         <AmplifyAuthContainer>
-          <AmplifyAuthenticator>        
+          <AmplifyAuthenticator       style={{
+        display: 'flex',
+        justifyContent: 'right',
+        marginRight:50,
+      }}>        
             <AmplifySignIn
               hideSignUp="true" 
               slot="sign-in" 
               headerText="Libro de Accionistas"              
               submitButtonText="Iniciar Sesión"  
-                  
+
               />
           </AmplifyAuthenticator>
         </AmplifyAuthContainer>

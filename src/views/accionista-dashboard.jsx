@@ -30,6 +30,8 @@ import HowToRegIcon from '@material-ui/icons/HowToReg';
 //import ThumbUpOffAltIcon from '@material-ui/icons/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
+import PrintIcon from '@material-ui/icons/Print';
+
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import PageviewIcon from '@material-ui/icons/Pageview';
@@ -75,6 +77,18 @@ function Alert(props) {
         flexGrow: 1,
         padding: theme.spacing(2),        
       },
+      textField: {
+        [theme.breakpoints.down('xs')]: {
+          width: '100%',
+        },
+        margin: theme.spacing(1, 0.5, 1.5),
+        '& .MuiSvgIcon-root': {
+          marginRight: theme.spacing(0.5),
+        },
+        '& .MuiInput-underline:before': {
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        },
+      },      
       button: {
           borderRadius: 20,
         },
@@ -85,7 +99,60 @@ function Alert(props) {
     { defaultTheme },
   );
   
+
+  const Input = styled('input')({
+    display: 'none',
+  });
+    
+
+  function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
+
   
+  QuickSearchToolbar.propTypes = {
+    clearSearch: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.string.isRequired,
+  };
+  
+
+function QuickSearchToolbar(props) {
+    const classes = useStyles();
+  
+    return (
+      <div className={classes.root}>    
+
+        <TextField
+          variant="standard"
+          value={props.value}
+          onChange={props.onChange}
+          placeholder="Buscar accionista…"          
+          className={classes.textField}
+          InputProps={{
+            startAdornment: <SearchIcon fontSize="small" />,
+            endAdornment: (
+              <IconButton
+                title="Clear"
+                aria-label="Clear"
+                size="small"
+                style={{ visibility: props.value ? 'visible' : 'hidden' }}
+                onClick={props.clearSearch}
+              >
+
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            ),
+          }}
+        />
+
+      </div>
+      
+    );
+  }
+ 
+
+
 export default function Accionistadashboard() {
 
     const [openSnack, setOpenSnack] = useState(false);
@@ -158,6 +225,33 @@ export default function Accionistadashboard() {
           },             
                   
       ];
+
+      const [accionistas, setAccionistas] = useState([]);
+      const [rowsAccionistas, setRowsAccionistas] = useState([]);
+      const [searchText, setSearchText] = useState('');
+
+      function getParticipacion(params) {
+        return `${(params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido).toFixed(8) || ''} `;
+      }
+
+      function getNombre(params) {
+        return `${ params.getValue(params.id, 'tipoPersona') == 'PN' ? params.getValue(params.id, 'pn_primerNombre') + " " + params.getValue(params.id, 'pn_segundoNombre') + " " + params.getValue(params.id, 'pn_apellidoPaterno') + " " + params.getValue(params.id, 'pn_apellidoMaterno') : params.getValue(params.id, 'nombre') } `;
+      }
+      //params.tipoPersona == 'PN' ? params.pn_apellidoPaterno + " " + params.pn_apellidoMaterno + " " + params.pn_primerNombre + " " + params.pn_segundoNombre : params.nombre;
+
+      const columnsAccionistas = [
+        {  field: 'tipoIdentificacion', headerName: 'Tipo Id', width: 120,},
+        {
+          field: 'identificacion',
+          headerName: 'Identificacion',
+          width: 150,
+        }, 
+        {  field: 'nombre', headerName: 'Nombre', width: 400, },
+        {  field: 'cantidadAcciones', headerName: 'Cantidad de Acciones', width: 180, align: "right",},
+        {  field: 'participacion', headerName: 'Participación (%)', width: 150,type: 'number',valueGetter: getParticipacion,},
+        //{  field: 'repLegal_nombre', headerName: 'Representante Legal', width: 250,},
+      ]
+
 
       const [accionistasxJuntas, setAccionistasxJuntas] = useState([])
 
@@ -545,10 +639,10 @@ setDividendos(accionistaCalculo);
 
       useEffect(() => {
 
-        if(contador == 1) {
-          setOpenSnack(true)
-          setContador(2)
-        }
+        //if(contador == 1) {
+        //  setOpenSnack(true)
+        //  setContador(2)
+        //}
         const user = getUser();
         setUserName(user);
         fetchParametros();
@@ -562,7 +656,7 @@ setDividendos(accionistaCalculo);
         
         fetchDividendos();
   
-
+        fetchAccionistas();
         
 
       }, [refrescar,accionistasxJuntas.length]);
@@ -598,7 +692,65 @@ setDividendos(accionistaCalculo);
         }
   
 
+        async function fetchAccionistas() {
+
+   
+          const filter = {
+            estado: {
+              ne: 'Inactivo'
+            },
+          }      
+          const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 1000} });
+          const accionistasFromAPI = apiData.data.listAccionistas.items;
+    
+          accionistasFromAPI.forEach(function (obj) {
+            obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+          });
+    
+          setAccionistas(accionistasFromAPI.sort(function (b, a) {
+            if (a.cantidadAcciones > b.cantidadAcciones) {
+              return 1;
+            }
+            if (a.cantidadAcciones < b.cantidadAcciones) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          }));
+    
+          setRowsAccionistas(accionistasFromAPI);
+               
+        }
+    
+        const requestSearch = (searchValue) => {
+          setSearchText(searchValue);
+          const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+          const filteredRows = accionistas.filter((row) => {
+            return Object.keys(row).some((field) => {
+              //if (row[field] != null) {
+              return row[field] && searchRegex.test(row[field].toString());
+              //}
+  
+            });
+          });
+          setRowsAccionistas(filteredRows);
+        };
+
+
       const exportPDFCertificado = async() => {
+
+        const miInit = { // OPTIONAL
+          queryStringParameters: {  // OPTIONAL
+            id : accionista[0].id,
+          },
+      };
+
+        //console.log("Data API Parameter", miInit);
+        //const data = await API.get('LibroApiQLDB','/registro',miInit )
+        const data = await API.get('apiQLDBprod','/crearRegistro-prod',miInit )
+        //console.log("Data API", data[0].hash);
+
+
 
         let base64Image = document.getElementById('qrcode').toDataURL()
 
@@ -634,8 +786,8 @@ setDividendos(accionistaCalculo);
 
         doc.setTextColor(100);
         doc.setFontSize(11);
-        const texto1 = "ESTE CERTIFICADO ACREDITA QUE";
-        doc.text(texto1, 340, 250);            
+        const texto1 = "ESTE CERTIFICADO TOKENIZADO ACREDITA QUE";
+        doc.text(texto1, 300, 250);            
         
         //const texto2 = accionista[0].nombre + " con Identificacion " + accionista[0].tipoIdentificacion + " " + accionista[0].identificacion;
         doc.setFont("helvetica", "bold");
@@ -681,16 +833,32 @@ setDividendos(accionistaCalculo);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(150);
-        //const texto7 = hash;
-        //doc.text(texto7,195, 480);            
+/*
+        const texto7 = data[0].hash;
+        doc.text(texto7,195, 480);            
         
         const texto8 = "Fuente de Información plataforma de accionistas Unacem"
         doc.text(texto8, 195, 490);            
 
         const texto9 = "https://main.d1uap272r7bnzf.amplifyapp.com/"
         doc.text(texto9, 195, 500);            
+*/
 
         
+        const texto7 = "Fuente de Información Plataforma de Accionistas Unacem"
+        doc.text(texto7,195, 460);            
+        
+        const texto8 = "https://main.d1uap272r7bnzf.amplifyapp.com/"
+        doc.text(texto8, 195, 470);            
+
+        const texto9 = "El código QR lo direccionará a la página de verificación";
+        doc.text(texto9, 195, 490);            
+
+        const texto10 = data[0].hash;
+        doc.text(texto10, 195, 500);            
+
+
+
 //        doc.autoTable(content);
 
 /*
@@ -806,7 +974,7 @@ setDividendos(accionistaCalculo);
                     <Typography variant="body2">
                         <small>{accionista.length > 0 && accionista[0].tipoIdentificacion + " : " + accionista[0].identificacion}</small>                        
                     </Typography>                    
-                    <Button size="small" variant="contained"  color="primary" style={{textTransform: 'none', height: '18px', marginTop:'15px'}} onClick={exportPDFCertificado}><small>Imprimir Certificado</small></Button>
+                    <Button startIcon={<PrintIcon />} size="small" variant="contained"  color="primary" style={{textTransform: 'none', height: '22px', marginTop:'15px'}} onClick={exportPDFCertificado}><small>Imprimir Certificado de Acciones</small></Button>
                 </CardContent>
             </Card>              
           </Grid>
@@ -820,6 +988,7 @@ setDividendos(accionistaCalculo);
                     <Typography variant="h5" component="div">
                         {accionista.length > 0 && numberWithCommas(accionista[0].cantidadAcciones)}
                     </Typography>
+                    <QRcode hidden value = {'https://production.dnyw5qmklx2h.amplifyapp.com/?id='+ userName} id = 'qrcode' size={75}/>
                 </CardContent>
             </Card>              
           </Grid>
@@ -854,12 +1023,49 @@ setDividendos(accionistaCalculo);
           <Grid item xs={12} sm={2}>
             <Card variant="outlined" style={{height:"110px"}}>
                 <CardContent>
-                  <QRcode value = {'https://production.dnyw5qmklx2h.amplifyapp.com/?id='+ userName} id = 'qrcode' size={75}/>
+                    <Typography variant="body2" >
+                      Valor Nominal (USD)
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      {accionista.length > 0 && numberWithCommas((valorNominal).toFixed(2))}
+                    </Typography>
                 </CardContent>
             </Card>              
           </Grid>
 
+          <Grid item xs={12} sm={12}>
 
+          <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="body2" style={{ fontWeight: 600 }}>
+                        Listado de Accionistas
+                    </Typography>
+          <DataGrid
+            style={{backgroundColor:'white'}}
+            //sortModel={ [{field: 'cantidadAcciones', sort: 'desc',}]}
+            density="compact"             
+            autoHeight='true'
+            autoPageSize='true'
+            disableColumnMenu 
+            components={{ Toolbar:  QuickSearchToolbar}}
+            rows={rowsAccionistas}
+            columns={columnsAccionistas}
+            pageSize={20}
+            rowsPerPageOptions={[20]}
+            componentsProps={{
+                toolbar: {
+                  value: searchText,
+                  onChange: (event) => requestSearch(event.target.value),
+                  clearSearch: () => requestSearch(''),
+                },
+              }}
+          />
+                </CardContent>
+            </Card>              
+            </Grid>
+
+
+{rows.length > 0 &&
           <Grid item xs={12}>
             <Card variant="outlined">
                 <CardContent>
@@ -883,7 +1089,7 @@ setDividendos(accionistaCalculo);
                 </CardContent>
             </Card>              
           </Grid>
-
+}
 {false &&
           <Grid item xs={12}>
             <Card variant="outlined">
@@ -960,9 +1166,6 @@ setDividendos(accionistaCalculo);
           </Dialog>
   
       <Snackbar message="Hola" open={openSnack} autoHideDuration={15000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top',horizontal: 'center'}}>
-
-
-
         <Alert onClose={handleCloseSnack} icon={false} severity="info" className={classes.myAlert} >
           <Box
             component="img"
