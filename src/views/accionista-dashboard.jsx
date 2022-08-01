@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import { listAsambleas, listDividendos, listAccionistas, listAccionistasxJuntas, listOperaciones,getParametro, listHerederos } from '../graphql/queries';
-import { createAccionistasxJunta, updateAsamblea } from '../graphql/mutations';
+import { createAccionistasxJunta, updateAsamblea, updateAccionistasxJunta } from '../graphql/mutations';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 
@@ -318,6 +318,7 @@ export default function Accionistadashboard() {
             ...asamb,
             Estado: typeof(presente) !== 'undefined' ?  "Sí" : "No",
             NombreRep: typeof(presente) !== 'undefined' ? presente.representanteNombre : "",
+            IdAccionistarxJunta: typeof(presente) !== 'undefined' ? presente.id : "",
           }
 
         });
@@ -637,6 +638,11 @@ setDividendos(accionistaCalculo);
 
       const [userName, setUserName] = useState("");
 
+      const [nombreRepresentante, setNombreRepresentante] = useState('');
+      const [identificacionRepresentante, setIdentificacionRepresentante] = useState('');
+      const [IDRepresentante,setIDRepresentante] = useState('');
+  
+
       useEffect(() => {
 
         //if(contador == 1) {
@@ -658,8 +664,8 @@ setDividendos(accionistaCalculo);
   
         fetchAccionistas();
         
-
-      }, [refrescar,accionistasxJuntas.length]);
+      
+      }, [refrescar,accionistasxJuntas.length ]);
 
       const handleCloseSnack = (event, reason) => {
         if (reason === 'clickaway') {
@@ -879,9 +885,6 @@ setDividendos(accionistaCalculo);
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    const [nombreRepresentante, setNombreRepresentante] = useState('');
-    const [identificacionRepresentante, setIdentificacionRepresentante] = useState('');
-    const [IDRepresentante,setIDRepresentante] = useState('');
 
     const addAccionista = async () => {
       try {
@@ -905,14 +908,36 @@ setDividendos(accionistaCalculo);
           }  
   
 
-          //setValCedente({});
+  
+          let updatePresencia = '';
+          let accionistaxJuntaID = '';
+          //console.log("UPDATE OR INSERT", rows.length, rows)
+
+          if (rows[0].NombreRep)        
+          {
+            //console.log("ENTRA AL UPDATE",rows[0].NombreRep)
+            updatePresencia = API.graphql({ query: updateAccionistasxJunta , variables: { input: {id: rows[0].IdAccionistarxJunta,
+              representanteNombre: nombreRepresentante,
+              representanteDocumento: identificacionRepresentante, 
+              representanteDI: IDRepresentante.filename, 
+              } } });       
+              window.location.reload();
+
+              //setRefrescar(!refrescar);
+              //setNombreRepresentante('Cambiaaaaa');
+          }
+          else
+          {
+            //console.log("ENTRA AL INSERT",rows[0].NombreRep)
+            accionistaxJuntaID = await API.graphql(graphqlOperation(createAccionistasxJunta, { input: accionista2 }))
+          }
+  
           setNombreRepresentante('');
           setIdentificacionRepresentante('');
           setIDRepresentante('');
-  
-          const accionistaxJuntaID = await API.graphql(graphqlOperation(createAccionistasxJunta, { input: accionista2 }))
-  
-          
+
+
+          //const updatePresencia = API.graphql({ query: updateAccionistasxJunta , variables: { input: {id: value, presente: 'true'} } });
 
           //console.log("Datos Accionista", accionista2);
 
@@ -926,7 +951,7 @@ setDividendos(accionistaCalculo);
           setRefrescar(!refrescar);
 
           handleCloseRegistroAsamblea();
-          
+
            } catch (err) {
           console.log('error creating transaction:', err)
       }   
@@ -1033,39 +1058,7 @@ setDividendos(accionistaCalculo);
             </Card>              
           </Grid>
 
-          <Grid item xs={12} sm={12}>
-
-          <Card variant="outlined">
-                <CardContent>
-                    <Typography variant="body2" style={{ fontWeight: 600 }}>
-                        Listado de Accionistas
-                    </Typography>
-          <DataGrid
-            style={{backgroundColor:'white'}}
-            //sortModel={ [{field: 'cantidadAcciones', sort: 'desc',}]}
-            density="compact"             
-            autoHeight='true'
-            autoPageSize='true'
-            disableColumnMenu 
-            components={{ Toolbar:  QuickSearchToolbar}}
-            rows={rowsAccionistas}
-            columns={columnsAccionistas}
-            pageSize={20}
-            rowsPerPageOptions={[20]}
-            componentsProps={{
-                toolbar: {
-                  value: searchText,
-                  onChange: (event) => requestSearch(event.target.value),
-                  clearSearch: () => requestSearch(''),
-                },
-              }}
-          />
-                </CardContent>
-            </Card>              
-            </Grid>
-
-
-{rows.length > 0 &&
+          {rows.length > 0 &&
           <Grid item xs={12}>
             <Card variant="outlined">
                 <CardContent>
@@ -1114,6 +1107,38 @@ setDividendos(accionistaCalculo);
           </Grid>
 }
 
+
+
+          <Grid item xs={12} sm={12}>
+
+          <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="body2" style={{ fontWeight: 600 }}>
+                        Listado de Accionistas
+                    </Typography>
+          <DataGrid
+            style={{backgroundColor:'white'}}
+            //sortModel={ [{field: 'cantidadAcciones', sort: 'desc',}]}
+            density="compact"             
+            autoHeight='true'
+            autoPageSize='true'
+            disableColumnMenu 
+            components={{ Toolbar:  QuickSearchToolbar}}
+            rows={rowsAccionistas}
+            columns={columnsAccionistas}
+            pageSize={20}
+            rowsPerPageOptions={[20]}
+            componentsProps={{
+                toolbar: {
+                  value: searchText,
+                  onChange: (event) => requestSearch(event.target.value),
+                  clearSearch: () => requestSearch(''),
+                },
+              }}
+          />
+                </CardContent>
+            </Card>              
+            </Grid>
 
           <Dialog open={openRegistroAsamblea} onClose={handleCloseRegistroAsamblea} aria-labelledby="form-dialog-title"    >          
             <DialogTitle id="form-dialog-title">Registro en Asamblea</DialogTitle>

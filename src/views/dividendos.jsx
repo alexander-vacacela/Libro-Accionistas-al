@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { API,Storage,graphqlOperation } from 'aws-amplify';
-import { getParametro, listAccionistasxJuntas, listAccionistas, listDividendos, } from '../graphql/queries';
+import { getParametro, listDividendosAccionistas, listAccionistas, listDividendos,} from '../graphql/queries';
 
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -21,7 +21,7 @@ import FunctionsIcon from '@material-ui/icons/Functions';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 
 import { uuid } from 'uuidv4';
-import { createDividendos,  } from '../graphql/mutations';
+import { createDividendos, createDividendosAccionista  } from '../graphql/mutations';
 import MuiAlert from '@material-ui/lab/Alert';
 
 import jsPDF from "jspdf";
@@ -154,7 +154,7 @@ export default function Dividendos() {
       
 
         let num = base*retencionNoResidente/100.00;
-        //console.log("RESIDENCIAAAA",residente, base);
+        
         //num = base*retencionNoResidente/100.00
         //if(residente == "Ecuador"){
         if  (base > FB1 && base < FE1) { num = RFB1 + (base - FB1)*RFE1/100.00; }
@@ -164,8 +164,10 @@ export default function Dividendos() {
         if  (base > FB5 && base < FE5) { num = RFB5 + (base - FB5)*RFE5/100.00; }
         if  (base > FB6 && base < FE6) { num = RFB6 + (base - FB6)*RFE6/100.00; } 
         //}
-        //if(residente != "Ecuador") num = base*retencionNoResidente;
 
+        if(residente.trim() !== "Ecuador") {num = base*retencionNoResidente/100.00;}
+
+        //console.log("RESIDENCIAAAA",residente, base, num);
 
         return num.toFixed(2);
     }
@@ -198,8 +200,49 @@ export default function Dividendos() {
     
     const handleOpenCrearDividendo = () => setOpenCrearDividendo(true);
 
-    const handleConfirmarDividendo = () => console.log("MATRIZ", accionistasCorte);
+    const handleConfirmarDividendo = () => {
 
+      //console.log("MATRIZ", accionistasCorte);
+      for (const accionistaCorte of accionistasCorte) {
+        
+        //console.log(accionistaCorte.nombre, accionistaCorte.dividendo, accionistaCorte.baseImponible);
+
+        const dividendoAccionista = {    
+          idAccionista: accionistaCorte.id,
+          tipoIdentificacion:  accionistaCorte.tipoIdentificacion,
+          identificacion: accionistaCorte.identificacion,
+          nombre: accionistaCorte.nombre,
+          direccionPais: accionistaCorte.direccionPais,
+          paisNacionalidad: accionistaCorte.paisNacionalidad,
+          cantidadAcciones: accionistaCorte.cantidadAcciones,
+          participacion: accionistaCorte.participacion,
+          tipoAcciones: accionistaCorte.tipoAcciones,
+          estado: accionistaCorte.estado,
+          tipoPersona: accionistaCorte.tipoPersona,
+          decevale: accionistaCorte.decevale,
+          idDividendo: accionistaCorte.idDividendo,
+          periodo: accionistaCorte.periodo,
+          dividendo: accionistaCorte.dividendo,
+          baseImponible: accionistaCorte.baseImponible,
+          retencion: accionistaCorte.retencion,
+          dividendoRecibido: accionistaCorte.dividendoRecibido,
+          estadoDividendo: accionistaCorte.estadoDividendo,
+          documento: accionistaCorte.documento,
+          solicitado: accionistaCorte.solicitado,
+          fechaSolicitud: accionistaCorte.fechaSolicitud,
+          HoraSolicitud: accionistaCorte.HoraSolicitud,
+          fechaPago: accionistaCorte.fechaPago
+        
+        };
+
+          console.log('input',dividendoAccionista)
+          //const apiDataDividendoAccionista = await API.graphql({ query: createDividendosAccionista, variables: { input: dividendoAccionista } });  
+  
+
+
+      }
+
+    }
     const columns = [
         {
           field: 'periodo',
@@ -224,7 +267,7 @@ export default function Dividendos() {
           field: 'porcentajeRepartir',
           headerName: '% Reparto',
           type: 'number',
-          width: 80,
+          width: 100,
         },
         {
           field: 'dividendoRepartir',
@@ -266,20 +309,18 @@ export default function Dividendos() {
         {
           //field: "Quorum",
           field: "Acciones",
-          width: 100,
+          width: 120,
           renderCell: (cellValues) => {
 
-            setPeriodoSeleccionado(cellValues.row);
+            //setPeriodoSeleccionado(cellValues.row);
 
-            return <Fragment> <IconButton  onClick={() =>  
-              {
-                fetchAccionistas(cellValues.row);
-              }
-            } color='primary'><DonutLargeIcon /></IconButton>
+            return <Fragment> 
+              
 
             <IconButton  onClick={() =>  
               {
                 fetchAccionistas(cellValues.row);
+                setPeriodoSeleccionado(cellValues.row);
               }
             } color='primary'><PageviewIcon /></IconButton>
             
@@ -287,6 +328,7 @@ export default function Dividendos() {
 
           }
         },
+        /*
         {
             field: 'entregado',
             headerName: 'Entregado',
@@ -298,7 +340,7 @@ export default function Dividendos() {
             headerName: 'Por Entregar',
             type: 'number',
             width: 120,
-          },             
+          },  */           
       ];
 
       const columnsAccionistasCorte = [
@@ -395,7 +437,7 @@ export default function Dividendos() {
     fetchParametros();
     fetchDividendos();
     //fetchTodosAccionistas();
-    if (periodoSeleccionado.id) refrescarAccionistas();
+    //if (periodoSeleccionado.id) refrescarAccionistas();
 
     }, [refrescar]);
      
@@ -459,13 +501,16 @@ export default function Dividendos() {
           estado: {
               ne: "Inactivo" // filter priority = 1
           },
+          cantidadAcciones: {
+            gt: 0
+          }
         };
     
         const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit : 1000} });
         const accionistasFromAPI = apiData.data.listAccionistas.items;       
 
         
-        console.log("PERIODO SELECCIONADO II",periodoSeleccionado.dividendoRepartir);
+        console.log("PERIODO SELECCIONADO II",row.dividendoRepartir);
 
         const accionistasCalculo = accionistasFromAPI.map(function(e) {
             return {
@@ -482,12 +527,13 @@ export default function Dividendos() {
                 estado: e.estado,
                 tipoPersona: e.tipoPersona,
                 decevale: e.decevale,
-                idDividendo: periodoSeleccionado.id,
-                periodo: periodoSeleccionado.periodo,
-                dividendo:  (periodoSeleccionado.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2),
-                baseImponible: (baseImponible * (periodoSeleccionado.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),
-                retencion: getRetencion1((baseImponible * (periodoSeleccionado.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais),
-                dividendoRecibido: ((periodoSeleccionado.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) - getRetencion1((baseImponible * (periodoSeleccionado.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais)).toFixed(2),
+                idDividendo: row.id,
+                periodo: row.periodo,
+                dividendo:  (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2),
+                baseImponible: (baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),
+                retencion: getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais),
+                dividendoRecibido: ((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2)) - (getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais)),
+                //dividendoRecibido: ((row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) - getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais)).toFixed(2),
                 estadoDividendo: 'Confirmado',
                 documento: '',
                 solicitado: false,
@@ -499,7 +545,7 @@ export default function Dividendos() {
 
 
         setAccionistasCorte(accionistasCalculo);
-        setPeriodoSeleccionado(row)
+        //setPeriodoSeleccionado(row)
         setOpenAccionistas(true)
       }
 

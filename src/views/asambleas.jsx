@@ -522,7 +522,7 @@ export default function Asambleas() {
         const filename = uuid() + file.name
         //setFormData({ ...formData, acta: filename });
         await Storage.put(filename, file);
-
+        
         console.log('Datos de Acta de Cierre',asambleaSeleccionada.id,filename)
         if (!asambleaSeleccionada ) return
         const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, acta: filename} } });
@@ -532,6 +532,103 @@ export default function Asambleas() {
 
       }
 
+
+      async function onRemoveActaFin() {
+
+        const filename = asambleaSeleccionada.acta;
+
+        //await Storage.put(filename, file);
+        await Storage.remove(asambleaSeleccionada.acta);
+        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, acta: ''} } });
+
+        setAsambleaSeleccionada({...asambleaSeleccionada, acta:'' });
+        setRefrescar(!refrescar);
+
+      }
+
+
+      async function onRemoveHabilitante1() {
+        const filename = asambleaSeleccionada.habilitanteTema1;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema1);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema1: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema1:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante2() {
+        const filename = asambleaSeleccionada.habilitanteTema2;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema2);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema2: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema2:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante3() {
+        const filename = asambleaSeleccionada.habilitanteTema3;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema3);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema3: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema3:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante4() {
+        const filename = asambleaSeleccionada.habilitanteTema4;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema4);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema4: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema4:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante5() {
+        const filename = asambleaSeleccionada.habilitanteTema5;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema5);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema5: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema5:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante6() {
+        const filename = asambleaSeleccionada.habilitanteTema6;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema6);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema6: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema6:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante7() {
+        const filename = asambleaSeleccionada.habilitanteTema7;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema7);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema7: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema7:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante8() {
+        const filename = asambleaSeleccionada.habilitanteTema8;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema8);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema8: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema8:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante9() {
+        const filename = asambleaSeleccionada.habilitanteTema9;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema9);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema9: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema9:'' });
+        setRefrescar(!refrescar);
+      }
+      async function onRemoveHabilitante10() {
+        const filename = asambleaSeleccionada.habilitanteTema10;
+        await Storage.remove(asambleaSeleccionada.habilitanteTema10);        
+        if (!asambleaSeleccionada ) return
+        const updateAsambleaReturn = await API.graphql({ query: updateAsamblea , variables: { input: {id: asambleaSeleccionada.id, habilitanteTema10: ''} } });
+        setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema10:'' });
+        setRefrescar(!refrescar);
+      }
 
       async function onChangeHabilitante1(e) {
           console.log("HABiLITANTE",e);
@@ -546,6 +643,9 @@ export default function Asambleas() {
         setAsambleaSeleccionada({...asambleaSeleccionada, habilitanteTema1:filename });
         setRefrescar(!refrescar);
       }
+
+
+      
       async function onChangeHabilitante2(e) {
         if (!e.target.files[0]){return}
         const file = e.target.files[0];
@@ -1747,61 +1847,75 @@ export default function Asambleas() {
                 <label htmlFor="upload-photo100">
                     <input style={{ display: 'none' }} id="upload-photo100" name="upload-photo100" type="file" onChange={onChangeActaFin} />
                     <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='medium' style={{textTransform: 'none',marginTop:7}}>Acta de Cierre</Button>
+                    {asambleaSeleccionada.acta &&  <IconButton onClick={getPictureActa} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.acta &&  <IconButton onClick={onRemoveActaFin} ><DeleteIcon /></IconButton>}
                     
                 </label>
+                
+                
 
                 <div style={{marginTop:20}}>
-                Habilitantes
+                Expediente del Acta de Junta
                 </div>
                 {asambleaSeleccionada.votacionTema1 && <label htmlFor="upload-photo101">
                     <input style={{ display: 'none' }} id="upload-photo101" name="upload-photo101" type="file" onChange={onChangeHabilitante1} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema1}</Button>                    
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 1</Button>                    
                     {asambleaSeleccionada.habilitanteTema1 &&  <IconButton onClick={getPictureHabilitante1} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema1 &&  <IconButton onClick={onRemoveHabilitante1} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema2 && <label htmlFor="upload-photo102">
                     <input style={{ display: 'none' }} id="upload-photo102" name="upload-photo102" type="file" onChange={onChangeHabilitante2} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema2}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 2</Button>
                     {asambleaSeleccionada.habilitanteTema2 &&  <IconButton onClick={getPictureHabilitante2} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema2 &&  <IconButton onClick={onRemoveHabilitante2} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema3 && <label htmlFor="upload-photo103">
                     <input style={{ display: 'none' }} id="upload-photo103" name="upload-photo103" type="file" onChange={onChangeHabilitante3} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema3}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 3</Button>
                     {asambleaSeleccionada.habilitanteTema3 &&  <IconButton onClick={getPictureHabilitante3} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema3 &&  <IconButton onClick={onRemoveHabilitante3} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema4 && <label htmlFor="upload-photo104">
                     <input style={{ display: 'none' }} id="upload-photo104" name="upload-photo104" type="file" onChange={onChangeHabilitante4} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema4}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 4</Button>
                     {asambleaSeleccionada.habilitanteTema4 &&  <IconButton onClick={getPictureHabilitante4} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema4 &&  <IconButton onClick={onRemoveHabilitante4} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema5 && <label htmlFor="upload-photo105">
                     <input style={{ display: 'none' }} id="upload-photo105" name="upload-photo105" type="file" onChange={onChangeHabilitante5} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema5}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 5</Button>
                     {asambleaSeleccionada.habilitanteTema5 &&  <IconButton onClick={getPictureHabilitante5} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema5 &&  <IconButton onClick={onRemoveHabilitante5} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema6 && <label htmlFor="upload-photo106">
                     <input style={{ display: 'none' }} id="upload-photo106" name="upload-photo106" type="file" onChange={onChangeHabilitante6} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema6}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 6</Button>
                     {asambleaSeleccionada.habilitanteTema6 &&  <IconButton onClick={getPictureHabilitante6} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema6 &&  <IconButton onClick={onRemoveHabilitante6} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema7 && <label htmlFor="upload-photo107">
                     <input style={{ display: 'none' }} id="upload-photo107" name="upload-photo107" type="file" onChange={onChangeHabilitante7} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema7}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 7</Button>
                     {asambleaSeleccionada.habilitanteTema7 &&  <IconButton onClick={getPictureHabilitante7} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema7 &&  <IconButton onClick={onRemoveHabilitante7} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema8 && <label htmlFor="upload-photo108">
                     <input style={{ display: 'none' }} id="upload-photo108" name="upload-photo108" type="file" onChange={onChangeHabilitante8} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema8}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 8</Button>
                     {asambleaSeleccionada.habilitanteTema8 &&  <IconButton onClick={getPictureHabilitante8} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema8 &&  <IconButton onClick={onRemoveHabilitante8} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema9 && <label htmlFor="upload-photo109">
                     <input style={{ display: 'none' }} id="upload-photo109" name="upload-photo109" type="file" onChange={onChangeHabilitante9} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema9}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 9</Button>
                     {asambleaSeleccionada.habilitanteTema9 &&  <IconButton onClick={getPictureHabilitante9} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema9 &&  <IconButton onClick={onRemoveHabilitante9} ><DeleteIcon /></IconButton>}
                 </label>}
                 {asambleaSeleccionada.votacionTema10 && <label htmlFor="upload-photo110">
                     <input style={{ display: 'none' }} id="upload-photo110" name="upload-photo110" type="file" onChange={onChangeHabilitante10} />
-                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>{asambleaSeleccionada.votacionTema10}</Button>
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Expendiente 10</Button>
                     {asambleaSeleccionada.habilitanteTema10 &&  <IconButton onClick={getPictureHabilitante10} ><PageviewIcon /></IconButton>}
+                    {asambleaSeleccionada.habilitanteTema10 &&  <IconButton onClick={onRemoveHabilitante10} ><DeleteIcon /></IconButton>}
                 </label>}                                                                                                                                
 
                 </div> 
