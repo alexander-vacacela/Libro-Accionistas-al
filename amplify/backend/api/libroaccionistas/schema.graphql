@@ -118,6 +118,8 @@ type Accionista @model {
   herederos: Boolean
   esHeredero: Boolean
   decevale: String
+  nombreBeneficirario1: String
+  direccionPaisBeneficiario1 : String
   titulos : [Titulo] @connection(keyName: "byAccionista", fields: ["id"])
 }
 
@@ -227,6 +229,23 @@ type Parametro @model {
   IGhasta6: Float
   FBretencion6: Float
   FEretencion6: Float  
+  Retencion_Minima: Float
+  Retencion_Maxima: Float
+  Retencion_PN_Loc: Int
+  Retencion_PN_NPF: Int
+  Retencion_PN_PF: Int
+  Retencion_PJ_Loc_Loc: Int
+  Retencion_PJ_Loc_NPF: Int
+  Retencion_PJ_Loc_PF: Int
+  Retencion_PJ_PF_Loc: Int
+  Retencion_PJ_PF_NPF: Int
+  Retencion_PJ_PF_PF: Int
+  Retencion_PJ_NPF_Loc: Int
+  Retencion_PJ_NPF_NPF: Int
+  Retencion_PJ_NPF_PF: Int
+  modeloCartaCesion: String
+  modeloCartaGerente: String
+  modeloCartaInstrucciones: String
 }
 
 type Asamblea @model {
@@ -388,4 +407,23 @@ type DividendosAccionista @model {
   fechaSolicitud: String
   HoraSolicitud: String
   fechaPago: String
+}
+
+type Solicitudes @model {  
+  id: ID!
+  fecha:  String!
+  operacion: String!
+  idCedente:String!
+  cedente: String!
+  cedenteIdentificacion: String!
+  acciones: Int!
+  cesionarioIdentificacion: String!
+  cesionarioNombre: String!  
+  cesionarioDireccion: String
+  cesionarioEmail: String
+  cesionarioTelefono: String
+  estado: String!
+  cs: String
+  ci: String
+  docIdentidad: String
 }

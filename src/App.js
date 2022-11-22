@@ -22,6 +22,7 @@ import Reportes from './views/reportes';
 import Asambleas from './views/asambleas';
 import Dividendos from './views/dividendos';
 import AccionistaDashboard from './views/accionista-dashboard'
+import Transferencia from './views/transferencia';
 
 function App() {
 
@@ -55,10 +56,13 @@ function App() {
         <Switch>
           <Route path="/accionistadashboard">
             <AccionistaDashboard />
-          </Route>                
+          </Route>              
+          <Route path="/transferencia">
+            <Transferencia />
+          </Route>               
           <Route path="/">
             <Redirect to="/accionistadashboard" />
-          </Route>
+          </Route>       
         </Switch>
       </Layout>
     </div>

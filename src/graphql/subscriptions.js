@@ -415,6 +415,8 @@ export const onCreateAccionista = /* GraphQL */ `
       herederos
       esHeredero
       decevale
+      nombreBeneficirario1
+      direccionPaisBeneficiario1
       titulos {
         items {
           id
@@ -488,6 +490,8 @@ export const onUpdateAccionista = /* GraphQL */ `
       herederos
       esHeredero
       decevale
+      nombreBeneficirario1
+      direccionPaisBeneficiario1
       titulos {
         items {
           id
@@ -561,6 +565,8 @@ export const onDeleteAccionista = /* GraphQL */ `
       herederos
       esHeredero
       decevale
+      nombreBeneficirario1
+      direccionPaisBeneficiario1
       titulos {
         items {
           id
@@ -973,6 +979,20 @@ export const onCreateParametro = /* GraphQL */ `
       IGhasta6
       FBretencion6
       FEretencion6
+      Retencion_Minima
+      Retencion_Maxima
+      Retencion_PN_Loc
+      Retencion_PN_NPF
+      Retencion_PN_PF
+      Retencion_PJ_Loc_Loc
+      Retencion_PJ_Loc_NPF
+      Retencion_PJ_Loc_PF
+      Retencion_PJ_PF_Loc
+      Retencion_PJ_PF_NPF
+      Retencion_PJ_PF_PF
+      Retencion_PJ_NPF_Loc
+      Retencion_PJ_NPF_NPF
+      Retencion_PJ_NPF_PF
       createdAt
       updatedAt
     }
@@ -1011,6 +1031,20 @@ export const onUpdateParametro = /* GraphQL */ `
       IGhasta6
       FBretencion6
       FEretencion6
+      Retencion_Minima
+      Retencion_Maxima
+      Retencion_PN_Loc
+      Retencion_PN_NPF
+      Retencion_PN_PF
+      Retencion_PJ_Loc_Loc
+      Retencion_PJ_Loc_NPF
+      Retencion_PJ_Loc_PF
+      Retencion_PJ_PF_Loc
+      Retencion_PJ_PF_NPF
+      Retencion_PJ_PF_PF
+      Retencion_PJ_NPF_Loc
+      Retencion_PJ_NPF_NPF
+      Retencion_PJ_NPF_PF
       createdAt
       updatedAt
     }
@@ -1049,6 +1083,20 @@ export const onDeleteParametro = /* GraphQL */ `
       IGhasta6
       FBretencion6
       FEretencion6
+      Retencion_Minima
+      Retencion_Maxima
+      Retencion_PN_Loc
+      Retencion_PN_NPF
+      Retencion_PN_PF
+      Retencion_PJ_Loc_Loc
+      Retencion_PJ_Loc_NPF
+      Retencion_PJ_Loc_PF
+      Retencion_PJ_PF_Loc
+      Retencion_PJ_PF_NPF
+      Retencion_PJ_PF_PF
+      Retencion_PJ_NPF_Loc
+      Retencion_PJ_NPF_NPF
+      Retencion_PJ_NPF_PF
       createdAt
       updatedAt
     }
@@ -1589,6 +1637,78 @@ export const onDeleteDividendosAccionista = /* GraphQL */ `
       fechaSolicitud
       HoraSolicitud
       fechaPago
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSolicitudes = /* GraphQL */ `
+  subscription OnCreateSolicitudes {
+    onCreateSolicitudes {
+      id
+      fecha
+      operacion
+      idCedente
+      cedente
+      cedenteIdentificacion
+      acciones
+      cesionarioIdentificacion
+      cesionarioNombre
+      cesionarioDireccion
+      cesionarioEmail
+      cesionarioTelefono
+      estado
+      cs
+      ci
+      docIdentidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSolicitudes = /* GraphQL */ `
+  subscription OnUpdateSolicitudes {
+    onUpdateSolicitudes {
+      id
+      fecha
+      operacion
+      idCedente
+      cedente
+      cedenteIdentificacion
+      acciones
+      cesionarioIdentificacion
+      cesionarioNombre
+      cesionarioDireccion
+      cesionarioEmail
+      cesionarioTelefono
+      estado
+      cs
+      ci
+      docIdentidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSolicitudes = /* GraphQL */ `
+  subscription OnDeleteSolicitudes {
+    onDeleteSolicitudes {
+      id
+      fecha
+      operacion
+      idCedente
+      cedente
+      cedenteIdentificacion
+      acciones
+      cesionarioIdentificacion
+      cesionarioNombre
+      cesionarioDireccion
+      cesionarioEmail
+      cesionarioTelefono
+      estado
+      cs
+      ci
+      docIdentidad
       createdAt
       updatedAt
     }

@@ -224,6 +224,22 @@ export default function Header(props){
     </Button>
 }
 
+{perfil === "Accionista_Aux" &&
+
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        //startIcon={<AddIcon/>}                    
+        size='small'
+        onClick={()=>history.push('/transferencia')}
+        style={{textTransform: 'none'}}
+    >
+        Solicitar Transferencia
+    </Button>
+}
+
+
     <Menu
         id="menu-operaciones"
         anchorEl={anchorEl}

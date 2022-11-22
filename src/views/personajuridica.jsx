@@ -115,6 +115,8 @@ const useStyles = makeStyles((theme) => ({
     docIdentidadPrincipal : '',
     docCertificadoBancario: '',
     docIdentidadConyugue : '',
+    nombreBeneficirario1: '',
+    direccionPaisBeneficiario1 : '1'
   };
   
 export default function PersonaJuridica() {
@@ -151,9 +153,13 @@ export default function PersonaJuridica() {
       value: "2",
     },
     {
-        label: "Estadoudinense",
-        value: "3",
-      },        
+      label: "Estadoudinense",
+      value: "3",
+    }, 
+    {
+      label: "Panameña",
+      value: "4",
+    },           
   ];
 
   const pais = [
@@ -169,6 +175,10 @@ export default function PersonaJuridica() {
         label: "Estados Unidos",
         value: "3",
       },        
+    {
+      label: "Panama",
+      value: "4",
+    },              
   ];
 
   const provincia = [
@@ -686,6 +696,10 @@ export default function PersonaJuridica() {
       docCertificadoBancario: location.state.preloadedValue.docCertificadoBancario,
       docIdentidadConyugue : location.state.preloadedValue.docIdentidadConyugue,
 
+      nombreBeneficirario1: location.state.preloadedValue.nombreBeneficirario1,
+      direccionPaisBeneficiario1 : pais.find(o => o.label === location.state.preloadedValue.direccionPaisBeneficiario1) ? pais.find(o => o.label === location.state.preloadedValue.direccionPaisBeneficiario1).value : '1',
+  
+
   }} : defaultValues;
 
 
@@ -756,6 +770,9 @@ export default function PersonaJuridica() {
             docIdentidadPrincipal : formData.docIdentidadPrincipal,
             docCertificadoBancario: formData.docCertificadoBancario,
             docIdentidadConyugue : formData.docIdentidadConyugue,
+
+            nombreBeneficirario1: data.nombreBeneficirario1,
+            direccionPaisBeneficiario1 : pais.find(o => o.value === data.direccionPaisBeneficiario1).label,      
             
          };
 
@@ -910,7 +927,11 @@ export default function PersonaJuridica() {
               repLegal_email: accionista.repLegal_email,
               docIdentidadPrincipal : accionista.docIdentidadPrincipal,
               docCertificadoBancario: accionista.docCertificadoBancario,
-              docIdentidadConyugue : accionista.docIdentidadConyugue              
+              docIdentidadConyugue : accionista.docIdentidadConyugue,   
+              
+              nombreBeneficirario1 : accionista.nombreBeneficirario1,
+              direccionPaisBeneficiario1 : accionista.direccionPaisBeneficiario1
+
             } } });
 
             console.log('respuesta:', operID)
@@ -969,12 +990,12 @@ export default function PersonaJuridica() {
                             <div className={classes.formSection}>
                                 <div>
                                     <Typography variant='subtitle1' style={{color:"#000000"}}>Identificación Persona Jurídica</Typography>
-                                    <Controller                    
+                                    <Controller       
                                         control={control}
                                         name={"tipoIdentificacion"}
                                         //label={"Y Ahora"}
                                         render={({ field: { onChange, value } }) => (
-                                            <Select onChange={onChange} value={value}  variant="outlined" style={{height:37, minWidth:100}}>
+                                            <Select onChange={onChange} value={value}  variant="outlined" style={{height:37, minWidth:100,}}>
                                             {generateSelectTipoIdentificacion()}
                                             </Select>
                                         )}/>
@@ -1178,7 +1199,7 @@ export default function PersonaJuridica() {
                         <Grid item xs={4} >
                             <div className={classes.gridSpace}>
 
-                                <div style={{marginBottom: 20}}>
+                                <div style={{marginBottom: 0}}>
                                     <Typography variant='subtitle1' style={{color:"#000000"}}>Medios de Contacto</Typography>
                                 </div>  
 
@@ -1187,7 +1208,7 @@ export default function PersonaJuridica() {
                                 name={"telefono"}
                                 control={control}
                                 render={({ field: { onChange, value } }) => (
-                                    <TextField size='small' onChange={onChange} value={value} label={"Teléfono"} variant='outlined' style={{minWidth: 130}}  margin='dense'/>
+                                    <TextField onChange={onChange} value={value} label={"Teléfono"} variant='outlined' style={{minWidth: 130}}  margin='dense'/>
                                 )} />
                                 <Controller
                                 name={"observacionTelefono"}
@@ -1265,7 +1286,7 @@ export default function PersonaJuridica() {
                                   </div>
                                 </div>   
 
-                                <div style={{marginTop: 20}}>
+                                <div style={{marginTop: 10}}>
                                     <Typography variant='subtitle1' style={{color:"#000000"}}>Documentos Habilitantes</Typography>
                                 </div>  
                                 
@@ -1283,6 +1304,25 @@ export default function PersonaJuridica() {
                                     {formData.docCertificadoBancario.length > 0 && <CheckIcon />}
                                 </label>
                                 </div>  
+                                
+                                <div style={{marginTop: 10}}>
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Beneficiario</Typography>
+                                </div>  
+                                <Controller
+                                  name={"nombreBeneficirario1"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Beneficiario"} variant='outlined' fullWidth  margin='dense'/>
+                                  )} />
+                                <Controller
+                                    control={control}
+                                    name={"direccionPaisBeneficiario1"}
+                                    render={({ field: { onChange, value } }) => (
+                                        <Select onChange={onChange} value={value} defaultValue='1'  variant="outlined" style={{height:37, minWidth:140}}>
+                                        {generateSelectPais()}
+                                        </Select>
+                                    )}/>
+
                             </div>
                         </Grid>                        
                     </Grid>

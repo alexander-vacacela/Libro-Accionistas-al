@@ -8,9 +8,9 @@ import { createTheme } from '@material-ui/core/styles';
 
 import { Grid, Typography,  Button, ListItem, ListItemText, ListSubheader, List, Chip, TextField , LinearProgress,
     FormControl,  Box, Tabs, Tab, IconButton, Checkbox, InputLabel,Select, MenuItem, 
-    Dialog, DialogActions,DialogContent,DialogTitle, ListItemIcon,Snackbar, CircularProgress, Divider} from '@material-ui/core';
+    Dialog, DialogActions,DialogContent,DialogTitle, ListItemIcon,Snackbar, CircularProgress, Divider, DialogContentText} from '@material-ui/core';
 
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
 
 import PageviewIcon from '@material-ui/icons/Pageview';
@@ -98,6 +98,21 @@ export default function Dividendos() {
     const [RFE5, setRFE5] = useState(0);
     const [RFE6, setRFE6] = useState(0);
 
+    const [retencionMinima, setRetencionMinima] = useState(0);
+    const [retencionMaxima, setRetencionMaxima] = useState(0);
+
+    const [Retencion_PN_Loc, setRetencion_PN_Loc] = useState(0);
+    const [Retencion_PN_NPF, setRetencion_PN_NPF] = useState(0);
+    const [Retencion_PN_PF, setRetencion_PN_PF] = useState(0);
+    const [Retencion_PJ_Loc_Loc, setRetencion_PJ_Loc_Loc] = useState(0);
+    const [Retencion_PJ_Loc_NPF, setRetencion_PJ_Loc_NPF] = useState(0);
+    const [Retencion_PJ_Loc_PF, setRetencion_PJ_Loc_PF] = useState(0);
+    const [Retencion_PJ_PF_Loc, setRetencion_PJ_PF_Loc] = useState(0);
+    const [Retencion_PJ_PF_NPF, setRetencion_PJ_PF_NPF] = useState(0);
+    const [Retencion_PJ_PF_PF, setRetencion_PJ_PF_PF] = useState(0);
+    const [Retencion_PJ_NPF_Loc, setRetencion_PJ_NPF_Loc] = useState(0);
+    const [Retencion_PJ_NPF_NPF, setRetencion_PJ_NPF_NPF] = useState(0);
+    const [Retencion_PJ_NPF_PF, setRetencion_PJ_NPF_PF] = useState(0);
     
     const handleClose = () => 
     {
@@ -149,25 +164,53 @@ export default function Dividendos() {
         return ((cantidadAcciones / cantidadEmitido) * 100.00).toFixed(16) ;
     }
     
-    function getRetencion1(base, residente) {       
-      
-      
-
-        let num = base*retencionNoResidente/100.00;
+    function getRetencion1(base, persona, residente, beneficiario) {       
+            
+        //,e.tipoPersona, e.direccionPais, e.direccionPais
         
-        //num = base*retencionNoResidente/100.00
-        //if(residente == "Ecuador"){
+        let retencion = 4;         
+        let residenciaFiscal = "NPF";
+        let residenciaFiscalBenef = "NPF";
+
+        if(residente.trim() == "Ecuador") residenciaFiscal = "Local"
+        //if(residente == null) residenciaFiscal = "Local"
+        if(residente.trim() == "Panama") residenciaFiscal = "PF"
+
+        if(beneficiario.trim() == "Ecuador") residenciaFiscalBenef = "Local"
+        //if(beneficiario == null) residenciaFiscalBenef = "Local"
+        if(beneficiario.trim() == "Panama") residenciaFiscalBenef = "PF"
+
+        if (persona == "PN" && residenciaFiscal == "Local") retencion = Retencion_PN_Loc;
+        if (persona == "PN" && residenciaFiscal == "NPF") retencion = Retencion_PN_NPF;
+        if (persona == "PN" && residenciaFiscal == "PF") retencion = Retencion_PN_PF;
+        if (persona == "PJ" && residenciaFiscal == "Local" && residenciaFiscalBenef == "Local") retencion = Retencion_PJ_Loc_Loc;
+        if (persona == "PJ" && residenciaFiscal == "Local" && residenciaFiscalBenef == "NPF") retencion = Retencion_PJ_Loc_NPF;
+        if (persona == "PJ" && residenciaFiscal == "Local" && residenciaFiscalBenef == "PF") retencion = Retencion_PJ_Loc_PF;
+        if (persona == "PJ" && residenciaFiscal == "PF" && residenciaFiscalBenef == "Local") retencion = Retencion_PJ_PF_Loc;
+        if (persona == "PJ" && residenciaFiscal == "PF" && residenciaFiscalBenef == "NPF") retencion = Retencion_PJ_PF_NPF;
+        if (persona == "PJ" && residenciaFiscal == "PF" && residenciaFiscalBenef == "PF") retencion = Retencion_PJ_PF_PF;
+        if (persona == "PJ" && residenciaFiscal == "NPF" && residenciaFiscalBenef == "Local") retencion = Retencion_PJ_NPF_Loc;
+        if (persona == "PJ" && residenciaFiscal == "NPF" && residenciaFiscalBenef == "NPF") retencion = Retencion_PJ_NPF_NPF;
+        if (persona == "PJ" && residenciaFiscal == "NPF" && residenciaFiscalBenef == "PF") retencion = Retencion_PJ_NPF_PF;
+      
+        //let num = base*retencionNoResidente/100.00;
+        let num = 0;
+        
+        if(retencion == 1) num = base*retencionMinima/100.00;
+        if(retencion == 2) num = base*retencionMaxima/100.00;
+        if(retencion == 4) num = 0;
+
+        if(retencion == 3) {        
         if  (base > FB1 && base < FE1) { num = RFB1 + (base - FB1)*RFE1/100.00; }
         if  (base > FB2 && base < FE2) { num = RFB2 + (base - FB2)*RFE2/100.00; }
         if  (base > FB3 && base < FE3) { num = RFB3 + (base - FB3)*RFE3/100.00; }
         if  (base > FB4 && base < FE4) { num = RFB4 + (base - FB4)*RFE4/100.00; }
         if  (base > FB5 && base < FE5) { num = RFB5 + (base - FB5)*RFE5/100.00; }
         if  (base > FB6 && base < FE6) { num = RFB6 + (base - FB6)*RFE6/100.00; } 
-        //}
+        }
 
-        if(residente.trim() !== "Ecuador") {num = base*retencionNoResidente/100.00;}
-
-        //console.log("RESIDENCIAAAA",residente, base, num);
+        //if(residente.trim() !== "Ecuador") {num = base*retencionNoResidente/100.00;}
+        if (persona == "PJ") console.log("RESIDENCIAAAA",persona, residente, base, num, retencion);
 
         return num.toFixed(2);
     }
@@ -231,7 +274,8 @@ export default function Dividendos() {
           solicitado: accionistaCorte.solicitado,
           fechaSolicitud: accionistaCorte.fechaSolicitud,
           HoraSolicitud: accionistaCorte.HoraSolicitud,
-          fechaPago: accionistaCorte.fechaPago
+          fechaPago: accionistaCorte.fechaPago,
+          direccionPaisBeneficiario1: accionistaCorte.direccionPaisBeneficiario1
         
         };
 
@@ -250,22 +294,14 @@ export default function Dividendos() {
           width: 80,
         },
         {
-            field: 'estado',
-            headerName: 'Estado',
-            width: 110,
-            renderCell: (cellValues) => {
-              return <Chip size="small" variant="outlined" label={cellValues.row.estado} color={cellValues.row.estado == 'Nuevo' ? 'primary' : 'secondary'} />
-            }
-        },         
-        {
           field: 'dividendo',
-          headerName: 'Dividendo',
+          headerName: 'Total Dividendo',
           type: 'number',
           width: 120,
         },      
         {
           field: 'porcentajeRepartir',
-          headerName: '% Reparto',
+          headerName: 'Reparto Acordado',
           type: 'number',
           width: 100,
         },
@@ -308,7 +344,7 @@ export default function Dividendos() {
           },                                            
         {
           //field: "Quorum",
-          field: "Acciones",
+          field: "Detalle",
           width: 120,
           renderCell: (cellValues) => {
 
@@ -328,6 +364,15 @@ export default function Dividendos() {
 
           }
         },
+        {
+          field: 'estado',
+          headerName: 'Estado',
+          width: 110,
+          renderCell: (cellValues) => {
+            return <Chip size="small" variant="outlined" label={cellValues.row.estado} color={cellValues.row.estado == 'Nuevo' ? 'primary' : 'secondary'} />
+          }
+      },         
+
         /*
         {
             field: 'entregado',
@@ -366,17 +411,23 @@ export default function Dividendos() {
             renderCell: (cellValues) => {
               return <Chip size="small" variant="outlined" label={cellValues.row.estado} color={cellValues.row.estado == 'Activo' ? 'primary' : 'secondary'} />
             }
-        },         
+        }, 
+        /*        
         {
             field: 'paisNacionalidad',
             headerName: 'Nacionalidad',
             width: 100,
-        },   
+        }, */  
         {
             field: 'direccionPais',
             headerName: 'Residencia',
             width: 100,
         },  
+        {
+          field: 'direccionPaisBeneficiario1',
+          headerName: 'Beneficiario',
+          width: 100,
+      },  
         {
           field: 'cantidadAcciones',
           headerName: 'Acciones',
@@ -413,11 +464,21 @@ export default function Dividendos() {
           },   
           {
             field: 'dividendoRecibido',
-            headerName: 'Recibir',
+            headerName: 'Pagar',
             type: 'number',
             width: 110,
             //valueGetter: getNetoRecibir,
-          },                        
+          },  
+          {
+            field: 'saldoDividendoPeriodo',
+            headerName: 'Saldo Dividendo',
+            type: 'number',
+            width: 110,
+            //valueGetter: getNetoRecibir,
+          },  
+          
+          
+          
       ];
 
           
@@ -484,7 +545,22 @@ export default function Dividendos() {
         setRFE5(parametrosFromAPI.FEretencion5);
         setRFE6(parametrosFromAPI.FEretencion6);
 
-
+        setRetencionMinima(parametrosFromAPI.Retencion_Minima);
+        setRetencionMaxima(parametrosFromAPI.Retencion_Maxima);
+    
+        setRetencion_PN_Loc(parametrosFromAPI.Retencion_PN_Loc);
+        setRetencion_PN_NPF(parametrosFromAPI.Retencion_PN_NPF);
+        setRetencion_PN_PF(parametrosFromAPI.Retencion_PN_PF);
+        setRetencion_PJ_Loc_Loc(parametrosFromAPI.Retencion_PJ_Loc_Loc);
+        setRetencion_PJ_Loc_NPF(parametrosFromAPI.Retencion_PJ_Loc_NPF);
+        setRetencion_PJ_Loc_PF(parametrosFromAPI.Retencion_PJ_Loc_PF);
+        setRetencion_PJ_PF_Loc(parametrosFromAPI.Retencion_PJ_PF_Loc);
+        setRetencion_PJ_PF_NPF(parametrosFromAPI.Retencion_PJ_PF_NPF);
+        setRetencion_PJ_PF_PF(parametrosFromAPI.Retencion_PJ_PF_PF);
+        setRetencion_PJ_NPF_Loc(parametrosFromAPI.Retencion_PJ_NPF_Loc);
+        setRetencion_PJ_NPF_NPF(parametrosFromAPI.Retencion_PJ_NPF_NPF);
+        setRetencion_PJ_NPF_PF(parametrosFromAPI.Retencion_PJ_NPF_PF);
+      
     }
 
       async function fetchDividendos() {
@@ -531,15 +607,17 @@ export default function Dividendos() {
                 periodo: row.periodo,
                 dividendo:  (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2),
                 baseImponible: (baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),
-                retencion: getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais),
-                dividendoRecibido: ((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2)) - (getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais)),
-                //dividendoRecibido: ((row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) - getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.direccionPais)).toFixed(2),
+                retencion: getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.tipoPersona, e.direccionPais, e.direccionPaisBeneficiario1 == null ? 'Ecuador' : e.direccionPaisBeneficiario1),
+                //dividendoRecibido: ((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2)) - (getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.tipoPersona, e.direccionPais, e.direccionPais)),
+                dividendoRecibido: ((row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) - getRetencion1((baseImponible * (row.dividendoRepartir * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2) / 100.00).toFixed(2),e.tipoPersona, e.direccionPais, e.direccionPaisBeneficiario1 == null ? 'Ecuador' : e.direccionPaisBeneficiario1)).toFixed(2),
                 estadoDividendo: 'Confirmado',
                 documento: '',
                 solicitado: false,
                 fechaSolicitud: '',
                 HoraSolicitud: '',
                 fechaPago: '',
+                direccionPaisBeneficiario1: e.direccionPaisBeneficiario1,
+                saldoDividendoPeriodo:  (row.saldoDividendo * getParticipacion1(e.cantidadAcciones) / 100.00).toFixed(2),
             } ;
         })
 
@@ -549,7 +627,7 @@ export default function Dividendos() {
         setOpenAccionistas(true)
       }
 
-
+/*
       async function refrescarAccionistas() {
 
         let filter = {
@@ -596,7 +674,7 @@ export default function Dividendos() {
         //console.log("PRUEBAAAAAA",accionistasCalculo);
         setAccionistasCorte(accionistasCalculo);
         }
-      
+      */
 
     const handlePeriodoChange = (event) => {setFormData({ ...formData, 'periodo': event.target.value})};
 
@@ -732,7 +810,7 @@ export default function Dividendos() {
               autoPageSize='true'
               disableColumnMenu 
               rows={rows}
-              columns={columns}
+              columns={columns}              
               pageSize={20}
               rowsPerPageOptions={[20]}
             />
@@ -740,7 +818,16 @@ export default function Dividendos() {
   
   
           <Dialog open={openAccionistas} onClose={handleClose} aria-labelledby="form-dialog-title"  fullScreen  >          
-            <DialogTitle id="form-dialog-title">Ejercicio {periodoSeleccionado.periodo}</DialogTitle>
+            <DialogTitle id="form-dialog-title">
+              <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-around', width:'100%' }}>              
+              Ejercicio {periodoSeleccionado.periodo}
+              <Typography variant="body2" >Total dividendo del periodo : {new Intl.NumberFormat('en-US',{minimumFractionDigits: 2,maximumFractionDigits: 2,}).format(periodoSeleccionado.dividendo)}</Typography>
+              <Typography variant="body2" >Total a repartir : {new Intl.NumberFormat('en-US',{minimumFractionDigits: 2,maximumFractionDigits: 2,}).format(periodoSeleccionado.dividendoRepartir) }</Typography>
+              <Typography variant="body2" >Porcentaje a repartir : {new Intl.NumberFormat('en-US',{minimumFractionDigits: 2,maximumFractionDigits: 2,}).format(periodoSeleccionado.porcentajeRepartir)} %</Typography>
+              <Typography variant="body2" >Saldo del periodo : {new Intl.NumberFormat('en-US',{minimumFractionDigits: 2,maximumFractionDigits: 2,}).format(periodoSeleccionado.saldoDividendo)}</Typography>
+              </div>
+            </DialogTitle>
+            
             <DialogContent style={{height: '500px'}}>
   
                 <DataGrid
@@ -752,6 +839,7 @@ export default function Dividendos() {
                 disableColumnMenu 
                 rows={accionistasCorte}
                 columns={columnsAccionistasCorte}
+                //components={{ Toolbar: GridToolbar }}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 />

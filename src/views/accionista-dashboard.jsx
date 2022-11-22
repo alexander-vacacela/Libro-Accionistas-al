@@ -4,8 +4,8 @@ import { API,Storage,Auth,graphqlOperation } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-import { listAsambleas, listDividendos, listAccionistas, listAccionistasxJuntas, listOperaciones,getParametro, listHerederos } from '../graphql/queries';
-import { createAccionistasxJunta, updateAsamblea, updateAccionistasxJunta } from '../graphql/mutations';
+import { listAsambleas, listDividendos, listAccionistas, listAccionistasxJuntas, listOperaciones,getParametro, listHerederos, listSolicitudes } from '../graphql/queries';
+import { createAccionistasxJunta, updateAsamblea, updateAccionistasxJunta, createSolicitudes } from '../graphql/mutations';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 
@@ -44,6 +44,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import FiberNewOutlined from '@material-ui/icons/FiberNewOutlined';
 
+import PanToolIcon from '@material-ui/icons/PanTool';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -161,16 +163,22 @@ export default function Accionistadashboard() {
     const [rows, setRows] = useState([]);
     const [openRegistroAsamblea, setOpenRegistroAsamblea] = useState(false);
     const [asambleaSeleccionada, setAsambleaSeleccionada]= useState({});
+    const [openTransferencia, setOpenTransferencia] = useState(false);
 
     const handleCloseRegistroAsamblea = () =>  setOpenRegistroAsamblea(false);    
-
     const handleOpenRegistroAsamblea = () => setOpenRegistroAsamblea(true);
+
+    const handleOpenTransferencia = () => setOpenTransferencia(true);
+    const handleCloseTransferencia = () =>  setOpenTransferencia(false);    
 
     const [accionista, setAccionista] = useState([])
 
     const[refrescar, setRefrescar]=useState(false);
 
     const[hash, setHash]=useState('');
+
+    const [solicitudes, setSolicitudes] = useState([])
+    
 
     const columns = [
         {
@@ -252,6 +260,35 @@ export default function Accionistadashboard() {
         //{  field: 'repLegal_nombre', headerName: 'Representante Legal', width: 250,},
       ]
 
+      const columnsSolicitudes = [
+        {  field: 'fecha', headerName: 'Fecha', width: 100,},
+        {  field: 'cesionarioNombre', headerName: 'Nombre Cesionario', width: 300, },
+        {
+          field: 'cesionarioIdentificacion',
+          headerName: 'Identificacion',
+          width: 130,
+        },         
+        {  field: 'acciones', headerName: 'Acciones', width: 120, align: "right",},
+        {
+          field: "CS",
+          width: 120,
+          renderCell: (cellValues) => {
+            return <IconButton  onClick={() =>  
+              {
+                //REgistrase
+                //fetchAccionistas(cellValues.row);
+                handleOpenRegistroAsamblea();
+                setAsambleaSeleccionada(cellValues.row);
+              }
+            } color='primary'><HowToRegIcon /></IconButton>
+          }
+        }, 
+
+
+        //{  field: 'participacion', headerName: 'Participación (%)', width: 150,type: 'number',valueGetter: getParticipacion,},
+        //{  field: 'repLegal_nombre', headerName: 'Representante Legal', width: 250,},
+      ]
+
 
       const [accionistasxJuntas, setAccionistasxJuntas] = useState([])
 
@@ -272,8 +309,6 @@ export default function Accionistadashboard() {
       }
 
       async function fetchAsambleas() {
-
-
 
         let filter = {
           estado: {
@@ -641,7 +676,56 @@ setDividendos(accionistaCalculo);
       const [nombreRepresentante, setNombreRepresentante] = useState('');
       const [identificacionRepresentante, setIdentificacionRepresentante] = useState('');
       const [IDRepresentante,setIDRepresentante] = useState('');
-  
+
+      const [nombreCesionario, setNombreCesionario] = useState('');
+      const [identificacionCesionario, setIdentificacionCesionario] = useState('');
+      const [direccionCesionario, setDireccionCesionario] = useState('');
+      const [emailCesionario, setEmailCesionario] = useState('');
+      const [telefonoCesionario, setTelefonoCesionario] = useState('');
+      const [accionesTransferir, setAccionesTransferir] = useState(0);
+      const [docIdentificacionCesionario, setDocIdentificacionCesionario] = useState('');
+      const [cartaCesion, setCartaCesion] = useState('');
+      const [cartaInstrucciones, setCartaInstrucciones] = useState('');
+
+      const handleChangeNombreCesionario = (event) => { setNombreCesionario(event.target.value); };
+      const handleChangeIdentificacionCesionario = (event) => { setIdentificacionCesionario(event.target.value); };
+      const handleChangeDireccionCesionario = (event) => { setDireccionCesionario(event.target.value); };
+      const handleChangeEmailCesionario = (event) => { setEmailCesionario(event.target.value); };
+      const handleChangeTelefonoCesionario = (event) => { setTelefonoCesionario(event.target.value); };
+      const handleChangeAccionesTransferir = (event) => { setAccionesTransferir(event.target.value); };
+
+      async function onChangeDocIdentificacion(e) {
+        if (!e.target.files[0]){
+          console.log('entro al cancelar')
+          return
+        }
+        const file = e.target.files[0];
+        const filename = file.name + uuid();
+        setDocIdentificacionCesionario({ filename });
+        await Storage.put(filename, file);
+        }
+      async function onChangeCartaCesion(e) {
+        if (!e.target.files[0]){
+          console.log('entro al cancelar')
+          return
+        }
+        const file = e.target.files[0];
+        const filename = file.name + uuid();
+        setCartaCesion({ filename });
+        await Storage.put(filename, file);
+        }
+      async function onChangeCartaInstrucciones(e) {
+        if (!e.target.files[0]){
+          console.log('entro al cancelar')
+          return
+        }
+        const file = e.target.files[0];
+        const filename = file.name + uuid();
+        setCartaInstrucciones({ filename });
+        await Storage.put(filename, file);
+        }
+      
+
 
       useEffect(() => {
 
@@ -664,6 +748,7 @@ setDividendos(accionistaCalculo);
   
         fetchAccionistas();
         
+        if (accionista.length > 0) fetchSolicitudes();
       
       }, [refrescar,accionistasxJuntas.length ]);
 
@@ -753,6 +838,7 @@ setDividendos(accionistaCalculo);
 
         //console.log("Data API Parameter", miInit);
         //const data = await API.get('LibroApiQLDB','/registro',miInit )
+
         const data = await API.get('apiQLDBprod','/crearRegistro-prod',miInit )
         //console.log("Data API", data[0].hash);
 
@@ -860,6 +946,7 @@ setDividendos(accionistaCalculo);
         const texto9 = "El código QR lo direccionará a la página de verificación";
         doc.text(texto9, 195, 490);            
 
+        //const texto10 = "prueba";
         const texto10 = data[0].hash;
         doc.text(texto10, 195, 500);            
 
@@ -957,6 +1044,54 @@ setDividendos(accionistaCalculo);
       }   
     }
 
+
+    const addSolicitud = async () => {
+      try {
+          
+          const today = new Date();
+          const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+        
+          const solicitud =  { 
+          fecha:fecha, 
+          operacion: 'Solicitud Transferencia',
+          idCedente: accionista[0].id, 
+          cedente: accionista[0].nombre, 
+          cedenteIdentificacion: accionista[0].identificacion, 
+          acciones: accionesTransferir, 
+          cesionarioIdentificacion: identificacionCesionario,
+          cesionarioNombre: nombreCesionario,  
+          cesionarioDireccion: direccionCesionario,
+          cesionarioEmail: emailCesionario,
+          cesionarioTelefono: telefonoCesionario,
+          estado: 'Pendiente', 
+          cs: cartaCesion.filename,
+          ci: cartaInstrucciones.filename,
+          docIdentidad: docIdentificacionCesionario.filename,                    
+          }  
+  
+          console.log("Registro de Solicitud", solicitud);
+          const solicitudTransferencia = await API.graphql(graphqlOperation(createSolicitudes, { input: solicitud }))
+          
+          setRefrescar(!refrescar);
+
+          setNombreCesionario('');
+          setIdentificacionCesionario('');
+          setDireccionCesionario('');
+          setEmailCesionario('');
+          setTelefonoCesionario('');
+          setAccionesTransferir(0);
+          setDocIdentificacionCesionario('');
+          setCartaCesion('');
+          setCartaInstrucciones('');
+    
+          handleCloseTransferencia();
+
+           } catch (err) {
+          console.log('error creating transaction:', err)
+      }   
+    }
+
+
     const handleChangeNombreRepresentante = (event) => { setNombreRepresentante(event.target.value); };
     const handleChangeIdentificacionRepresentante = (event) => { setIdentificacionRepresentante(event.target.value); };
 
@@ -983,6 +1118,23 @@ setDividendos(accionistaCalculo);
     }
 
 
+    async function fetchSolicitudes() {
+
+      const filter = {
+        estado: {
+          ne: 'Cerrada'
+        },
+        idCedente:{
+          eq: accionista[0].id
+        },
+      }      
+      const apiData = await API.graphql({ query: listSolicitudes, variables: { filter: filter, limit: 1000} });
+      const solicitudesFromAPI = apiData.data.listSolicitudes.items;
+
+      setSolicitudes(solicitudesFromAPI);
+           
+    }
+
 
     const classes = useStyles();
 
@@ -1000,6 +1152,7 @@ setDividendos(accionistaCalculo);
                         <small>{accionista.length > 0 && accionista[0].tipoIdentificacion + " : " + accionista[0].identificacion}</small>                        
                     </Typography>                    
                     <Button startIcon={<PrintIcon />} size="small" variant="contained"  color="primary" style={{textTransform: 'none', height: '22px', marginTop:'15px'}} onClick={exportPDFCertificado}><small>Imprimir Certificado de Acciones</small></Button>
+                    <Button startIcon={<PanToolIcon />} size="small" variant="contained"  color="primary" style={{textTransform: 'none', height: '22px', marginTop:'15px', marginLeft:'10px'}} onClick={handleOpenTransferencia}><small>Solicitar Transferencia</small></Button>
                 </CardContent>
             </Card>              
           </Grid>
@@ -1013,6 +1166,7 @@ setDividendos(accionistaCalculo);
                     <Typography variant="h5" component="div">
                         {accionista.length > 0 && numberWithCommas(accionista[0].cantidadAcciones)}
                     </Typography>
+                    
                     <QRcode hidden value = {'https://production.dnyw5qmklx2h.amplifyapp.com/?id='+ userName} id = 'qrcode' size={75}/>
                 </CardContent>
             </Card>              
@@ -1058,6 +1212,33 @@ setDividendos(accionistaCalculo);
             </Card>              
           </Grid>
 
+          {solicitudes.length > 0 &&
+          <Grid item xs={12}>
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="body2" style={{ fontWeight: 600 }} color="secondary">
+                        Solicitudes de Transferencias 
+                    </Typography>
+
+                    <DataGrid
+                    style={{backgroundColor:'white'}}
+                    density="compact"             
+                    autoHeight='true'
+                    autoPageSize='true'
+                    disableColumnMenu 
+                    rows={solicitudes}
+                    columns={columnsSolicitudes}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    //pagination= {false}
+                    hideFooter={true}
+                    />
+
+                </CardContent>
+            </Card>              
+          </Grid>
+}
+
           {rows.length > 0 &&
           <Grid item xs={12}>
             <Card variant="outlined">
@@ -1076,13 +1257,14 @@ setDividendos(accionistaCalculo);
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
-                    //pagination= {false}
+                    hideFooter={true}
                     />
 
                 </CardContent>
             </Card>              
           </Grid>
 }
+
 {false &&
           <Grid item xs={12}>
             <Card variant="outlined">
@@ -1189,7 +1371,89 @@ setDividendos(accionistaCalculo);
 
             </DialogActions>
           </Dialog>
-  
+
+
+
+          <Dialog open={openTransferencia} onClose={handleCloseTransferencia} aria-labelledby="form-dialog-title"    >          
+            <DialogTitle id="form-dialog-title">Solicitar Transferencia de Acciones              
+            </DialogTitle>       
+            
+            <DialogContent style={{height: '400px'}}>
+              <Typography variant="body2">Descargar Modelos de Cartas</Typography> 
+              <div style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'space-between', width:'100%' }}  >
+              <Button startIcon={<CloudDownloadIcon />} variant='contained' component="span" color="secondary" size='small' style={{textTransform: 'none',marginLeft:0}}>Carta de Cesión</Button>                                                                     
+              <Button startIcon={<CloudDownloadIcon />} variant='contained' component="span" color="secondary" size='small' style={{textTransform: 'none',marginLeft:0}}>Carta de Gerente</Button>                                                                     
+              <Button startIcon={<CloudDownloadIcon />} variant='contained' component="span" color="secondary" size='small' style={{textTransform: 'none',marginLeft:0}}>Carta de Instrucciones</Button>                                                                     
+              </div>
+              <div style={{display:'flex', flexDirection:'column'}}>                       
+                <TextField
+                    id="outlined-required"
+                    label={<small>Cantidad de Acciones</small>}
+                    value={accionesTransferir}
+                    onChange={handleChangeAccionesTransferir}
+                    size='small'
+                    variant="outlined"
+                    style={{width: '200px',marginTop:30, marginBottom:25}}
+                    helperText={accionista.length>0 ? "Saldo de acciones : " + numberWithCommas(accionista[0].cantidadAcciones - accionesTransferir) : ""} 
+                />  
+                <Typography variant="body2">Cesionario</Typography>
+                <div>
+                  <TextField
+                    id="outlined-required"
+                    label={<small>Nombre Completo</small>}
+                    value={nombreCesionario}
+                    onChange={handleChangeNombreCesionario}
+                    size='small'
+                    variant="outlined"
+                    style={{width: '300px', marginTop:7}}
+                  /> 
+                  <TextField
+                    id="outlined-required"
+                    label={<small># Identificación</small>}
+                    value={identificacionCesionario}
+                    onChange={handleChangeIdentificacionCesionario}
+                    size='small'
+                    variant="outlined"
+                    style={{width: '200px',marginTop:7}}
+                  /> 
+                </div>
+
+
+              </div>    
+
+              <div style={{display:'flex', flexDirection:'column', marginTop:15}}>                                
+                <Typography variant="body2">Adjuntar Documentos</Typography>
+                <label htmlFor="upload-photo101">
+                    <input style={{ display: 'none' }} id="upload-photo101" name="upload-photo101" type="file" onChange={onChangeDocIdentificacion} />
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Identificación Cesionario y Cedente</Button>                                         
+                </label>
+                <label htmlFor="upload-photo101">
+                    <input style={{ display: 'none' }} id="upload-photo101" name="upload-photo101" type="file" onChange={onChangeCartaCesion} />
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Carta de Cesión y Carta Gerente</Button>                                         
+                </label>
+                <label htmlFor="upload-photo101">
+                    <input style={{ display: 'none' }} id="upload-photo101" name="upload-photo101" type="file" onChange={onChangeCartaInstrucciones} />
+                    <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginTop:7}}>Carta de Instrucciones y Certificado Bancario</Button>                                         
+                </label>
+                </div>
+            </DialogContent>
+            <DialogActions style={{display:'flex', flexDirection:'row', alignItems:'flex-end', justifyContent:'flex-end', width:'100%' }}>            
+                        
+             <Button onClick={ addSolicitud } variant="contained" color="primary" style={{textTransform: 'none'}}
+             disabled={accionesTransferir > 0 && nombreCesionario != '' && identificacionCesionario != '' ? false : true}
+             >
+                Solicitar
+              </Button>            
+              <Button onClick={handleCloseTransferencia} color="primary" style={{textTransform: 'none'}}>
+                Salir
+              </Button>
+            
+
+            </DialogActions>
+          </Dialog>
+
+
+
       <Snackbar message="Hola" open={openSnack} autoHideDuration={15000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top',horizontal: 'center'}}>
         <Alert onClose={handleCloseSnack} icon={false} severity="info" className={classes.myAlert} >
           <Box

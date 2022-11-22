@@ -376,6 +376,8 @@ export const getAccionista = /* GraphQL */ `
       herederos
       esHeredero
       decevale
+      nombreBeneficirario1
+      direccionPaisBeneficiario1
       titulos {
         items {
           id
@@ -454,6 +456,8 @@ export const listAccionistas = /* GraphQL */ `
         herederos
         esHeredero
         decevale
+        nombreBeneficirario1
+        direccionPaisBeneficiario1
         titulos {
           nextToken
         }
@@ -777,6 +781,20 @@ export const getParametro = /* GraphQL */ `
       IGhasta6
       FBretencion6
       FEretencion6
+      Retencion_Minima
+      Retencion_Maxima
+      Retencion_PN_Loc
+      Retencion_PN_NPF
+      Retencion_PN_PF
+      Retencion_PJ_Loc_Loc
+      Retencion_PJ_Loc_NPF
+      Retencion_PJ_Loc_PF
+      Retencion_PJ_PF_Loc
+      Retencion_PJ_PF_NPF
+      Retencion_PJ_PF_PF
+      Retencion_PJ_NPF_Loc
+      Retencion_PJ_NPF_NPF
+      Retencion_PJ_NPF_PF
       createdAt
       updatedAt
     }
@@ -820,6 +838,20 @@ export const listParametros = /* GraphQL */ `
         IGhasta6
         FBretencion6
         FEretencion6
+        Retencion_Minima
+        Retencion_Maxima
+        Retencion_PN_Loc
+        Retencion_PN_NPF
+        Retencion_PN_PF
+        Retencion_PJ_Loc_Loc
+        Retencion_PJ_Loc_NPF
+        Retencion_PJ_Loc_PF
+        Retencion_PJ_PF_Loc
+        Retencion_PJ_PF_NPF
+        Retencion_PJ_PF_PF
+        Retencion_PJ_NPF_Loc
+        Retencion_PJ_NPF_NPF
+        Retencion_PJ_NPF_PF
         createdAt
         updatedAt
       }
@@ -1216,6 +1248,61 @@ export const listDividendosAccionistas = /* GraphQL */ `
         fechaSolicitud
         HoraSolicitud
         fechaPago
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSolicitudes = /* GraphQL */ `
+  query GetSolicitudes($id: ID!) {
+    getSolicitudes(id: $id) {
+      id
+      fecha
+      operacion
+      idCedente
+      cedente
+      cedenteIdentificacion
+      acciones
+      cesionarioIdentificacion
+      cesionarioNombre
+      cesionarioDireccion
+      cesionarioEmail
+      cesionarioTelefono
+      estado
+      cs
+      ci
+      docIdentidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSolicitudes = /* GraphQL */ `
+  query ListSolicitudes(
+    $filter: ModelSolicitudesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSolicitudes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        fecha
+        operacion
+        idCedente
+        cedente
+        cedenteIdentificacion
+        acciones
+        cesionarioIdentificacion
+        cesionarioNombre
+        cesionarioDireccion
+        cesionarioEmail
+        cesionarioTelefono
+        estado
+        cs
+        ci
+        docIdentidad
         createdAt
         updatedAt
       }

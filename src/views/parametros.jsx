@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import {makeStyles, Paper, Grid, Button, TextField, CircularProgress, Snackbar} from '@material-ui/core'
+import {makeStyles, Paper, Grid, Button, TextField, CircularProgress, Snackbar, FormControl, InputLabel, Select, MenuItem, Typography} from '@material-ui/core'
 import { API } from 'aws-amplify';
 import { getParametro } from './../graphql/queries'
 import { updateParametro } from './../graphql/mutations'
 import MuiAlert from '@material-ui/lab/Alert';
+import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
+import { uuid } from 'uuidv4';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,6 +37,10 @@ export default function Parametros(){
     const [baseImponible, setbaseImponible] = useState(0);
     const [retencionNoResidente, setRetencionNoResidente] = useState(0);
 
+    const [cartaCesion, setCartaCesion] = useState('');
+    const [cartaGerente, setCartaGerente] = useState('');
+    const [cartaInstrucciones, setCartaInstrucciones] = useState('');
+
     const [FB1, setFB1] = useState(0);
     const [FB2, setFB2] = useState(0);
     const [FB3, setFB3] = useState(0);
@@ -62,6 +68,23 @@ export default function Parametros(){
     const [RFE4, setRFE4] = useState(0);
     const [RFE5, setRFE5] = useState(0);
     const [RFE6, setRFE6] = useState(0);
+
+    const [retencionMinima, setRetencionMinima] = useState(0);
+    const [retencionMaxima, setRetencionMaxima] = useState(0);
+
+    const [Retencion_PN_Loc, setRetencion_PN_Loc] = useState(0);
+    const [Retencion_PN_NPF, setRetencion_PN_NPF] = useState(0);
+    const [Retencion_PN_PF, setRetencion_PN_PF] = useState(0);
+    const [Retencion_PJ_Loc_Loc, setRetencion_PJ_Loc_Loc] = useState(0);
+    const [Retencion_PJ_Loc_NPF, setRetencion_PJ_Loc_NPF] = useState(0);
+    const [Retencion_PJ_Loc_PF, setRetencion_PJ_Loc_PF] = useState(0);
+    const [Retencion_PJ_PF_Loc, setRetencion_PJ_PF_Loc] = useState(0);
+    const [Retencion_PJ_PF_NPF, setRetencion_PJ_PF_NPF] = useState(0);
+    const [Retencion_PJ_PF_PF, setRetencion_PJ_PF_PF] = useState(0);
+    const [Retencion_PJ_NPF_Loc, setRetencion_PJ_NPF_Loc] = useState(0);
+    const [Retencion_PJ_NPF_NPF, setRetencion_PJ_NPF_NPF] = useState(0);
+    const [Retencion_PJ_NPF_PF, setRetencion_PJ_NPF_PF] = useState(0);
+
 
     const handleCantidadEmitidoChange = (event) => {
 
@@ -117,6 +140,23 @@ export default function Parametros(){
     const handleRFB6Change = (event) => {setRFB6(event.target.value.replace(/[^0-9.]/g, '')); };
     const handleRFE6Change = (event) => {setRFE6(event.target.value.replace(/[^0-9.]/g, '')); };
 
+    const handleRetencionMinimaChange = (event) => {setRetencionMinima(event.target.value.replace(/[^0-9.]/g, ''));};
+    const handleRetencionMaximaChange = (event) => {setRetencionMaxima(event.target.value.replace(/[^0-9.]/g, ''));};
+
+    //const handleChangeEstadoListado = (event) => {setEstadoListado(event.target.value);};
+    const handleChangeRetencion_PN_Loc = (event) => {setRetencion_PN_Loc(event.target.value);};
+    const handleChangeRetencion_PN_NPF = (event) => {setRetencion_PN_NPF(event.target.value);};
+    const handleChangeRetencion_PN_PF = (event) => {setRetencion_PN_PF(event.target.value);};
+    const handleChangeRetencion_PJ_Loc_Loc = (event) => {setRetencion_PJ_Loc_Loc(event.target.value);};
+    const handleChangeRetencion_PJ_Loc_NPF = (event) => {setRetencion_PJ_Loc_NPF(event.target.value);};
+    const handleChangeRetencion_PJ_Loc_PF = (event) => {setRetencion_PJ_Loc_PF(event.target.value);};
+    const handleChangeRetencion_PJ_PF_Loc = (event) => {setRetencion_PJ_PF_Loc(event.target.value);};
+    const handleChangeRetencion_PJ_PF_NPF = (event) => {setRetencion_PJ_PF_NPF(event.target.value);};
+    const handleChangeRetencion_PJ_PF_PF = (event) => {setRetencion_PJ_PF_PF(event.target.value);};
+    const handleChangeRetencion_PJ_NPF_Loc = (event) => {setRetencion_PJ_NPF_Loc(event.target.value);};
+    const handleChangeRetencion_PJ_NPF_NPF = (event) => {setRetencion_PJ_NPF_NPF(event.target.value);};
+    const handleChangeRetencion_PJ_NPF_PF = (event) => {setRetencion_PJ_NPF_PF(event.target.value);};
+
 
     const classes = useStyles();
     const [circular, setCircular] = useState(false);
@@ -167,6 +207,23 @@ export default function Parametros(){
         setRFE5(parametrosFromAPI.FEretencion5);
         setRFE6(parametrosFromAPI.FEretencion6);
 
+
+        setRetencionMinima(parametrosFromAPI.Retencion_Minima);
+        setRetencionMaxima(parametrosFromAPI.Retencion_Maxima);
+    
+        setRetencion_PN_Loc(parametrosFromAPI.Retencion_PN_Loc);
+        setRetencion_PN_NPF(parametrosFromAPI.Retencion_PN_NPF);
+        setRetencion_PN_PF(parametrosFromAPI.Retencion_PN_PF);
+        setRetencion_PJ_Loc_Loc(parametrosFromAPI.Retencion_PJ_Loc_Loc);
+        setRetencion_PJ_Loc_NPF(parametrosFromAPI.Retencion_PJ_Loc_NPF);
+        setRetencion_PJ_Loc_PF(parametrosFromAPI.Retencion_PJ_Loc_PF);
+        setRetencion_PJ_PF_Loc(parametrosFromAPI.Retencion_PJ_PF_Loc);
+        setRetencion_PJ_PF_NPF(parametrosFromAPI.Retencion_PJ_PF_NPF);
+        setRetencion_PJ_PF_PF(parametrosFromAPI.Retencion_PJ_PF_PF);
+        setRetencion_PJ_NPF_Loc(parametrosFromAPI.Retencion_PJ_NPF_Loc);
+        setRetencion_PJ_NPF_NPF(parametrosFromAPI.Retencion_PJ_NPF_NPF);
+        setRetencion_PJ_NPF_PF(parametrosFromAPI.Retencion_PJ_NPF_PF);
+
     }
 
     //const apiDataUpdate =  async(nuevoSecuencial) => await API.graphql({ query: updateNumeroSecuencial, variables: { input: {id: '1', numerotitulo: nuevoSecuencial} } });
@@ -180,29 +237,44 @@ export default function Parametros(){
     
             const operID = await API.graphql({ query: updateParametro, variables: { input: {id: '1', cantidadEmitida: cantidadEmitido, valorNominal: valorNominal, baseImponible: baseImponible, noResidente: retencionNoResidente,
             IGdesde1: FB1,
-  IGhasta1: FE1,
-  FBretencion1: RFB1,
-  FEretencion1: RFE1,
-  IGdesde2: FB2,
-  IGhasta2: FE2,
-  FBretencion2: RFB2,
-  FEretencion2: RFE2,
-  IGdesde3: FB3,
-  IGhasta3: FE3,
-  FBretencion3: RFB3,
-  FEretencion3: RFE3,
-  IGdesde4: FB4,
-  IGhasta4: FE4,
-  FBretencion4: RFB4,
-  FEretencion4: RFE4,
-  IGdesde5: FB5,
-  IGhasta5: FE5,
-  FBretencion5: RFB5,
-  FEretencion5: RFE5,
-  IGdesde6: FB6,
-  IGhasta6: FE6,
-  FBretencion6: RFB6,
-  FEretencion6: RFE6,  
+            IGhasta1: FE1,
+            FBretencion1: RFB1,
+            FEretencion1: RFE1,
+            IGdesde2: FB2,
+            IGhasta2: FE2,
+            FBretencion2: RFB2,
+            FEretencion2: RFE2,
+            IGdesde3: FB3,
+            IGhasta3: FE3,
+            FBretencion3: RFB3,
+            FEretencion3: RFE3,
+            IGdesde4: FB4,
+            IGhasta4: FE4,
+            FBretencion4: RFB4,
+            FEretencion4: RFE4,
+            IGdesde5: FB5,
+            IGhasta5: FE5,
+            FBretencion5: RFB5,
+            FEretencion5: RFE5,
+            IGdesde6: FB6,
+            IGhasta6: FE6,
+            FBretencion6: RFB6,
+            FEretencion6: RFE6,  
+
+            Retencion_Minima: retencionMinima,
+            Retencion_Maxima: retencionMaxima,
+            Retencion_PN_Loc: Retencion_PN_Loc,
+            Retencion_PN_NPF: Retencion_PN_NPF,
+            Retencion_PN_PF: Retencion_PN_PF,
+            Retencion_PJ_Loc_Loc: Retencion_PJ_Loc_Loc,
+            Retencion_PJ_Loc_NPF: Retencion_PJ_Loc_NPF,
+            Retencion_PJ_Loc_PF: Retencion_PJ_Loc_PF,
+            Retencion_PJ_PF_Loc: Retencion_PJ_PF_Loc,
+            Retencion_PJ_PF_NPF: Retencion_PJ_PF_NPF,
+            Retencion_PJ_PF_PF: Retencion_PJ_PF_PF,
+            Retencion_PJ_NPF_Loc: Retencion_PJ_NPF_Loc,
+            Retencion_PJ_NPF_NPF: Retencion_PJ_NPF_NPF,
+            Retencion_PJ_NPF_PF: Retencion_PJ_NPF_PF,
 
           } } });
     
@@ -221,6 +293,40 @@ export default function Parametros(){
         setOpenSnack(false);
       };
       
+
+      async function onChangeCartaCesion(e) {
+        if (!e.target.files[0]){
+          console.log('entro al cancelar')
+          return
+        }
+        const file = e.target.files[0];
+        const filename = file.name + uuid();
+        setCartaCesion({ filename });
+        await Storage.put(filename, file);
+        }
+
+    async function onChangeCartaGerente(e) {
+        if (!e.target.files[0]){
+            console.log('entro al cancelar')
+            return
+        }
+        const file = e.target.files[0];
+        const filename = file.name + uuid();
+        setCartaGerente({ filename });
+        await Storage.put(filename, file);
+        }
+
+    async function onChangeCartaInstrucciones(e) {
+        if (!e.target.files[0]){
+            console.log('entro al cancelar')
+            return
+        }
+        const file = e.target.files[0];
+        const filename = file.name + uuid();
+        setCartaInstrucciones({ filename });
+        await Storage.put(filename, file);
+        }
+                    
 
 return(
     <main className={classes.content}>
@@ -241,10 +347,15 @@ return(
                         value={valorNominal}
                         onChange={handleValorNominalChange}
                         style={{marginRight:20}}
-                    /> 
+                    />                                        
+                    <Button onClick={addCantidadEmitida} size='small' variant='contained' color='primary' style={{marginLeft:20}}>Grabar</Button>
+                </Grid>  
+
+
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'50px'}}>
                     <TextField
                         id="outlined-required3"
-                        label="Base Imponible %"
+                        label="Base Imponible (%)"
                         value={baseImponible}
                         onChange={handleBaseImponibleChange}
                         style={{marginRight:20}}
@@ -252,13 +363,430 @@ return(
                     /> 
                     <TextField
                         id="outlined-required4"
-                        label="Retención No Residente %"
-                        value={retencionNoResidente}
-                        onChange={handleRetencionNoResidenteChange}
+                        label="Mínima Retención (%)"
+                        value={retencionMinima}
+                        onChange={handleRetencionMinimaChange}
                         style={{marginRight:20}}
                         type="number"
                     />                                         
-                    <Button onClick={addCantidadEmitida} size='small' variant='contained' color='primary' style={{marginLeft:20}}>Grabar</Button>
+                    <TextField
+                        id="outlined-required4"
+                        label="Máxima Retención (%)"
+                        value={retencionMaxima}
+                        onChange={handleRetencionMaximaChange}
+                        style={{marginRight:20}}
+                        type="number"
+                    />                                         
+                </Grid>  
+
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'50px'}}>
+                    <Typography variant="body2">Modelos de Cartas</Typography>
+                    <label htmlFor="upload-photo101">
+                        <input style={{ display: 'none' }} id="upload-photo101" name="upload-photo101" type="file" onChange={onChangeCartaCesion} />
+                        <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginLeft:10}}>Carta de Cesión</Button>                                         
+                    </label>
+                    <label htmlFor="upload-photo102">
+                        <input style={{ display: 'none' }} id="upload-photo102" name="upload-photo102" type="file" onChange={onChangeCartaGerente} />
+                        <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginLeft:10}}>Carta de Gerente</Button>                                         
+                    </label>
+                    <label htmlFor="upload-photo103">
+                        <input style={{ display: 'none' }} id="upload-photo103" name="upload-photo103" type="file" onChange={onChangeCartaInstrucciones} />
+                        <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',marginLeft:10}}>Carta de Instrucciones</Button>                                         
+                    </label>
+                </Grid>  
+
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'50px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        label="Persona"
+                        value={'Persona Natural'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        label="Residencia Fiscal"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />                                            
+                    <FormControl style={{width:'180px'}}>
+                        <InputLabel id="demo-simple-select-label">Retención Asignada</InputLabel>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PN_Loc}
+                        label="Retención Asignada"
+                        onChange={handleChangeRetencion_PN_Loc}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Persona Natural'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PN_NPF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PN_NPF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Persona Natural'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PN_PF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PN_PF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'50px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        label="Residencia Fiscal"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        label="Residencia Beneficiario"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <InputLabel id="demo-simple-select-label">Retención Asignada</InputLabel>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_Loc_Loc}
+                        label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_Loc_Loc}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_Loc_NPF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_Loc_NPF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_Loc_PF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_Loc_PF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_PF_Loc}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_PF_Loc}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_PF_NPF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_PF_NPF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_PF_PF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_PF_PF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'Ecuador'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_NPF_Loc}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_NPF_Loc}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_NPF_NPF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_NPF_NPF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'10px'}}>
+                    <TextField
+                        id="outlined-required3"
+                        //label="Persona"
+                        value={'Sociedad'}
+                        style={{marginRight:20}}
+                    /> 
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Fiscal"
+                        value={'No Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />                                         
+                    <TextField
+                        id="outlined-required4"
+                        //label="Residencia Beneficiario"
+                        value={'Paraíso Fiscal'}
+                        style={{marginRight:20}}
+                    />      
+                    <FormControl style={{width:'180px'}}>
+                        <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={Retencion_PJ_NPF_PF}
+                        //label="Retención Asignada"
+                        onChange={handleChangeRetencion_PJ_NPF_PF}
+                        >
+                        <MenuItem value={1} >Mínima Retención</MenuItem>
+                        <MenuItem value={2} >Máxima Retención</MenuItem>
+                        <MenuItem value={3} >Tabla</MenuItem>
+                        <MenuItem value={4} >Exento</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>  
 
                 <Grid item xs={12} style={{display:'flex', flexDirection:'row', alignItems:'flex-start', justifyContent:'normal', marginTop:'150px'}}>
