@@ -87,6 +87,8 @@ import { ConsoleLogger } from '@aws-amplify/core';
   };
   
 
+
+  
 function QuickSearchToolbar(props) {
     const classes = useStyles();
   
@@ -179,6 +181,14 @@ function QuickSearchToolbar(props) {
     let columns = []
     if(consultaDetallada){
       columns = [
+        { 
+          field: 'secuencial' , 
+          headerName: 'Nro', 
+          type: 'number',
+          width: 50,
+          //filterable: false,        
+          //renderCell:(index) => index.api.getRowIndex(index.row.id) + 1
+        },   
         {  field: 'tipoIdentificacion', headerName: 'Tipo Id', width: 100,},
         {
           field: 'identificacion',
@@ -190,7 +200,14 @@ function QuickSearchToolbar(props) {
           headerName: 'Decevale',
           width: 100,
         },    
-        {  field: 'nombre', headerName: 'Nombre', width: 100,},
+
+        {
+          field: 'nombre2',
+          headerName: 'Nombre',
+          width: 250,
+        },
+
+        //{  field: 'nombre', headerName: 'Nombre', width: 100,},
         {  field: 'direccionCalle', headerName: 'Calle', width: 100,},
         {  field: 'direccionNumero', headerName: 'Numero', width: 100,},
         {  field: 'nombreBanco', headerName: 'Banco', width: 100,},
@@ -222,6 +239,14 @@ function QuickSearchToolbar(props) {
     }else{
     columns = [
       //{ field: 'id', headerName: 'Nro', width: 80, type: 'number',},
+      { 
+        field: 'secuencial' , 
+        headerName: 'Nro', 
+        type: 'number',
+        width: 50,
+        //filterable: false,        
+        //renderCell:(index) => index.api.getRowIndex(index.row.id) + 1
+      },      
       {
         field: 'identificacion',
         headerName: 'Identificacion',
@@ -403,9 +428,13 @@ function QuickSearchToolbar(props) {
       //const accionistas = accionistasFromAPI.map( accionista => accionista)
       //accionistasFromAPI.map(obj=> ({ ...obj, nombre2 : obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre }))
 
+      let numero = 1;
+      let nombre_aux = '';
       accionistasFromAPI.forEach(function (obj) {
+        
         //obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
-        obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+        nombre_aux = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+        obj.nombre2 = nombre_aux.toUpperCase();
       });
 
       setAccionistas(accionistasFromAPI.sort(function (a, b) {
@@ -418,6 +447,11 @@ function QuickSearchToolbar(props) {
         // a must be equal to b
         return 0;
       }));
+
+      accionistasFromAPI.forEach(function (obj) {
+        
+        obj.secuencial = numero++;
+      });
 
       setRows(accionistasFromAPI);
       /*
@@ -664,6 +698,7 @@ function QuickSearchToolbar(props) {
 
 
           <DataGrid
+            //getRowId= {(row) => row.code}
             style={{backgroundColor:'white'}}
             //sortModel={ [{field: 'cantidadAcciones', sort: 'desc',}]}
             density="compact"             

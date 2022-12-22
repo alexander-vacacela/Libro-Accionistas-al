@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {makeStyles, Paper, Grid, Button, TextField, CircularProgress, Snackbar, FormControl, InputLabel, Select, MenuItem, Typography} from '@material-ui/core'
-import { API } from 'aws-amplify';
+import { API,Storage } from 'aws-amplify';
 import { getParametro } from './../graphql/queries'
 import { updateParametro } from './../graphql/mutations'
 import MuiAlert from '@material-ui/lab/Alert';
@@ -179,6 +179,10 @@ export default function Parametros(){
         setbaseImponible(parametrosFromAPI.baseImponible);
         setRetencionNoResidente(parametrosFromAPI.noResidente);
 
+        setCartaCesion(parametrosFromAPI.modeloCartaCesion);
+        setCartaGerente(parametrosFromAPI.modeloCartaGerente);
+        setCartaInstrucciones(parametrosFromAPI.modeloCartaInstrucciones);
+
         setFB1(parametrosFromAPI.IGdesde1);
         setFB2(parametrosFromAPI.IGdesde2);
         setFB3(parametrosFromAPI.IGdesde3);
@@ -276,8 +280,13 @@ export default function Parametros(){
             Retencion_PJ_NPF_NPF: Retencion_PJ_NPF_NPF,
             Retencion_PJ_NPF_PF: Retencion_PJ_NPF_PF,
 
+            modeloCartaCesion: cartaCesion,
+            modeloCartaGerente: cartaGerente,
+            modeloCartaInstrucciones: cartaInstrucciones,
+
           } } });
     
+          console.log('leer carta cesion', cartaCesion)
             setCircular(false);
             setOpenSnack(true)
     
@@ -300,8 +309,10 @@ export default function Parametros(){
           return
         }
         const file = e.target.files[0];
-        const filename = file.name + uuid();
+        //const filename = file.name + uuid();
+        const filename = uuid() + file.name ;
         setCartaCesion({ filename });
+        console.log('entro al carta cesion', cartaCesion)
         await Storage.put(filename, file);
         }
 

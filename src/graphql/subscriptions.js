@@ -993,6 +993,9 @@ export const onCreateParametro = /* GraphQL */ `
       Retencion_PJ_NPF_Loc
       Retencion_PJ_NPF_NPF
       Retencion_PJ_NPF_PF
+      modeloCartaCesion
+      modeloCartaGerente
+      modeloCartaInstrucciones
       createdAt
       updatedAt
     }
@@ -1045,6 +1048,9 @@ export const onUpdateParametro = /* GraphQL */ `
       Retencion_PJ_NPF_Loc
       Retencion_PJ_NPF_NPF
       Retencion_PJ_NPF_PF
+      modeloCartaCesion
+      modeloCartaGerente
+      modeloCartaInstrucciones
       createdAt
       updatedAt
     }
@@ -1097,6 +1103,9 @@ export const onDeleteParametro = /* GraphQL */ `
       Retencion_PJ_NPF_Loc
       Retencion_PJ_NPF_NPF
       Retencion_PJ_NPF_PF
+      modeloCartaCesion
+      modeloCartaGerente
+      modeloCartaInstrucciones
       createdAt
       updatedAt
     }
@@ -1652,6 +1661,8 @@ export const onCreateSolicitudes = /* GraphQL */ `
       cedente
       cedenteIdentificacion
       acciones
+      valorVenta
+      totalVenta
       cesionarioIdentificacion
       cesionarioNombre
       cesionarioDireccion
@@ -1676,6 +1687,8 @@ export const onUpdateSolicitudes = /* GraphQL */ `
       cedente
       cedenteIdentificacion
       acciones
+      valorVenta
+      totalVenta
       cesionarioIdentificacion
       cesionarioNombre
       cesionarioDireccion
@@ -1700,6 +1713,8 @@ export const onDeleteSolicitudes = /* GraphQL */ `
       cedente
       cedenteIdentificacion
       acciones
+      valorVenta
+      totalVenta
       cesionarioIdentificacion
       cesionarioNombre
       cesionarioDireccion

@@ -723,15 +723,21 @@ export default function PersonaJuridica() {
             identificacion: data.identificacion,
             decevale: data.decevale,
             nombre: data.razonSocial, 
-            direccionPais: pais.find(o => o.value === data.paisDireccion).label,
-            direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion).label,
-            direccionCiudad: ciudad.find(o => o.value === data.ciudadDireccion).label ,
+            //direccionPais: pais.find(o => o.value === data.paisDireccion).label,
+            direccionPais: pais.find(o => o.value === data.paisDireccion) ? pais.find(o => o.value === data.paisDireccion).label : '',
+            //direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion).label,
+            direccionProvincia: provincia.find(o => o.value === data.provinciaDireccion) ? provincia.find(o => o.value === data.provinciaDireccion).label : '',
+            //direccionCiudad: ciudad.find(o => o.value === data.ciudadDireccion).label ,
+            direccionCiudad: ciudad.find(o => o.value === data.ciudadDireccion) ? ciudad.find(o => o.value === data.ciudadDireccion).label : '',
             direccionCalle: data.calle,
             direccionNumero: data.numero,
-            nombreBanco:  banco.find(o => o.value === data.banco).label,
-            tipoCuenta: tipoCuenta.find(o => o.value === data.tipoCuenta).label, 
+            //nombreBanco:  banco.find(o => o.value === data.banco).label,
+            //tipoCuenta: tipoCuenta.find(o => o.value === data.tipoCuenta).label, 
+            nombreBanco:  banco.find(o => o.value === data.banco) ? banco.find(o => o.value === data.banco).label : '',
+            tipoCuenta: tipoCuenta.find(o => o.value === data.tipoCuenta) ? tipoCuenta.find(o => o.value === data.tipoCuenta).label : '', 
             cuentaBancaria: data.cuenta,
-            paisNacionalidad: nacionalidad.find(o => o.value === data.nacionalidad).label, 
+            //paisNacionalidad: nacionalidad.find(o => o.value === data.nacionalidad).label, 
+            paisNacionalidad: nacionalidad.find(o => o.value === data.nacionalidad) ? nacionalidad.find(o => o.value === data.nacionalidad).label : '', 
             cantidadAcciones: 0,
             tipoAcciones: 'D',
             estado: 'Activo',
@@ -760,10 +766,12 @@ export default function PersonaJuridica() {
             docCertificadoBancario: formData.docCertificadoBancario,
             docIdentidadConyugue : formData.docIdentidadConyugue,
 
-            repLegal_tipoIdentificacion: tipoIdentificacionPN.find(o => o.value === data.tipoIdentificacionRepLegal).label ,
+            //repLegal_tipoIdentificacion: tipoIdentificacionPN.find(o => o.value === data.tipoIdentificacionRepLegal).label ,
+            repLegal_tipoIdentificacion: tipoIdentificacionPN.find(o => o.value === data.tipoIdentificacionRepLegal) ? tipoIdentificacionPN.find(o => o.value === data.tipoIdentificacionRepLegal).label : '',   
             repLegal_identificacion: data.identificacionRepLegal,
             repLegal_nombre: data.repLegal,
-            repLegal_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadRepLegal).label,   
+            //repLegal_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadRepLegal).label, 
+            repLegal_nacionalidad: nacionalidad.find(o => o.value === data.nacionalidadRepLegal) ? nacionalidad.find(o => o.value === data.nacionalidadRepLegal).label : '',   
             repLegal_telefono: data.telefonoRepLegal,
             repLegal_email: data.emailRepLegal,
 
@@ -772,7 +780,8 @@ export default function PersonaJuridica() {
             docIdentidadConyugue : formData.docIdentidadConyugue,
 
             nombreBeneficirario1: data.nombreBeneficirario1,
-            direccionPaisBeneficiario1 : pais.find(o => o.value === data.direccionPaisBeneficiario1).label,      
+            //direccionPaisBeneficiario1 : pais.find(o => o.value === data.direccionPaisBeneficiario1).label, 
+            direccionPaisBeneficiario1 : pais.find(o => o.value === data.direccionPaisBeneficiario1) ? pais.find(o => o.value === data.direccionPaisBeneficiario1).label : '',     
             
          };
 
@@ -951,6 +960,12 @@ export default function PersonaJuridica() {
             reset(defaultValues);
       }
   
+      const eliminarAccionista = async () => {
+        const apiDataUpdateAccionista = await API.graphql({ query: updateAccionista, variables: { input: {id: location.state.preloadedValue.id, estado: 'Eliminado'} } });
+        setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+        reset(defaultValues);
+  }
+      
     async function onChangeDI(e) {
       if (!e.target.files[0]) return
       const file = e.target.files[0];
@@ -1081,7 +1096,7 @@ export default function PersonaJuridica() {
                                 <Controller
                                 name={"calle"}
                                 control={control}
-                                rules={{required: 'Requerido'}}
+                                //rules={{required: 'Requerido'}}
                                 render={({ field: { onChange, value }, fieldState: { error }, }) => (
                                     <TextField size='small' onChange={onChange} value={value} label={"Calle"} variant='outlined' style={{minWidth: 300}} error={!!error} helperText={error ? error.message : null}/>
                                 )} />
@@ -1142,9 +1157,7 @@ export default function PersonaJuridica() {
                                     id={"identificacionRepLegal"}
                                     name={"identificacionRepLegal"}
                                     control={control}
-                                    rules={{
-                                        required: 'Requerido'
-                                      }}
+                                    //rules={{required: 'Requerido'}}
                                     render={({ field: { onChange, value }, fieldState: { error }, }) => (
                                         <TextField  size='small' onChange={onChange} value={value} label={"Identificación"} variant='outlined' error={!!error} helperText={error ? error.message : null} />
                                     )}
@@ -1156,7 +1169,7 @@ export default function PersonaJuridica() {
                                     <Controller
                                     name={"repLegal"}
                                     control={control}
-                                    rules={{required: 'Requerido'}}
+                                    //rules={{required: 'Requerido'}}
                                     render={({ field: { onChange, value }, fieldState: { error }, }) => (
                                         <TextField size='small'  onChange={onChange} value={value} label={"Representante Legal"}  variant='outlined' error={!!error} helperText={error ? error.message : null} style={{minWidth: 300}}/>
                                     )} />                                 
@@ -1181,7 +1194,7 @@ export default function PersonaJuridica() {
                                 <Controller
                                 name={"telefonoRepLegal"}
                                 control={control}
-                                rules={{required: 'Requerido'}}
+                                //rules={{required: 'Requerido'}}
                                 render={({ field: { onChange, value }, fieldState: { error }, }) => (
                                     <TextField size='small' onChange={onChange} value={value} label={"Teléfono"} variant='outlined' style={{minWidth: 100}} error={!!error} helperText={error ? error.message : null}/>
                                 )} />
@@ -1331,6 +1344,7 @@ export default function PersonaJuridica() {
                     <div className={classes.formSection}>  
                         <Button size='small' onClick={limpiarForm} style={{textTransform: 'none'}} color='primary'>Limpiar</Button>
                         <Button siza='small' onClick={handleSubmit(onSubmit)} variant='contained' color='primary' style={{textTransform: 'none'}}>{location.state ?  "Actualizar Accionista" :  "Registrar Accionista"}</Button>
+                        {location.state ? (location.state.preloadedValue.cantidadAcciones === 0 || location.state.preloadedValue.cantidadAcciones === null || location.state.preloadedValue.cantidadAcciones === undefined) && <Button siza='small' onClick={eliminarAccionista} variant='contained' color='secondary' style={{textTransform: 'none'}}>Eliminar Accionista</Button> : null}
                     </div>
                     <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
                       <Alert onClose={handleCloseSnack} severity="success">

@@ -360,6 +360,7 @@ export default function Operaciones() {
       fetchTitulos(values.row.id);
       fetchHerederos(values.row.id);
 
+      setFormData({ cs: values.row.cs, cg: values.row.cg, ci: values.row.ci, es: values.row.es, cp: values.row.cp})    
       console.log('values',values.row);
       //console.log('operacion',values.row.id);
     };
@@ -1088,6 +1089,7 @@ export default function Operaciones() {
           var myRequest = new Request(url);
           fetch(myRequest).then(function(response) {
             if (response.status === 200) {              
+              console.log("DOCUMENTOOOO CS", url);
               setImageCS(url);
               window.open(url)
             }
@@ -1105,6 +1107,7 @@ export default function Operaciones() {
           var myRequest = new Request(url);
           fetch(myRequest).then(function(response) {
             if (response.status === 200) {
+              console.log("DOCUMENTOOOO CG", url.url);
               setImageCS(url);
               window.open(url)
             }
@@ -1466,12 +1469,13 @@ export default function Operaciones() {
                       <EditIcon fontSize="small" color='secondary' />
                     </IconButton>
                   </label>}
-                  <Button component="span" color="primary" size='small' style={{marginTop:10}} onClick={getPictureCS}>
-                    {transferencia.operacion == 'Cesión' ? 'Carta de Cesión' :  transferencia.operacion == 'Posesión Efectiva' ? 'Carta de Posesión Efectiva' : transferencia.operacion == 'Bloqueo' || transferencia.operacion == 'Desbloqueo' ? 'Documento de Respaldo' :  transferencia.operacion == 'Testamento' ? 'Carta de Testamento' :  transferencia.operacion == 'Donación' ? 'Carta de Donación' : 'Titulo Ordinario'}
+                  <Button component="span" color="primary" size='small' style={{marginTop:10}} onClick={getPictureCS} disabled={transferencia.cs ? false : true}>
+                    {transferencia.operacion == 'Cesión' ? 'Carta de Cesión y Gerente' :  transferencia.operacion == 'Posesión Efectiva' ? 'Carta de Posesión Efectiva' : transferencia.operacion == 'Bloqueo' || transferencia.operacion == 'Desbloqueo' ? 'Documento de Respaldo' :  transferencia.operacion == 'Testamento' ? 'Carta de Testamento' :  transferencia.operacion == 'Donación' ? 'Carta de Donación' : 'Titulo Ordinario'}
                   </Button>
                   {transferencia.cs && <CheckIcon />}
                   {formData.cs && <FiberNewOutlined color='secondary'/>}
                 </div>
+
                 {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
                   {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
@@ -1481,13 +1485,15 @@ export default function Operaciones() {
                       <EditIcon fontSize="small" color='secondary' />
                     </IconButton>
                   </label>}                  
-                  <Button component="span" color="primary" size='small' onClick={getPictureCG}>
-                    {transferencia.operacion == 'Cesión' ? 'Carta de Gerente' :  transferencia.operacion == 'Testamento' ? 'Escritura de Testamento' :  transferencia.operacion == 'Donación' ? 'Escritura de Donación de Bienes' : 'Impuesto a la Herencia'}              
+                  <Button component="span" color="primary" size='small' onClick={getPictureCG} disabled={transferencia.cg ? false : true}>
+                    {transferencia.operacion == 'Cesión' ? 'Cédulas' :  transferencia.operacion == 'Testamento' ? 'Escritura de Testamento' :  transferencia.operacion == 'Donación' ? 'Escritura de Donación de Bienes' : 'Impuesto a la Herencia'}              
+
                   </Button>
                   {transferencia.cg  && <CheckIcon />}
                   {formData.cg && <FiberNewOutlined color='secondary'/>}
                 </div>
                 }
+
                 {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
                   {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
@@ -1497,7 +1503,7 @@ export default function Operaciones() {
                       <EditIcon fontSize="small" color='secondary' />
                     </IconButton>
                   </label>}                  
-                  <Button component="span" color="primary" size='small' onClick={getPictureCI}>
+                  <Button component="span" color="primary" size='small' onClick={getPictureCI} disabled={transferencia.ci ? false : true}>
                     {transferencia.operacion == 'Cesión' ? 'Carta de Instrucciones' :  transferencia.operacion == 'Testamento' ? 'Pago de Impuestos' :  transferencia.operacion == 'Donación' ? 'Pago de Impuestos' : 'Declaración Jurada'}              
                   </Button>
                   {transferencia.ci  && <CheckIcon />}
@@ -1513,14 +1519,15 @@ export default function Operaciones() {
                       <EditIcon fontSize="small" color='secondary' />
                     </IconButton>
                   </label>}                  
-                  <Button component="span" color="primary" size='small' onClick={getPictureES}>
-                    {transferencia.operacion == 'Cesión' ? 'Escritura' :  transferencia.operacion == 'Testamento' ? 'Declaración Jurada' :  transferencia.operacion == 'Donación' ? 'Declaración Jurada' : 'Escritura Posesión efectiva de Bienes'}                    
+                  <Button component="span" color="primary" size='small' onClick={getPictureES} disabled={transferencia.es ? false : true}>
+                    {transferencia.operacion == 'Cesión' ? 'Escrituras' :  transferencia.operacion == 'Testamento' ? 'Declaración Jurada' :  transferencia.operacion == 'Donación' ? 'Declaración Jurada' : 'Escritura Posesión efectiva de Bienes'}                    
                   </Button>
                   {transferencia.es  && <CheckIcon />}
                   {formData.es && <FiberNewOutlined color='secondary'/>}
                 </div>
                 }
-                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
+                
+                {transferencia.operacion != 'Cesión' && transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
                 <div>
                   {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCP">
@@ -1529,7 +1536,7 @@ export default function Operaciones() {
                       <EditIcon fontSize="small" color='secondary' />
                     </IconButton>
                   </label>}                  
-                  <Button component="span" color="primary" size='small' onClick={getPictureCP}>Poder</Button>
+                  <Button component="span" color="primary" size='small' onClick={getPictureCP} disabled={transferencia.cp ? false : true}>Poder</Button>
                     {transferencia.cp  && <CheckIcon />}
                   {formData.cp && <FiberNewOutlined color='secondary'/>}
                 </div>  

@@ -86,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
     identificacion: '',
     decevale: '',
     nacionalidad: '1',
+    cantidadAcciones: '0',
     numero: '',
     observaciónTelefono: '',
     paisBanco: '1',
@@ -670,6 +671,7 @@ export default function PersonaNatural() {
       email: location.state.preloadedValue.email1,
       estadoCivil: estadoCivil.find(o => o.label === location.state.preloadedValue.pn_estadoCivil) ? estadoCivil.find(o => o.label === location.state.preloadedValue.pn_estadoCivil).value : '1',
       nacionalidad: nacionalidad.find(o => o.label === location.state.preloadedValue.paisNacionalidad) ? nacionalidad.find(o => o.label === location.state.preloadedValue.paisNacionalidad).value : '1',
+      cantidadAcciones: location.state.preloadedValue.cantidadAcciones,
       numero: location.state.preloadedValue.direccionNumero,
       paisBanco: pais.find(o => o.label === location.state.preloadedValue.paisNacionalidad) ? pais.find(o => o.label === location.state.preloadedValue.paisNacionalidad).value : '1',
       paisDireccion: pais.find(o => o.label === location.state.preloadedValue.direccionPais) ? pais.find(o => o.label === location.state.preloadedValue.direccionPais).value : '1',
@@ -934,7 +936,14 @@ export default function PersonaNatural() {
             setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
             reset(defaultValues);
       }
-    
+
+      const eliminarAccionista = async () => {
+        const apiDataUpdateAccionista = await API.graphql({ query: updateAccionista, variables: { input: {id: location.state.preloadedValue.id, estado: 'Eliminado'} } });
+        setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+        reset(defaultValues);
+  }
+
+
     const onChangeEstadoCivil = (e) =>{
       //console.log('estado civil', e.target.value);
       if(e.target.value === '2' || e.target.value === '3')
@@ -1105,7 +1114,7 @@ export default function PersonaNatural() {
                                 <Controller
                                 name={"calle"}
                                 control={control}
-                                rules={{required: 'Requerido'}}
+                                //rules={{required: 'Requerido'}}
                                 render={({ field: { onChange, value }, fieldState: { error }, }) => (
                                     <TextField size='small' onChange={onChange} value={value} label={"Calle"} variant='outlined' style={{minWidth: 300}} error={!!error} helperText={error ? error.message : null}/>
                                 )} />
@@ -1328,6 +1337,8 @@ export default function PersonaNatural() {
                     <div className={classes.formSection}>  
                         <Button size='small' onClick={limpiarForm} style={{textTransform: 'none'}} color='primary'>Limpiar</Button>
                         <Button siza='small' onClick={handleSubmit(onSubmit)} variant='contained' color='primary' style={{textTransform: 'none'}}>{location.state ?  "Actualizar Accionista" :  "Registrar Accionista"}</Button>
+                       {location.state ?  (location.state.preloadedValue.cantidadAcciones === 0 || location.state.preloadedValue.cantidadAcciones === null || location.state.preloadedValue.cantidadAcciones === undefined) && <Button siza='small' onClick={eliminarAccionista} variant='contained' color='secondary' style={{textTransform: 'none'}}>Eliminar Accionista</Button> : null}
+
                     </div>
                     <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
                       <Alert onClose={handleCloseSnack} severity="success">

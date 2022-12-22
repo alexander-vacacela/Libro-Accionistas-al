@@ -417,6 +417,8 @@ type Solicitudes @model {
   cedente: String!
   cedenteIdentificacion: String!
   acciones: Int!
+  valorVenta: Float!
+  totalVenta: Float!
   cesionarioIdentificacion: String!
   cesionarioNombre: String!  
   cesionarioDireccion: String
