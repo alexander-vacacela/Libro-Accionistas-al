@@ -304,6 +304,17 @@ export default function Operaciones() {
 
     console.log('revisar operaciones II',operacionesFromAPI);
 
+
+    operacionesFromAPI.forEach(function (obj) {
+        
+      //obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
+      //nombre_aux = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+      obj.cedente = obj.cedente.toUpperCase();
+      obj.cesionario = obj.cesionario.toUpperCase();
+    });
+
+
+
     setOperaciones(operacionesFromAPI);
     if(count === 0)
       {      

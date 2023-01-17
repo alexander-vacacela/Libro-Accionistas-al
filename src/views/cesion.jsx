@@ -548,17 +548,17 @@ async function eliminarDocumento(doc) {
         </Grid>
         <Grid item xs={3} container direction='column' justifyContent= 'flex-start' style={{backgroundColor:'#f9f9f9', padding:20, borderRadius: 10,}}>
           <BlaclTextTypography variant='h6' >
-            Documentos requeridos
+            Documentos Requeridos
           </BlaclTextTypography>
 
           <label htmlFor="upload-photo1" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
             <input style={{ display: 'none' }} id="upload-photo1" name="upload-photo1" type="file" onChange={onChangeCS} />            
-            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Cesión</Button>
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Cesión y Gerente</Button>
             {formData.cs.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'cs': ''})} ><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
           <label htmlFor="upload-photo2" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
             <input style={{ display: 'none' }} id="upload-photo2" name="upload-photo2" type="file" onChange={onChangeCG} />            
-            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Gerente</Button>
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Documentos de Identidad</Button>
             {formData.cg.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'cg': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
           <label htmlFor="upload-photo3" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
@@ -566,16 +566,16 @@ async function eliminarDocumento(doc) {
             <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Carta de Instrucciones</Button>
             {formData.ci.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'ci': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
-          <label htmlFor="upload-photo4" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
-            <input style={{ display: 'none' }} id="upload-photo4" name="upload-photo4" type="file" onChange={onChangeES} />
-            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Escritura</Button>
-            {formData.es.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'es': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
-          </label>
           <label htmlFor="upload-photo5" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
             <input style={{ display: 'none' }} id="upload-photo5" name="upload-photo5" type="file" onChange={onChangeCP} />
-            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Poder</Button>
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Poderes</Button>
             {formData.cp.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'cp': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
           </label>
+          <label htmlFor="upload-photo4" style={{marginTop:'10px',display:'flex', flexDirection:'row', alignItems:'center'}}>
+            <input style={{ display: 'none' }} id="upload-photo4" name="upload-photo4" type="file" onChange={onChangeES} />
+            <Button startIcon={<CloudUploadOutlinedIcon />} variant='outlined' component="span" color="primary" size='small' style={{textTransform: 'none',}}>Respaldo de Adquisición</Button>
+            {formData.es.length > 0 && <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}> <CheckIcon color='primary' /> <IconButton onClick={() => setFormData({ ...formData, 'es': ''}) }><DeleteOutlineIcon color='disabled'/></IconButton>  </div>}
+          </label>          
         </Grid>
         <Grid item xs={12} style={{paddingTop:20}} >
           <Divider/>

@@ -46,6 +46,13 @@
           "deploymentBucketName": "amplify-libroaccionistas-prod-115753-deployment",
           "s3Key": "amplify-builds/crearRegistro-5636516952464e596955-build.zip"
         }
+      },
+      "api": {
+        "libroaccionistas": {},
+        "apiQLDBprod": {}
+      },
+      "storage": {
+        "imagestorage": {}
       }
     }
   }

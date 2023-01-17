@@ -1814,7 +1814,7 @@ console.log("carta cesion",modeloCartaCesion)                ;
                         <small>{accionista.length > 0 && accionista[0].tipoIdentificacion + " : " + accionista[0].identificacion}</small>                        
                     </Typography>                    
                     <Button startIcon={<PrintIcon />} size="small" variant="contained"  color="primary" style={{textTransform: 'none', height: '22px', marginTop:'15px'}} onClick={exportPDFCertificado}><small>Imprimir Certificado de Acciones</small></Button>
-                    
+
                 </CardContent>
             </Card>              
           </Grid>
