@@ -429,3 +429,37 @@ type Solicitudes @model {
   ci: String
   docIdentidad: String
 }
+
+type AccionistaArchive @model {
+  fecha: String!
+  id: ID!
+  tipoIdentificacion:  String!
+  identificacion: String!
+  nombre: String!
+  cantidadAcciones: Int
+  participacion: Float
+  tipoAcciones: String
+  estado: String!
+  tipoPersona: String!
+  pn_primerNombre: String
+  pn_segundoNombre: String
+  pn_apellidoPaterno: String
+  pn_apellidoMaterno: String
+  decevale: String
+  direccionPais: String
+  paisNacionalidad: String  
+}
+
+type TituloArchive @model {
+  fecha: String!
+  id: ID!
+  accionistaID: ID!
+  titulo : String!
+  acciones: Int!
+  fechaCompra: String
+  estado: String
+  idCedenteHereda: ID
+  nombreCedenteHereda: String
+  desde: Int
+  hasta: Int
+}

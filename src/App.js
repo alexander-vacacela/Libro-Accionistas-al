@@ -23,6 +23,7 @@ import Asambleas from './views/asambleas';
 import Dividendos from './views/dividendos';
 import AccionistaDashboard from './views/accionista-dashboard'
 import Transferencia from './views/transferencia';
+import AccionistasHistorico from './views/accionistas-historico';
 
 function App() {
 
@@ -69,7 +70,10 @@ function App() {
     ) : (
         <div>            
           <Layout>
-            <Switch>             
+            <Switch>    
+              <Route path="/historico">
+                <AccionistasHistorico />
+              </Route>
               <Route path="/dividendos">
                 <Dividendos />
               </Route>  

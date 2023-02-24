@@ -1320,3 +1320,109 @@ export const listSolicitudes = /* GraphQL */ `
     }
   }
 `;
+export const getAccionistaArchive = /* GraphQL */ `
+  query GetAccionistaArchive($id: ID!) {
+    getAccionistaArchive(id: $id) {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAccionistaArchives = /* GraphQL */ `
+  query ListAccionistaArchives(
+    $filter: ModelAccionistaArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAccionistaArchives(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        fecha
+        id
+        tipoIdentificacion
+        identificacion
+        nombre
+        cantidadAcciones
+        participacion
+        tipoAcciones
+        estado
+        tipoPersona
+        pn_primerNombre
+        pn_segundoNombre
+        pn_apellidoPaterno
+        pn_apellidoMaterno
+        decevale
+        direccionPais
+        paisNacionalidad
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getTituloArchive = /* GraphQL */ `
+  query GetTituloArchive($id: ID!) {
+    getTituloArchive(id: $id) {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTituloArchives = /* GraphQL */ `
+  query ListTituloArchives(
+    $filter: ModelTituloArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTituloArchives(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        fecha
+        id
+        accionistaID
+        titulo
+        acciones
+        fechaCompra
+        estado
+        idCedenteHereda
+        nombreCedenteHereda
+        desde
+        hasta
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

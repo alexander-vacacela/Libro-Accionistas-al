@@ -10,6 +10,7 @@ import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DescriptionIcon from '@material-ui/icons/Description';
 import WebIcon from '@material-ui/icons/Web';
+import ArchiveIcon from '@material-ui/icons/Archive';
 
 import { secondaryListItems } from './listitems';
 import clsx from 'clsx';
@@ -82,7 +83,12 @@ export default function Sidebar(props){
           label: "Reportes",
           path: "/reportes",
           icon: <DescriptionIcon />
-      },        
+        },    
+        {
+          label: "Libro Histórico",
+          path: "/historico",
+          icon: <ArchiveIcon />
+        },            
     ];
 
     const [perfil, setPerfil] = useState();

@@ -1729,3 +1729,135 @@ export const onDeleteSolicitudes = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAccionistaArchive = /* GraphQL */ `
+  subscription OnCreateAccionistaArchive {
+    onCreateAccionistaArchive {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAccionistaArchive = /* GraphQL */ `
+  subscription OnUpdateAccionistaArchive {
+    onUpdateAccionistaArchive {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAccionistaArchive = /* GraphQL */ `
+  subscription OnDeleteAccionistaArchive {
+    onDeleteAccionistaArchive {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTituloArchive = /* GraphQL */ `
+  subscription OnCreateTituloArchive {
+    onCreateTituloArchive {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTituloArchive = /* GraphQL */ `
+  subscription OnUpdateTituloArchive {
+    onUpdateTituloArchive {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTituloArchive = /* GraphQL */ `
+  subscription OnDeleteTituloArchive {
+    onDeleteTituloArchive {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;

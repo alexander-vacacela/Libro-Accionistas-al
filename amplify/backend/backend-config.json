@@ -1,64 +1,58 @@
 {
+  "api": {
+    "apiQLDBprod": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "crearRegistro"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "libroaccionistas": {
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 360,
+              "description": "demo"
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
   "auth": {
     "libroaccionistasdbe6011c": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
       "customAuth": false,
+      "dependsOn": [],
       "frontendAuthConfig": {
         "loginMechanisms": [
           "PREFERRED_USERNAME"
         ],
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
-        },
         "mfaConfiguration": "OFF",
         "mfaTypes": [
           "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
         ]
-      }
-    }
-  },
-  "api": {
-    "libroaccionistas": {
-      "service": "AppSync",
+      },
       "providerPlugin": "awscloudformation",
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "API_KEY",
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 360,
-              "description": "demo"
-            }
-          },
-          "additionalAuthenticationProviders": []
-        }
-      }
-    },
-    "apiQLDBprod": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "crearRegistro",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    }
-  },
-  "storage": {
-    "imagestorage": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
+      "service": "Cognito"
     }
   },
   "function": {
@@ -66,6 +60,30 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_crearRegistro_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "crearRegistro"
+        }
+      ]
+    },
+    "AMPLIFY_function_crearRegistro_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "crearRegistro"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "imagestorage": {
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

@@ -21,6 +21,13 @@
           "deploymentBucketName": "amplify-amplifyf7cdc7b192f54-staging-195641-deployment",
           "s3Key": "amplify-builds/crearRegistro-5636516952464e596955-build.zip"
         }
+      },
+      "api": {
+        "libroaccionistas": {},
+        "apiQLDBprod": {}
+      },
+      "storage": {
+        "imagestorage": {}
       }
     }
   },

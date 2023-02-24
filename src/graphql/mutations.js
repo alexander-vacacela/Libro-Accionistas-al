@@ -1936,3 +1936,153 @@ export const deleteSolicitudes = /* GraphQL */ `
     }
   }
 `;
+export const createAccionistaArchive = /* GraphQL */ `
+  mutation CreateAccionistaArchive(
+    $input: CreateAccionistaArchiveInput!
+    $condition: ModelAccionistaArchiveConditionInput
+  ) {
+    createAccionistaArchive(input: $input, condition: $condition) {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAccionistaArchive = /* GraphQL */ `
+  mutation UpdateAccionistaArchive(
+    $input: UpdateAccionistaArchiveInput!
+    $condition: ModelAccionistaArchiveConditionInput
+  ) {
+    updateAccionistaArchive(input: $input, condition: $condition) {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAccionistaArchive = /* GraphQL */ `
+  mutation DeleteAccionistaArchive(
+    $input: DeleteAccionistaArchiveInput!
+    $condition: ModelAccionistaArchiveConditionInput
+  ) {
+    deleteAccionistaArchive(input: $input, condition: $condition) {
+      fecha
+      id
+      tipoIdentificacion
+      identificacion
+      nombre
+      cantidadAcciones
+      participacion
+      tipoAcciones
+      estado
+      tipoPersona
+      pn_primerNombre
+      pn_segundoNombre
+      pn_apellidoPaterno
+      pn_apellidoMaterno
+      decevale
+      direccionPais
+      paisNacionalidad
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTituloArchive = /* GraphQL */ `
+  mutation CreateTituloArchive(
+    $input: CreateTituloArchiveInput!
+    $condition: ModelTituloArchiveConditionInput
+  ) {
+    createTituloArchive(input: $input, condition: $condition) {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTituloArchive = /* GraphQL */ `
+  mutation UpdateTituloArchive(
+    $input: UpdateTituloArchiveInput!
+    $condition: ModelTituloArchiveConditionInput
+  ) {
+    updateTituloArchive(input: $input, condition: $condition) {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTituloArchive = /* GraphQL */ `
+  mutation DeleteTituloArchive(
+    $input: DeleteTituloArchiveInput!
+    $condition: ModelTituloArchiveConditionInput
+  ) {
+    deleteTituloArchive(input: $input, condition: $condition) {
+      fecha
+      id
+      accionistaID
+      titulo
+      acciones
+      fechaCompra
+      estado
+      idCedenteHereda
+      nombreCedenteHereda
+      desde
+      hasta
+      createdAt
+      updatedAt
+    }
+  }
+`;
