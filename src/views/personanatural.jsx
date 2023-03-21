@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles, Paper, TextField, Button, Typography, MenuItem, Select, Divider, Grid, IconButton, InputLabel, Snackbar   } from '@material-ui/core';
+import { makeStyles, Paper, TextField, Button, Typography, MenuItem, Select, Divider, Grid, IconButton, InputLabel, Snackbar, Switch, FormGroup, FormControlLabel      } from '@material-ui/core';
 import { Controller, useForm } from "react-hook-form";
 import { useLocation } from 'react-router-dom'
 
@@ -111,6 +111,16 @@ const useStyles = makeStyles((theme) => ({
     docIdentidadPrincipal : '',
     docCertificadoBancario: '',
     docIdentidadConyugue : '',
+    herederos : false,
+    nombreBeneficiario1 : '',
+    nombreBeneficiario2 : '',
+    nombreBeneficiario3 : '',
+    nombreBeneficiario4 : '',
+    nombreBeneficiario5 : '',
+    nombreBeneficiario6 : '',
+    nombreBeneficiario7 : '',
+    nombreBeneficiario8 : '',
+    nombreBeneficiario9 : '',
   };
   
 export default function PersonaNatural() {
@@ -694,6 +704,27 @@ export default function PersonaNatural() {
       docIdentidadPrincipal : location.state.preloadedValue.docIdentidadPrincipal,
       docCertificadoBancario: location.state.preloadedValue.docCertificadoBancario,
       docIdentidadConyugue : location.state.preloadedValue.docIdentidadConyugue,
+      docPosesionEfectiva : location.state.preloadedValue.docPosesionEfectiva,
+      herederos : location.state.preloadedValue.herederos,
+      nombreBeneficiario1 : location.state.preloadedValue.nombreBeneficiario1,
+      nombreBeneficiario2 : location.state.preloadedValue.nombreBeneficiario2,
+      nombreBeneficiario3 : location.state.preloadedValue.nombreBeneficiario3,
+      nombreBeneficiario4 : location.state.preloadedValue.nombreBeneficiario4,
+      nombreBeneficiario5 : location.state.preloadedValue.nombreBeneficiario5,
+      nombreBeneficiario6 : location.state.preloadedValue.nombreBeneficiario6,
+      nombreBeneficiario7 : location.state.preloadedValue.nombreBeneficiario7,
+      nombreBeneficiario8 : location.state.preloadedValue.nombreBeneficiario8,
+      nombreBeneficiario9 : location.state.preloadedValue.nombreBeneficiario9,  
+      fechaBeneficiario1 : location.state.preloadedValue.fechaBeneficiario1,    
+      fechaBeneficiario2 : location.state.preloadedValue.fechaBeneficiario2,    
+      fechaBeneficiario3 : location.state.preloadedValue.fechaBeneficiario3,    
+      fechaBeneficiario4 : location.state.preloadedValue.fechaBeneficiario4,    
+      fechaBeneficiario5 : location.state.preloadedValue.fechaBeneficiario5,    
+      fechaBeneficiario6 : location.state.preloadedValue.fechaBeneficiario6,    
+      fechaBeneficiario7 : location.state.preloadedValue.fechaBeneficiario7,    
+      fechaBeneficiario8 : location.state.preloadedValue.fechaBeneficiario8,    
+      fechaBeneficiario9 : location.state.preloadedValue.fechaBeneficiario9, 
+      
   }} : defaultValues;
 
 
@@ -701,8 +732,11 @@ export default function PersonaNatural() {
   const [countTelef, setCountTelef] = useState(1);
   const [countEmail, setCountEmail] = useState(1);
   const [conyugue, setConyugue] = useState(false);
+  //const [countHerederos, setCountHerederos] = useState(1);
+  const [countHerederos, setCountHerederos] = useState(location.state ? location.state.preloadedValue.nombreBeneficiario9 != null ? 9 : location.state.preloadedValue.nombreBeneficiario8 != null ? 8 : location.state.preloadedValue.nombreBeneficiario7 != null ? 7 : location.state.preloadedValue.nombreBeneficiario6 != null ? 6 : location.state.preloadedValue.nombreBeneficiario5 != null ? 5 : location.state.preloadedValue.nombreBeneficiario4 != null ? 4 : location.state.preloadedValue.nombreBeneficiario3 != null ? 3 : location.state.preloadedValue.nombreBeneficiario2 != null ? 2 : 1 : 1);
 
   const [formData, setFormData] = useState({
+    docPosesionEfectiva: location.state ?  location.state.preloadedValue.docPosesionEfectiva != null ? location.state.preloadedValue.docPosesionEfectiva : '' : '', 
     docIdentidadPrincipal: location.state ?  location.state.preloadedValue.docIdentidadPrincipal != null ? location.state.preloadedValue.docIdentidadPrincipal : '' : '', 
     docCertificadoBancario: location.state ?  location.state.preloadedValue.docCertificadoBancario != null ? location.state.preloadedValue.docCertificadoBancario : '' :'', 
     docIdentidadConyugue: location.state ?  location.state.preloadedValue.docIdentidadConyugue != null ? location.state.preloadedValue.docIdentidadConyugue : '' : ''});
@@ -752,13 +786,32 @@ export default function PersonaNatural() {
             email1 : data.email,
             email2 : countEmail > 1 ? data.emailAux1 : '',
             email3 : countEmail > 2 ? data.emailAux2 : '',
+            docPosesionEfectiva : formData.docPosesionEfectiva,
             docIdentidadPrincipal : formData.docIdentidadPrincipal,
             docCertificadoBancario: formData.docCertificadoBancario,
             docIdentidadConyugue : formData.docIdentidadConyugue,
-
+            herederos : checked,
+            nombreBeneficiario1 : data.nombreBeneficiario1,
+            nombreBeneficiario2 : data.nombreBeneficiario2,
+            nombreBeneficiario3 : data.nombreBeneficiario3,
+            nombreBeneficiario4 : data.nombreBeneficiario4,
+            nombreBeneficiario5 : data.nombreBeneficiario5,
+            nombreBeneficiario6 : data.nombreBeneficiario6,
+            nombreBeneficiario7 : data.nombreBeneficiario7,
+            nombreBeneficiario8 : data.nombreBeneficiario8,
+            nombreBeneficiario9 : data.nombreBeneficiario9,
+            fechaBeneficiario1 : data.fechaBeneficiario1,    
+            fechaBeneficiario2 : data.fechaBeneficiario2,    
+            fechaBeneficiario3 : data.fechaBeneficiario3,    
+            fechaBeneficiario4 : data.fechaBeneficiario4,    
+            fechaBeneficiario5 : data.fechaBeneficiario5,    
+            fechaBeneficiario6 : data.fechaBeneficiario6,    
+            fechaBeneficiario7 : data.fechaBeneficiario7,    
+            fechaBeneficiario8 : data.fechaBeneficiario8,    
+            fechaBeneficiario9 : data.fechaBeneficiario9,           
          };
 
-         // console.log('data',data);
+          console.log('data',data);
          data.id ? editAccionista(data.id, accionista) : addAccionista(accionista);
          
 
@@ -862,7 +915,7 @@ export default function PersonaNatural() {
       const addAccionista = async (accionista) => {
         try {          
             const operID = await API.graphql(graphqlOperation(createAccionista, { input: accionista }))
-            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '', docPosesionEfectiva: '' })
             reset(defaultValues);
             setOpenSnack(true)
 
@@ -917,12 +970,31 @@ export default function PersonaNatural() {
               email3 : accionista.email3,
               docIdentidadPrincipal : accionista.docIdentidadPrincipal,
               docCertificadoBancario: accionista.docCertificadoBancario,
-              docIdentidadConyugue : accionista.docIdentidadConyugue
-           
+              docIdentidadConyugue : accionista.docIdentidadConyugue,
+              docPosesionEfectiva : accionista.docPosesionEfectiva,
+              herederos : accionista.herederos,
+              nombreBeneficiario1 : accionista.nombreBeneficiario1,
+              nombreBeneficiario2 : accionista.nombreBeneficiario2,
+              nombreBeneficiario3 : accionista.nombreBeneficiario3,
+              nombreBeneficiario4 : accionista.nombreBeneficiario4,
+              nombreBeneficiario5 : accionista.nombreBeneficiario5,
+              nombreBeneficiario6 : accionista.nombreBeneficiario6,
+              nombreBeneficiario7 : accionista.nombreBeneficiario7,
+              nombreBeneficiario8 : accionista.nombreBeneficiario8,
+              nombreBeneficiario9 : accionista.nombreBeneficiario9,              
+              fechaBeneficiario1 : accionista.fechaBeneficiario1,    
+              fechaBeneficiario2 : accionista.fechaBeneficiario2,    
+              fechaBeneficiario3 : accionista.fechaBeneficiario3,    
+              fechaBeneficiario4 : accionista.fechaBeneficiario4,    
+              fechaBeneficiario5 : accionista.fechaBeneficiario5,    
+              fechaBeneficiario6 : accionista.fechaBeneficiario6,    
+              fechaBeneficiario7 : accionista.fechaBeneficiario7,    
+              fechaBeneficiario8 : accionista.fechaBeneficiario8,    
+              fechaBeneficiario9 : accionista.fechaBeneficiario9,              
             } } });
 
             console.log('respuesta:', operID)
-            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '', docPosesionEfectiva: '' })
             reset(defaultValues);
             setOpenSnack(true)
             
@@ -933,13 +1005,13 @@ export default function PersonaNatural() {
       }
 
       const limpiarForm = async () => {
-            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+            setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '', docPosesionEfectiva: '' })
             reset(defaultValues);
       }
 
       const eliminarAccionista = async () => {
         const apiDataUpdateAccionista = await API.graphql({ query: updateAccionista, variables: { input: {id: location.state.preloadedValue.id, estado: 'Eliminado'} } });
-        setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '' })
+        setFormData({ docIdentidadPrincipal: '', docCertificadoBancario: '', docIdentidadConyugue: '', docPosesionEfectiva: '' })
         reset(defaultValues);
   }
 
@@ -973,6 +1045,14 @@ export default function PersonaNatural() {
       setFormData({ ...formData, docIdentidadConyugue: filename });
       await Storage.put(filename, file);
     }
+    async function onChangePE(e) {
+      if (!e.target.files[0]) return
+      const file = e.target.files[0];
+      const filename = uuid() + file.name
+      setFormData({ ...formData, docPosesionEfectiva: filename });
+      await Storage.put(filename, file);
+    }
+
 
     const handleCloseSnack = (event, reason) => {
       if (reason === 'clickaway') {
@@ -981,6 +1061,13 @@ export default function PersonaNatural() {
     
       setOpenSnack(false);
     };
+
+    //const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(location.state ?  location.state.preloadedValue.herederos != null ? location.state.preloadedValue.herederos : '' : '');
+    const handleChange = (event) => {
+      setChecked(event.target.checked);
+    };
+
     return (
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
@@ -1329,6 +1416,181 @@ export default function PersonaNatural() {
                                 </label>
                                 </div>  
                                 }
+
+                                <div style={{marginTop: 10,         display : 'flex',
+                                    flexDirection : 'row',
+                                    justifyContent:'flex-start',
+                                    alignItems: 'center', }}>
+                                  
+                                    <Typography variant='subtitle1' style={{color:"#000000"}}>Herederos</Typography>
+
+                                    <Switch
+                                    checked={checked}
+                                    onChange={handleChange}
+                                    inputProps={{ 'aria-label': 'controlled' }}
+                                    size="small"
+                                    />
+
+                                    <div className={classes.formSection}>   
+                                      <label htmlFor="upload-photo4">
+                                      <input style={{ display: 'none' }} id="upload-photo4" name="upload-photo4" type="file" onChange={onChangePE} />
+                                      <Button component="span" color="primary" size='small' >Posesión Efectiva</Button>
+                                      {formData.docPosesionEfectiva.length > 0 && <CheckIcon />}
+                                      </label>
+                                    </div>  
+
+                                </div>  
+
+                                { checked && countHerederos > 0 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                  <Controller
+                                  name={"nombreBeneficiario1"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 1"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario1"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label="Fecha Carga" variant="standard" id="datetime-local1"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>
+                                }
+                                { countHerederos > 1 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario2"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 2"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario2"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local2"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                  
+                                }
+                                { countHerederos > 2 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario3"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 3"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario3"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local3"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }     
+                                { countHerederos > 3 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario4"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 4"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario4"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local4"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }        
+                                { countHerederos > 4 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario5"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 5"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario5"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local5"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }         
+                                { countHerederos > 5 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario6"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 6"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario6"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local6"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }      
+                                { countHerederos > 6 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario7"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 7"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario7"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local7"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }    
+                                { countHerederos > 7 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario8"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 8"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario8"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local8"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }       
+                                { countHerederos > 8 &&
+                                <div style={{display : 'flex', flexDirection : 'row', justifyContent:'space-evenly', alignItems: 'center', }}>
+                                <Controller
+                                  name={"nombreBeneficiario9"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} value={value} label={"Nombre Heredero 9"} variant='outlined' fullWidth  margin='dense' style={{marginRight:'15px'}}/>
+                                  )} />
+                                  <Controller
+                                  name={"fechaBeneficiario9"}
+                                  control={control}
+                                  render={({ field: { onChange, value } }) => (
+                                      <TextField size='small' onChange={onChange} defaultValue={Date.now()} value={value} label="Fecha Carga" variant="standard" id="datetime-local9"  type="date" style={{width:'140px'}} InputLabelProps={{shrink: true, }} />
+                                  )} />
+                                </div>                                          
+                                }    
+                                { checked &&                                                                                                                                                                                      
+                                  <div>                            
+                                    <IconButton color='primary' onClick={() => setCountHerederos(countHerederos + 1)} disabled={countHerederos===9 ? true : false}><ControlPointIcon/></IconButton>
+                                    <IconButton color='primary' onClick={() => setCountHerederos(countHerederos - 1)} disabled={countHerederos===1 ? true : false} ><RemoveCircleOutlineIcon/></IconButton>
+                                  </div>       
+}
                             </div>
                         </Grid>                        
                     </Grid>

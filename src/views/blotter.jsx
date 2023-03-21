@@ -15,7 +15,7 @@ import FiberNewOutlined from '@material-ui/icons/FiberNewOutlined';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { API, Storage, Auth } from 'aws-amplify';
-import { listOperaciones, listTituloPorOperacions, getNumeroSecuencial, listTitulos,listHerederoPorOperacions } from './../graphql/queries';
+import { listOperaciones, listTituloPorOperacions, getNumeroSecuencial, listTitulos,listHerederoPorOperacions,getParametro } from './../graphql/queries';
 import { updateTitulo, createTitulo, updateNumeroSecuencial, updateAccionista, updateOperaciones, createHeredero } from './../graphql/mutations';
 import PropTypes from 'prop-types';
 
@@ -273,6 +273,7 @@ export default function Operaciones() {
 
   useEffect(() => {
     fetchOperaciones("Pendiente");
+    fetchParametros();
     //getUser();
     const user = getUser();
     //setUserName(user.username);
@@ -336,6 +337,20 @@ export default function Operaciones() {
       setCountEstado([operacionesFromAPI1,operacionesFromAPI2,operacionesFromAPI3,operacionesFromAPI4])
 
   }
+
+  const [cantidadEmitida, setCantidadEmitida] = useState(0);
+  const [valorNominal, setValorNominal] = useState(0);
+
+  async function fetchParametros() {
+
+    const apiData = await API.graphql({ query: getParametro , variables: { id: '1' } });
+
+    const parametrosFromAPI = apiData.data.getParametro;    
+
+    setCantidadEmitida(parametrosFromAPI.cantidadEmitida);
+    setValorNominal(parametrosFromAPI.valorNominal);
+
+}
 
   const requestSearch = (searchValue) => {
       setSearchText(searchValue);
@@ -1025,6 +1040,64 @@ export default function Operaciones() {
       const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
 
     }
+
+
+    else if(transferencia.operacion == "Aumento Capital" )
+    {
+
+      //leer secuencial de titulos
+      const secuen = await apiDataSecuencial();
+
+      let tituloCesionario = {}
+
+        //crear nuevo titulo a cesionario (cantidad a transferir)
+        //incrementar secuencial de titulos
+        const num = parseInt(secuen.data.getNumeroSecuencial.numerotitulo)  + 1
+        const secuen2 = await apiDataUpdate(num);
+        //console.log('Update Secuencial',secuen2)
+        //console.log('Son diferentes')
+        tituloCesionario = {
+          accionistaID:transferencia.idCesionario,
+          titulo : num,
+          acciones : transferencia.acciones,
+          fechaCompra: transferencia.fecha,
+          estado:'Activo', 
+          desde: cantidadEmitida + 1,
+          hasta: (parseInt(cantidadEmitida + 1) + parseInt(transferencia.acciones) - 1),};        
+
+       console.log('input',tituloCesionario)
+       const apiDataTituloCesionario = await API.graphql({ query: createTitulo, variables: { input: tituloCesionario } });  
+
+    //actualizar saldo de acciones para Cesionario
+    let filter = {
+      accionistaID: {
+          eq: transferencia.idCesionario // filter priority = 1
+      },
+      estado: {
+        ne: 'Inactivo'
+      }
+    };
+    const apiDataTitulosCesionario = await API.graphql({ query: listTitulos, variables: { filter: filter, limit : 10000} });
+    const titulosCesionarioFromAPI = apiDataTitulosCesionario.data.listTitulos.items;
+    //console.log('busca titulos cesionario',titulosCesionarioFromAPI)
+    let totalAccionesCesionario= 0;
+    titulosCesionarioFromAPI.map(titulo => {totalAccionesCesionario = totalAccionesCesionario + titulo.acciones})
+    //console.log('total acciones cesionario',totalAccionesCesionario)
+
+    const apiDataUpdateCesionario = await API.graphql({ query: updateAccionista, variables: { input: {id: transferencia.idCesionario, cantidadAcciones: totalAccionesCesionario } } });
+
+    //console.log('Aprobar operacion y actualizar Fecha', transferencia.id)
+    //actualizar estado y fechaAprobacion de operacion aprobada
+    const today = new Date();
+    const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+    const apiDataUpdateOper = await API.graphql({ query: updateOperaciones, variables: { input: {id: transferencia.id, estado: 'Aprobada', fechaAprobacion: fecha, 'usuarioAprobador' : userName } } });
+    console.log(' Pasó Aprobar operacion y actualizar Fecha', apiDataUpdateOper)
+
+    actualizarAccionista(transferencia.idCesionario, transferencia.cesionario, totalAccionesCesionario, 'Activo');
+    console.log(' Pasó QLDB Cesionario', transferencia.idCesionario, transferencia.cesionario, totalAccionesCesionario)
+
+  }
+
 
     setCircular(false);
     setOpenRevisar(false);     

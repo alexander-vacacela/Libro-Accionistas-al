@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
+import FunctionsIcon from '@material-ui/icons/Functions';
 
 import {Auth} from 'aws-amplify';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
@@ -283,6 +284,12 @@ export default function Header(props){
           </ListItemIcon>
           <ListItemText primary="Desbloqueo"/>
         </MenuItem>
+        <MenuItem onClick={()=>{history.push('/aumentocapital'); setAnchorEl(null);} }>
+          <ListItemIcon>
+            <FunctionsIcon color='primary'/>
+          </ListItemIcon>
+          <ListItemText primary="Aumento Capital"/>
+        </MenuItem>        
     </Menu>
 
 {perfil != "Accionista" &&

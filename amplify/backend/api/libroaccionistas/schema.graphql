@@ -118,8 +118,26 @@ type Accionista @model {
   herederos: Boolean
   esHeredero: Boolean
   decevale: String
-  nombreBeneficirario1: String
+  docPosesionEfectiva : String
+  nombreBeneficiario1: String
+  fechaBeneficiario1 : String
   direccionPaisBeneficiario1 : String
+  nombreBeneficiario2: String
+  fechaBeneficiario2 : String
+  nombreBeneficiario3: String
+  fechaBeneficiario3 : String
+  nombreBeneficiario4: String
+  fechaBeneficiario4 : String
+  nombreBeneficiario5: String
+  fechaBeneficiario5 : String
+  nombreBeneficiario6: String
+  fechaBeneficiario6 : String
+  nombreBeneficiario7: String
+  fechaBeneficiario7 : String
+  nombreBeneficiario8: String
+  fechaBeneficiario8 : String
+  nombreBeneficiario9: String
+  fechaBeneficiario9 : String
   titulos : [Titulo] @connection(keyName: "byAccionista", fields: ["id"])
 }
 
@@ -171,6 +189,9 @@ type Operaciones @model {
   fechaAprobacion:String
   motivoRechazo: String
   observacion: String
+  valorNominal : Float
+  capital : Float
+  fechaValor : String
 }
 
 type TituloPorOperacion @model @key(name: "PorOperacion", fields: ["operacionID", "titulo"]) {
@@ -247,6 +268,58 @@ type Parametro @model {
   modeloCartaGerente: String
   modeloCartaInstrucciones: String
 }
+
+type ParametroArchive @model {
+  id: ID!
+  fecha: String
+  moneda: String
+  cantidadEmitida: Int
+  valorNominal: Float
+  baseImponible: Float
+  noResidente: Float
+  IGdesde1: Float
+  IGhasta1: Float
+  FBretencion1: Float
+  FEretencion1: Float
+  IGdesde2: Float
+  IGhasta2: Float
+  FBretencion2: Float
+  FEretencion2: Float
+  IGdesde3: Float
+  IGhasta3: Float
+  FBretencion3: Float
+  FEretencion3: Float
+  IGdesde4: Float
+  IGhasta4: Float
+  FBretencion4: Float
+  FEretencion4: Float
+  IGdesde5: Float
+  IGhasta5: Float
+  FBretencion5: Float
+  FEretencion5: Float
+  IGdesde6: Float
+  IGhasta6: Float
+  FBretencion6: Float
+  FEretencion6: Float  
+  Retencion_Minima: Float
+  Retencion_Maxima: Float
+  Retencion_PN_Loc: Int
+  Retencion_PN_NPF: Int
+  Retencion_PN_PF: Int
+  Retencion_PJ_Loc_Loc: Int
+  Retencion_PJ_Loc_NPF: Int
+  Retencion_PJ_Loc_PF: Int
+  Retencion_PJ_PF_Loc: Int
+  Retencion_PJ_PF_NPF: Int
+  Retencion_PJ_PF_PF: Int
+  Retencion_PJ_NPF_Loc: Int
+  Retencion_PJ_NPF_NPF: Int
+  Retencion_PJ_NPF_PF: Int
+  modeloCartaCesion: String
+  modeloCartaGerente: String
+  modeloCartaInstrucciones: String
+}
+
 
 type Asamblea @model {
   id: ID!

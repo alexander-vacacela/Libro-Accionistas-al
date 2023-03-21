@@ -434,7 +434,7 @@ function QuickSearchToolbar(props) {
         
         //obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
         nombre_aux = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
-        obj.nombre2 = nombre_aux.toUpperCase();
+        obj.nombre2 = obj.herederos == true ? nombre_aux.toUpperCase() +  "  -  HEREDEROS" : nombre_aux.toUpperCase();
       });
 
       setAccionistas(accionistasFromAPI.sort(function (a, b) {
@@ -632,6 +632,23 @@ function QuickSearchToolbar(props) {
         e.stopPropagation();
               
         Storage.get(accionistaSeleccionado.docIdentidadPrincipal)
+          .then(url => {
+            var myRequest = new Request(url);
+            fetch(myRequest).then(function(response) {
+              if (response.status === 200) {
+                //setImageCS(url);
+                window.open(url)
+              }
+            });
+          })
+          .catch(err => console.log(err));
+          
+      };
+
+      const getPicturePE = e => {
+        e.stopPropagation();
+              
+        Storage.get(accionistaSeleccionado.docPosesionEfectiva)
           .then(url => {
             var myRequest = new Request(url);
             fetch(myRequest).then(function(response) {
@@ -1006,6 +1023,25 @@ function QuickSearchToolbar(props) {
                   </div>
               }
             </div>  
+
+
+            <div>
+              <Typography variant='caption'>
+                <strong>Posesión Efectiva</strong>
+              </Typography> 
+              {accionistaSeleccionado.docPosesionEfectiva  && 
+                <div>
+                  <CheckIcon />
+                  <Button component="span" color="primary" size='small' onClick={getPicturePE}>Ver</Button>
+                </div>
+              }
+              {!accionistaSeleccionado.docPosesionEfectiva  && 
+                  <div>
+                  -
+                  </div>
+              }
+            </div>  
+
 
             {accionistaSeleccionado.pn_estadoCivil == 'Casado'  && 
               <div>

@@ -24,6 +24,7 @@ import Dividendos from './views/dividendos';
 import AccionistaDashboard from './views/accionista-dashboard'
 import Transferencia from './views/transferencia';
 import AccionistasHistorico from './views/accionistas-historico';
+import AumentoCapital from './views/aumentocapital';
 
 function App() {
 
@@ -91,7 +92,10 @@ function App() {
               </Route>                   
               <Route path="/donacion">
                 <Donacion />
-              </Route>                    
+              </Route> 
+              <Route path="/aumentocapital">
+                <AumentoCapital />
+              </Route>                                        
               <Route path="/desbloqueo">
                 <Desbloqueo />
               </Route>                       

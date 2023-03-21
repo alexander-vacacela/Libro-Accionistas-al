@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
     docIdentidadPrincipal : '',
     docCertificadoBancario: '',
     docIdentidadConyugue : '',
-    nombreBeneficirario1: '',
+    nombreBeneficiario1: '',
     direccionPaisBeneficiario1 : '1'
   };
   
@@ -696,7 +696,7 @@ export default function PersonaJuridica() {
       docCertificadoBancario: location.state.preloadedValue.docCertificadoBancario,
       docIdentidadConyugue : location.state.preloadedValue.docIdentidadConyugue,
 
-      nombreBeneficirario1: location.state.preloadedValue.nombreBeneficirario1,
+      nombreBeneficiario1: location.state.preloadedValue.nombreBeneficiario1,
       direccionPaisBeneficiario1 : pais.find(o => o.label === location.state.preloadedValue.direccionPaisBeneficiario1) ? pais.find(o => o.label === location.state.preloadedValue.direccionPaisBeneficiario1).value : '1',
   
 
@@ -779,7 +779,7 @@ export default function PersonaJuridica() {
             docCertificadoBancario: formData.docCertificadoBancario,
             docIdentidadConyugue : formData.docIdentidadConyugue,
 
-            nombreBeneficirario1: data.nombreBeneficirario1,
+            nombreBeneficiario1: data.nombreBeneficiario1,
             //direccionPaisBeneficiario1 : pais.find(o => o.value === data.direccionPaisBeneficiario1).label, 
             direccionPaisBeneficiario1 : pais.find(o => o.value === data.direccionPaisBeneficiario1) ? pais.find(o => o.value === data.direccionPaisBeneficiario1).label : '',     
             
@@ -938,7 +938,7 @@ export default function PersonaJuridica() {
               docCertificadoBancario: accionista.docCertificadoBancario,
               docIdentidadConyugue : accionista.docIdentidadConyugue,   
               
-              nombreBeneficirario1 : accionista.nombreBeneficirario1,
+              nombreBeneficiario1 : accionista.nombreBeneficiario1,
               direccionPaisBeneficiario1 : accionista.direccionPaisBeneficiario1
 
             } } });
@@ -1322,7 +1322,7 @@ export default function PersonaJuridica() {
                                     <Typography variant='subtitle1' style={{color:"#000000"}}>Beneficiario</Typography>
                                 </div>  
                                 <Controller
-                                  name={"nombreBeneficirario1"}
+                                  name={"nombreBeneficiario1"}
                                   control={control}
                                   render={({ field: { onChange, value } }) => (
                                       <TextField size='small' onChange={onChange} value={value} label={"Beneficiario"} variant='outlined' fullWidth  margin='dense'/>

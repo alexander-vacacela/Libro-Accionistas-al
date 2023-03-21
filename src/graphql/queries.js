@@ -376,8 +376,26 @@ export const getAccionista = /* GraphQL */ `
       herederos
       esHeredero
       decevale
-      nombreBeneficirario1
+      docPosesionEfectiva
+      nombreBeneficiario1
+      fechaBeneficiario1
       direccionPaisBeneficiario1
+      nombreBeneficiario2
+      fechaBeneficiario2
+      nombreBeneficiario3
+      fechaBeneficiario3
+      nombreBeneficiario4
+      fechaBeneficiario4
+      nombreBeneficiario5
+      fechaBeneficiario5
+      nombreBeneficiario6
+      fechaBeneficiario6
+      nombreBeneficiario7
+      fechaBeneficiario7
+      nombreBeneficiario8
+      fechaBeneficiario8
+      nombreBeneficiario9
+      fechaBeneficiario9
       titulos {
         items {
           id
@@ -456,8 +474,26 @@ export const listAccionistas = /* GraphQL */ `
         herederos
         esHeredero
         decevale
-        nombreBeneficirario1
+        docPosesionEfectiva
+        nombreBeneficiario1
+        fechaBeneficiario1
         direccionPaisBeneficiario1
+        nombreBeneficiario2
+        fechaBeneficiario2
+        nombreBeneficiario3
+        fechaBeneficiario3
+        nombreBeneficiario4
+        fechaBeneficiario4
+        nombreBeneficiario5
+        fechaBeneficiario5
+        nombreBeneficiario6
+        fechaBeneficiario6
+        nombreBeneficiario7
+        fechaBeneficiario7
+        nombreBeneficiario8
+        fechaBeneficiario8
+        nombreBeneficiario9
+        fechaBeneficiario9
         titulos {
           nextToken
         }
@@ -589,6 +625,9 @@ export const getOperaciones = /* GraphQL */ `
       fechaAprobacion
       motivoRechazo
       observacion
+      valorNominal
+      capital
+      fechaValor
       createdAt
       updatedAt
     }
@@ -628,6 +667,9 @@ export const listOperaciones = /* GraphQL */ `
         fechaAprobacion
         motivoRechazo
         observacion
+        valorNominal
+        capital
+        fechaValor
         createdAt
         updatedAt
       }
@@ -812,6 +854,129 @@ export const listParametros = /* GraphQL */ `
     listParametros(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        moneda
+        cantidadEmitida
+        valorNominal
+        baseImponible
+        noResidente
+        IGdesde1
+        IGhasta1
+        FBretencion1
+        FEretencion1
+        IGdesde2
+        IGhasta2
+        FBretencion2
+        FEretencion2
+        IGdesde3
+        IGhasta3
+        FBretencion3
+        FEretencion3
+        IGdesde4
+        IGhasta4
+        FBretencion4
+        FEretencion4
+        IGdesde5
+        IGhasta5
+        FBretencion5
+        FEretencion5
+        IGdesde6
+        IGhasta6
+        FBretencion6
+        FEretencion6
+        Retencion_Minima
+        Retencion_Maxima
+        Retencion_PN_Loc
+        Retencion_PN_NPF
+        Retencion_PN_PF
+        Retencion_PJ_Loc_Loc
+        Retencion_PJ_Loc_NPF
+        Retencion_PJ_Loc_PF
+        Retencion_PJ_PF_Loc
+        Retencion_PJ_PF_NPF
+        Retencion_PJ_PF_PF
+        Retencion_PJ_NPF_Loc
+        Retencion_PJ_NPF_NPF
+        Retencion_PJ_NPF_PF
+        modeloCartaCesion
+        modeloCartaGerente
+        modeloCartaInstrucciones
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getParametroArchive = /* GraphQL */ `
+  query GetParametroArchive($id: ID!) {
+    getParametroArchive(id: $id) {
+      id
+      fecha
+      moneda
+      cantidadEmitida
+      valorNominal
+      baseImponible
+      noResidente
+      IGdesde1
+      IGhasta1
+      FBretencion1
+      FEretencion1
+      IGdesde2
+      IGhasta2
+      FBretencion2
+      FEretencion2
+      IGdesde3
+      IGhasta3
+      FBretencion3
+      FEretencion3
+      IGdesde4
+      IGhasta4
+      FBretencion4
+      FEretencion4
+      IGdesde5
+      IGhasta5
+      FBretencion5
+      FEretencion5
+      IGdesde6
+      IGhasta6
+      FBretencion6
+      FEretencion6
+      Retencion_Minima
+      Retencion_Maxima
+      Retencion_PN_Loc
+      Retencion_PN_NPF
+      Retencion_PN_PF
+      Retencion_PJ_Loc_Loc
+      Retencion_PJ_Loc_NPF
+      Retencion_PJ_Loc_PF
+      Retencion_PJ_PF_Loc
+      Retencion_PJ_PF_NPF
+      Retencion_PJ_PF_PF
+      Retencion_PJ_NPF_Loc
+      Retencion_PJ_NPF_NPF
+      Retencion_PJ_NPF_PF
+      modeloCartaCesion
+      modeloCartaGerente
+      modeloCartaInstrucciones
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listParametroArchives = /* GraphQL */ `
+  query ListParametroArchives(
+    $filter: ModelParametroArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listParametroArchives(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        fecha
         moneda
         cantidadEmitida
         valorNominal

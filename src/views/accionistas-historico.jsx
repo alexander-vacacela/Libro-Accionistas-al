@@ -3,7 +3,7 @@ import { API,graphqlOperation } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
 import { listAccionistas, getParametro, listAccionistaArchives, listAccionistasxJuntas } from '../graphql/queries';
-import { createAccionistaArchive} from './../graphql/mutations';
+import { createAccionistaArchive, createParametroArchive} from './../graphql/mutations';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 
@@ -21,6 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import { Tooltip, Chip, Button} from '@material-ui/core';
 
 import { styled } from '@material-ui//styles';
+import { AddCommentRounded } from '@material-ui/icons';
 
   const defaultTheme = createTheme();
   const useStyles = makeStyles(
@@ -178,6 +179,7 @@ function QuickSearchToolbar(props) {
     ];
   
     const [accionistas, setAccionistas] = useState([]);
+    const [parametros, setParametros] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [rows, setRows] = useState([]);
 
@@ -197,6 +199,7 @@ function QuickSearchToolbar(props) {
 
       const parametrosFromAPI = apiData.data.getParametro;    
 
+      setParametros(parametrosFromAPI);
       setCantidadEmitido(parametrosFromAPI.cantidadEmitida);
   }
 
@@ -306,6 +309,134 @@ function QuickSearchToolbar(props) {
       }
   
 
+      const addCorteParametro = async () => {
+        try {
+            console.log("PARAMETROS",parametros);
+/*
+            const transferir = parametros.map(function(e) {
+              return {
+                fecha: '2022-12-31',
+                id: e.id,
+                moneda: e.moneda,
+                cantidadEmitida: e.cantidadEmitida,
+                valorNominal: e.valorNominal,
+                baseImponible: e.baseImponible,
+                noResidente: e.noResidente,
+                IGdesde1: e.IGdesde1,
+                IGhasta1: e.IGhasta1,
+                FBretencion1: e.FBretencion1,
+                FEretencion1: e.FEretencion1,
+                IGdesde2: e.IGdesde2,
+                IGhasta2: e.IGhasta2,
+                FBretencion2: e.FBretencion2,
+                FEretencion2: e.FEretencion2,
+                IGdesde3: e.IGdesde3,
+                IGhasta3: e.IGhasta3,
+                FBretencion3: e.FBretencion3,
+                FEretencion3: e.FEretencion3,
+                IGdesde4: e.IGdesde4,
+                IGhasta4: e.IGhasta4,
+                FBretencion4: e.FBretencion4,
+                FEretencion4: e.FEretencion4,
+                IGdesde5: e.IGdesde5,
+                IGhasta5: e.IGhasta5,
+                FBretencion5: e.FBretencion5,
+                FEretencion5: e.FEretencion5,
+                IGdesde6: e.IGdesde6,
+                IGhasta6: e.IGhasta6,
+                FBretencion6: e.FBretencion6,
+                FEretencion6: e.FEretencion6,  
+                Retencion_Minima: e.Retencion_Minima,
+                Retencion_Maxima: e.Retencion_Maxima,
+                Retencion_PN_Loc: e.Retencion_PN_Loc,
+                Retencion_PN_NPF: e.Retencion_PN_NPF,
+                Retencion_PN_PF: e.Retencion_PN_PF,
+                Retencion_PJ_Loc_Loc: e.Retencion_PJ_Loc_Loc,
+                Retencion_PJ_Loc_NPF: e.Retencion_PJ_Loc_NPF,
+                Retencion_PJ_Loc_PF: e.Retencion_PJ_Loc_PF,
+                Retencion_PJ_PF_Loc: e.Retencion_PJ_PF_Loc,
+                Retencion_PJ_PF_NPF: e.Retencion_PJ_PF_NPF,
+                Retencion_PJ_PF_PF: e.Retencion_PJ_PF_PF,
+                Retencion_PJ_NPF_Loc: e.Retencion_PJ_NPF_Loc,
+                Retencion_PJ_NPF_NPF: e.Retencion_PJ_NPF_NPF,
+                Retencion_PJ_NPF_PF: e.Retencion_PJ_NPF_PF,
+                modeloCartaCesion: e.modeloCartaCesion,
+                modeloCartaGerente: e.modeloCartaGerente,
+                modeloCartaInstrucciones: e.modeloCartaInstrucciones,
+                } ;
+            })
+
+*/
+            const transferir = 
+               {
+                fecha: '2022-12-31',
+                id: parametros.id,
+                moneda: parametros.moneda,
+                cantidadEmitida: parametros.cantidadEmitida,
+                valorNominal: parametros.valorNominal,
+                baseImponible: parametros.baseImponible,
+                noResidente: parametros.noResidente,
+                IGdesde1: parametros.IGdesde1,
+                IGhasta1: parametros.IGhasta1,
+                FBretencion1: parametros.FBretencion1,
+                FEretencion1: parametros.FEretencion1,
+                IGdesde2: parametros.IGdesde2,
+                IGhasta2: parametros.IGhasta2,
+                FBretencion2: parametros.FBretencion2,
+                FEretencion2: parametros.FEretencion2,
+                IGdesde3: parametros.IGdesde3,
+                IGhasta3: parametros.IGhasta3,
+                FBretencion3: parametros.FBretencion3,
+                FEretencion3: parametros.FEretencion3,
+                IGdesde4: parametros.IGdesde4,
+                IGhasta4: parametros.IGhasta4,
+                FBretencion4: parametros.FBretencion4,
+                FEretencion4: parametros.FEretencion4,
+                IGdesde5: parametros.IGdesde5,
+                IGhasta5: parametros.IGhasta5,
+                FBretencion5: parametros.FBretencion5,
+                FEretencion5: parametros.FEretencion5,
+                IGdesde6: parametros.IGdesde6,
+                IGhasta6: parametros.IGhasta6,
+                FBretencion6: parametros.FBretencion6,
+                FEretencion6: parametros.FEretencion6,  
+                Retencion_Minima: parametros.Retencion_Minima,
+                Retencion_Maxima: parametros.Retencion_Maxima,
+                Retencion_PN_Loc: parametros.Retencion_PN_Loc,
+                Retencion_PN_NPF: parametros.Retencion_PN_NPF,
+                Retencion_PN_PF: parametros.Retencion_PN_PF,
+                Retencion_PJ_Loc_Loc: parametros.Retencion_PJ_Loc_Loc,
+                Retencion_PJ_Loc_NPF: parametros.Retencion_PJ_Loc_NPF,
+                Retencion_PJ_Loc_PF: parametros.Retencion_PJ_Loc_PF,
+                Retencion_PJ_PF_Loc: parametros.Retencion_PJ_PF_Loc,
+                Retencion_PJ_PF_NPF: parametros.Retencion_PJ_PF_NPF,
+                Retencion_PJ_PF_PF: parametros.Retencion_PJ_PF_PF,
+                Retencion_PJ_NPF_Loc: parametros.Retencion_PJ_NPF_Loc,
+                Retencion_PJ_NPF_NPF: parametros.Retencion_PJ_NPF_NPF,
+                Retencion_PJ_NPF_PF: parametros.Retencion_PJ_NPF_PF,
+                modeloCartaCesion: parametros.modeloCartaCesion,
+                modeloCartaGerente: parametros.modeloCartaGerente,
+                modeloCartaInstrucciones: parametros.modeloCartaInstrucciones,
+                } ;
+            
+
+                const operID = await API.graphql(graphqlOperation(createParametroArchive, { input: transferir }))
+    /*
+            Promise.all(
+              transferir.map(input => API.graphql(graphqlOperation(createParametroArchive, { input: input })))
+            ).then(values => {          
+                console.log('éxito creating transaction:')
+            });*/
+    
+
+
+    
+             } catch (err) {
+            console.log('error creating transaction:', err)
+        }   
+      }
+  
+
 
   const classes = useStyles();
 
@@ -319,6 +450,7 @@ function QuickSearchToolbar(props) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
 {false &&
+<div>
         <Button                
               variant="contained"
               color="primary"
@@ -326,8 +458,20 @@ function QuickSearchToolbar(props) {
               size='medium'
               onClick={addCorteLibro}
           >
-              Grabar
+              Grabar Libro
           </Button>
+
+<Button                
+variant="contained"
+color="primary"
+className={classes.button}
+size='medium'
+onClick={addCorteParametro}
+>
+Grabar Parametros
+</Button>
+
+</div>
         }
 
 
