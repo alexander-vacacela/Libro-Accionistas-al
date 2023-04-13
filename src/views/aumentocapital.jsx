@@ -234,7 +234,7 @@ const handleCantidadEmitidoChange = (event) => {
     setCantidadEmitido(event.target.value.replace(/[^0-9]/g, ''));
     //console.log("CAPITAL AUMENTAO",event.target.value.replace(/[^0-9]/g, ''),valorNominal,(event.target.value.replace(/[^0-9]/g, '')*valorNominal));
     setCapitalAumentado((event.target.value.replace(/[^0-9]/g, '')*valorNominal).toFixed(2));
-    setFormData({ ...formData, 'acciones': cantidadEmitido,'valorNominal': valorNominal, 'capital' : (event.target.value.replace(/[^0-9]/g, '')*valorNominal).toFixed(2)  });
+    setFormData({ ...formData, 'acciones': event.target.value.replace(/[^0-9]/g, ''),'valorNominal': valorNominal, 'capital' : (event.target.value.replace(/[^0-9]/g, '')*valorNominal).toFixed(2)  });
   
   };
 

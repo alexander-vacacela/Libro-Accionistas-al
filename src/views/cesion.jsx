@@ -178,7 +178,34 @@ export default function Cesion() {
     };
     const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 1000} });
     const accionistasFromAPI = apiData.data.listAccionistas.items;
-    setAccionistas(accionistasFromAPI);
+
+
+/////////
+
+let nombre_aux = '';
+accionistasFromAPI.forEach(function (obj) {
+  
+  //obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
+  nombre_aux = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+  obj.nombre2 = obj.herederos == true ? nombre_aux.toUpperCase() +  "  -  HEREDEROS" : nombre_aux.toUpperCase();
+});
+
+setAccionistas(accionistasFromAPI.sort(function (a, b) {
+  if (a.nombre2 > b.nombre2) {
+    return 1;
+  }
+  if (a.nombre2 < b.nombre2) {
+    return -1;
+  }
+  // a must be equal to b
+  return 0;
+}));
+
+
+///////////
+
+
+   // setAccionistas(accionistasFromAPI);
     
   }
 
@@ -210,7 +237,7 @@ const handleClickCedente = (option, value) => {
 
     setValCedente(value)
 
-    setFormData({ ...formData, 'idCedente': value.id, 'cedente': value.nombre, 'usuarioIngreso' : userName})
+    setFormData({ ...formData, 'idCedente': value.id, 'cedente': value.nombre2, 'usuarioIngreso' : userName})
     fetchTitulos(value.id);
 
     setChecked([])
@@ -236,7 +263,7 @@ const handleClickCesionario = (option, value) => {
   if(value)
   {
     setValCesionario(value)
-    setFormData({ ...formData, 'idCesionario': value.id,'cesionario': value.nombre  })
+    setFormData({ ...formData, 'idCesionario': value.id,'cesionario': value.nombre2  })
   }
   else {
     setValCesionario({})
@@ -553,7 +580,7 @@ const getPictureCP = e => {
                   size='small'
                   id="combo-box-cedente"
                   options={accionistas}
-                  getOptionLabel={(option) => option.nombre}
+                  getOptionLabel={(option) => option.nombre2}
                   style={{ width: 'calc(100%)'}}
                   renderInput={(params) => <TextField {...params} label="Cedente" margin="normal" variant='outlined'/>}
                   onChange={(option, value) => handleClickCedente(option, value)}                  
@@ -566,7 +593,7 @@ const getPictureCP = e => {
                   size='small'
                   id="combo-box-cecionario"
                   options={accionistas}
-                  getOptionLabel={(option) => option.nombre}
+                  getOptionLabel={(option) => option.nombre2}
                   style={{ width: 'calc(100%)'}}
                   renderInput={(params) => <TextField {...params} label="Cesionario" margin="normal" variant='outlined'/>}
                   onChange={(option, value) => handleClickCesionario(option, value)}

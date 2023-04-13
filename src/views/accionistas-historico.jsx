@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API,graphqlOperation } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
-import { listAccionistas, getParametro, listAccionistaArchives, listAccionistasxJuntas } from '../graphql/queries';
+import { listAccionistas, getParametro, listAccionistaArchives, listOperaciones, accionistaArchiveByFecha} from '../graphql/queries';
 import { createAccionistaArchive, createParametroArchive} from './../graphql/mutations';
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
@@ -188,6 +188,8 @@ function QuickSearchToolbar(props) {
 
       fetchParametros();
       fetchAccionistas();
+
+      fetchOperaciones();
       
 
     }, []);
@@ -204,14 +206,16 @@ function QuickSearchToolbar(props) {
   }
 
     async function fetchAccionistas() {
-
+/*
       const filter = {
         estado: {
           //eq: estado
           ne: "Inactivo"
         },
-      }      
-      const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 1000} });
+      }  
+    */
+//      const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 10000} });
+      const apiData = await API.graphql({ query: listAccionistas, variables: { limit: 10000} });      
       const accionistasFromAPI = apiData.data.listAccionistas.items;
 
       let numero = 1;
@@ -236,9 +240,19 @@ function QuickSearchToolbar(props) {
         
         obj.secuencial = numero++;
       });
+/*
+      const filter2 = {
+        estado: {
+          //eq: estado
+          ne: "Inactivo"
+        },        
+      fecha: {
+        eq: fechaConsulta
+      }
+      }  
 
 
-      const apiData2 = await API.graphql({ query: listAccionistaArchives, variables: { filter: filter, limit: 10000} });
+      const apiData2 = await API.graphql({ query: listAccionistaArchives, variables: { filter: filter2, limit: 10000} });
       const accionistasFromAPI2 = apiData2.data.listAccionistaArchives.items;
 
 
@@ -254,7 +268,8 @@ function QuickSearchToolbar(props) {
       });
 
       setRows(accionistasFromAPI2);
-        
+        */
+       console.log("Cantidad de Accionistas", accionistas.length)
     }
 
     const requestSearch = (searchValue) => {
@@ -271,13 +286,184 @@ function QuickSearchToolbar(props) {
         setRows(filteredRows);
       };
 
+      const [fechas, setFechas] = useState([]);
+
+      async function fetchOperaciones() {
+
+        //console.log('entro de nuevo ??', 'SIIII')
+
+        let arrayFechas = []
+    
+        let filter = {
+          estado: {
+              eq: 'Aprobada' // filter priority = 1
+          },
+          
+      };
+    
+        const apiData = await API.graphql({ query: listOperaciones , variables: { filter: filter , limit: 10000},  });
+        const operacionesFromAPI = apiData.data.listOperaciones.items;
+    
+    
+        operacionesFromAPI.sort(function (b, a) {
+          if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) > new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return 1;
+          if (new Date(+a.fecha.split("-")[2],a.fecha.split("-")[1] - 1, +a.fecha.split("-")[0]) < new Date(+b.fecha.split("-")[2],b.fecha.split("-")[1] - 1, +b.fecha.split("-")[0])) return -1;
+          return 0;
+        });
+        
+    
+        operacionesFromAPI.forEach(function (obj) {
+            
+          //obj.nombre2 = obj.tipoPersona == 'PN' ? obj.pn_primerNombre + " " + obj.pn_segundoNombre + " " + obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno : obj.nombre;
+          //nombre_aux = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+          obj.cedente = obj.cedente.toUpperCase();
+          obj.cesionario = obj.cesionario.toUpperCase();
+
+          //var newdate = date.split("-").reverse().join("-");
+
+          arrayFechas.push(obj.fecha.split("-").reverse().join("-"));
+
+        });
+    
+        setFechas(arrayFechas);
+        console.log("Set de Fechas", arrayFechas)
+
+      }
+    
+      function newFindClosest(dates, testDate) {
+        var before = [];
+        var after = [];
+        var max = dates.length;
+        for(var i = 0; i < max; i++) {
+            var tar = dates[i];
+            
+            //var arrDate = new Date(tar.day_year, tar.day_month, tar.day_number);
+            var arrDate = new Date(tar);
+            var fechaConsultada = new Date(testDate);
+            var fechaConsultada2 = fechaConsultada.setHours(fechaConsultada.getHours() + 5);
+            //var fechaConsultada2 = removeTime(fechaConsultada);
+            //var fechaConsultada2 = new Date(fechaConsultada.getFullYear(), fechaConsultada.getMonth(), fechaConsultada.getDate());
+            
+            //var fechaConsultada = new Date(Date.UTC(testDate.getFullYear(), testDate.getMonth(), testDate.getDate()));
+            // 3600 * 24 * 1000 = calculating milliseconds to days, for clarity.
+            //var diff = (arrDate - new Date(testDate)) / (3600 * 24 * 1000);
+            var diff = (arrDate - fechaConsultada2) ;
+
+            //console.log('resultado',tar,testDate,arrDate, fechaConsultada,diff)
+            if(diff > 0) {
+                before.push({diff: diff, index: i});
+            } else {
+                after.push({diff: diff, index: i});
+            }
+        }
+        before.sort(function(a, b) {
+            if(a.diff < b.diff) {
+                return -1;
+            }
+            if(a.diff > b.diff) {
+                return 1;
+            }
+            return 0;
+        });
+    
+        after.sort(function(a, b) {
+            if(a.diff > b.diff) {
+                return -1;
+            }
+            if(a.diff < b.diff) {
+                return 1;
+            }
+            return 0;
+        });
+
+
+        const closest = Math.min(...after.map(o => o.index));
+        return dates[closest];
+        //return {Math.max.apply(Math, after.map(function(o) { return o.index; }))};
+        //return {after.reduce((prev, current) => (prev.y > current.y) ? prev : current)};
+        //return {datesBefore: before, datesAfter: after};
+    }
+
+      const consultarLibro = async () => {
+        try {
+          console.log('Fecha a Consultar', fechaConsulta);
+
+          const fechaPasada = new Date(newFindClosest(fechas,fechaConsulta));
+
+          const MyDateString = fechaPasada.getFullYear()  + '-'
+          + ('0' + (fechaPasada.getMonth()+1)).slice(-2) + '-'
+          + ('0' + fechaPasada.getDate()).slice(-2);
+        
+
+          console.log('Fecha Encontrada', MyDateString);
+
+          const filter = {
+            fecha: {
+              eq: MyDateString
+            },            
+            estado: {
+              //eq: "Activo"
+              ne: "Inactivo"
+            },
+          }  
+            
+          //console.log("fecha pasada", filter);
+          const apiData3 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 10000} });
+          let accionistasFromAPI3 = apiData3.data.listAccionistaArchives.items;
+
+          //console.log("Buscar TOKEN", apiData3.data.listAccionistaArchives.nextToken);
+
+          console.log("Registros",accionistasFromAPI3.length);
+
+          if(apiData3.data.listAccionistaArchives.nextToken != null)
+          {
+          const apiData4 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 10000, nextToken: apiData3.data.listAccionistaArchives.nextToken} });
+          const accionistasFromAPI4 = apiData4.data.listAccionistaArchives.items;
+          accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI4);
+          console.log("Registros",accionistasFromAPI3.length);
+          }
+          //console.log("Buscar TOKEN", apiData4.data.listAccionistaArchives.nextToken);
+
+          //const apiData3 = await API.graphql({query: accionistaArchiveByFecha, variables: { filter: filter, limit: 10000} });
+          //const accionistasFromAPI3 = apiData3.data.accionistaArchiveByFecha;
+          
+          //console.log("Registros",accionistasFromAPI3.length);
+          //console.log("Registros",accionistasFromAPI4.length);
+    
+          let numero2 = 1;
+          let nombre_aux2 = '';
+          let cantidadTotal = 0;
+          accionistasFromAPI3.forEach(function (obj) {        
+            nombre_aux2 = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+            obj.nombre2 = nombre_aux2.toUpperCase();
+            cantidadTotal = cantidadTotal + obj.cantidadAcciones;
+            obj.secuencial = numero2++;
+          });
+    
+          //accionistasFromAPI3.forEach(function (obj) {        
+          //  obj.secuencial = numero2++;
+          //});
+    
+          setRows(accionistasFromAPI3);
+          setCantidadEmitido(cantidadTotal);
+
+          console.log("Cantidad Emitida",cantidadTotal);
+    
+
+
+        } catch (err) {
+          console.log('error creating transaction:', err)
+      }   
+    }
+      
+
       const addCorteLibro = async () => {
         try {
             
             const transferir = accionistas.map(function(e) {
               return {
-                fecha: '2022-12-31',
-                id: e.id,
+                fecha: fechaConsulta,
+                //id: e.id,
                 tipoIdentificacion:  e.tipoIdentificacion,
                 identificacion: e.identificacion,
                 nombre: e.nombre,
@@ -296,6 +482,8 @@ function QuickSearchToolbar(props) {
                 } ;
             })
     
+            console.log("Accionistas a Copiar", transferir)
+            
             Promise.all(
               transferir.map(input => API.graphql(graphqlOperation(createAccionistaArchive, { input: input })))
             ).then(values => {          
@@ -369,7 +557,7 @@ function QuickSearchToolbar(props) {
 */
             const transferir = 
                {
-                fecha: '2022-12-31',
+                fecha: fechaConsulta,
                 id: parametros.id,
                 moneda: parametros.moneda,
                 cantidadEmitida: parametros.cantidadEmitida,
@@ -438,17 +626,34 @@ function QuickSearchToolbar(props) {
   
 
 
+
   const classes = useStyles();
 
+  const today = new Date();
+  //const fecha = today.getDate() + '-' + (today.getMonth() + 1) + '-' +  today.getFullYear();
+  const fecha =  today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
+
+  const MyDateString = today.getFullYear()  + '-'
+  + ('0' + (today.getMonth()+1)).slice(-2) + '-'
+  + ('0' + today.getDate()).slice(-2);
+
+  const [fechaConsulta, setFechaConsulta] = useState(MyDateString);  
+  const handleChangeFechaConsulta = (event) => {setFechaConsulta(event.target.value);};  
+
+
+/*
   const values = {
     someDate: "2017-05-24"
   };
+*/
 
   return (
     <main className={classes.content}>
       <div className={classes.appBarSpacer} />
       <Grid container spacing={3}>
         <Grid item xs={12}>
+
+
 {false &&
 <div>
         <Button                
@@ -482,15 +687,28 @@ Grabar Parametros
                     label="Fecha"
                     //type="datetime-local"
                     type="date"
-                    defaultValue={Date.now()}
+                    //defaultValue={Date.now()}
                     //className={classes.textField}
                     variant="standard"
                     InputLabelProps={{
                         shrink: true
                     }}
                     //disabled
+                    value={fechaConsulta}
+                    //label="Retención Asignada"
+                    onChange={handleChangeFechaConsulta}                    
                 />
             
+            <Button                
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              size='small'
+              onClick={consultarLibro}
+              style={{'marginTop' : 10, 'marginLeft' : 20}}
+          >
+              Consultar
+          </Button>
 
           <DataGrid
             //getRowId= {(row) => row.code}

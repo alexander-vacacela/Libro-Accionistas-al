@@ -1591,3 +1591,45 @@ export const listTituloArchives = /* GraphQL */ `
     }
   }
 `;
+export const accionistaArchiveByFecha = /* GraphQL */ `
+  query AccionistaArchiveByFecha(
+    $fecha: String
+    $estado: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAccionistaArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    AccionistaArchiveByFecha(
+      fecha: $fecha
+      estado: $estado
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        fecha
+        id
+        tipoIdentificacion
+        identificacion
+        nombre
+        cantidadAcciones
+        participacion
+        tipoAcciones
+        estado
+        tipoPersona
+        pn_primerNombre
+        pn_segundoNombre
+        pn_apellidoPaterno
+        pn_apellidoMaterno
+        decevale
+        direccionPais
+        paisNacionalidad
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

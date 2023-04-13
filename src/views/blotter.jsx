@@ -455,6 +455,9 @@ export default function Operaciones() {
       setCircular(true);
 
       console.log('Anular Operacion')
+
+      //Preguntar si tienen titulos ?
+      
       //Desbloquear Titulos
       for (const titulo of titulos) {
         console.log('Titulo a Desbloquear',titulo)
@@ -1545,6 +1548,7 @@ export default function Operaciones() {
                 <Typography variant='h6'>
                   Documentación
                 </Typography>
+                { transferencia.operacion != 'Aumento Capital' &&
                 <div>
                 {(estado == 'Rechazada' || estado == 'Aprobada') && !anular &&
                   <label htmlFor="icon-button-fileCS">
@@ -1559,8 +1563,8 @@ export default function Operaciones() {
                   {transferencia.cs && <CheckIcon />}
                   {formData.cs && <FiberNewOutlined color='secondary'/>}
                 </div>
-
-                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
+                }
+                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' && transferencia.operacion != 'Aumento Capital' &&
                 <div>
                   {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCG">
@@ -1578,7 +1582,7 @@ export default function Operaciones() {
                 </div>
                 }
 
-                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
+                {transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' && transferencia.operacion != 'Aumento Capital' &&
                 <div>
                   {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCI">
@@ -1604,14 +1608,14 @@ export default function Operaciones() {
                     </IconButton>
                   </label>}                  
                   <Button component="span" color="primary" size='small' onClick={getPictureES} disabled={transferencia.es ? false : true}>
-                    {transferencia.operacion == 'Cesión' ? 'Escrituras' :  transferencia.operacion == 'Testamento' ? 'Declaración Jurada' :  transferencia.operacion == 'Donación' ? 'Declaración Jurada' : 'Escritura Posesión efectiva de Bienes'}                    
+                    {transferencia.operacion == 'Aumento Capital' ? 'Escritura' : transferencia.operacion == 'Cesión' ? 'Escrituras' :  transferencia.operacion == 'Testamento' ? 'Declaración Jurada' :  transferencia.operacion == 'Donación' ? 'Declaración Jurada' : 'Escritura Posesión efectiva de Bienes'}                    
                   </Button>
                   {transferencia.es  && <CheckIcon />}
                   {formData.es && <FiberNewOutlined color='secondary'/>}
                 </div>
                 }
                 
-                {transferencia.operacion != 'Cesión' && transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' &&
+                {transferencia.operacion != 'Cesión' && transferencia.operacion != 'Canje' && transferencia.operacion != 'Bloqueo' && transferencia.operacion != 'Desbloqueo' && transferencia.operacion != 'Aumento Capital' &&
                 <div>
                   {(estado == 'Rechazada' || estado == 'Aprobada') && !anular && 
                   <label htmlFor="icon-button-fileCP">

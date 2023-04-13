@@ -503,8 +503,10 @@ type Solicitudes @model {
   docIdentidad: String
 }
 
-type AccionistaArchive @model {
-  fecha: String!
+type AccionistaArchive @model 
+@key(name: "accionistaArchiveByFecha", fields: ["fecha","estado"],queryField: "AccionistaArchiveByFecha")
+  {
+  fecha: String! 
   id: ID!
   tipoIdentificacion:  String!
   identificacion: String!

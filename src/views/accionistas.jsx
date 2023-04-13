@@ -739,7 +739,7 @@ function QuickSearchToolbar(props) {
 
 
         <Dialog open={openTitulos} onClose={handleClose} aria-labelledby="form-dialog-title"  maxWidth = 'md'  >          
-          <DialogTitle id="form-dialog-title">{accionistaSeleccionado.nombre}</DialogTitle>
+          <DialogTitle id="form-dialog-title">{accionistaSeleccionado.nombre2}</DialogTitle>
           <DialogContent style={{height: '400px'}}>
 
 
