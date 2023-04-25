@@ -340,7 +340,11 @@ function QuickSearchToolbar(props) {
             //var arrDate = new Date(tar.day_year, tar.day_month, tar.day_number);
             var arrDate = new Date(tar);
             var fechaConsultada = new Date(testDate);
+            //console.log('resultado antes',fechaConsultada);
             var fechaConsultada2 = fechaConsultada.setHours(fechaConsultada.getHours() + 5);
+            
+            if(arrDate.getHours() > 0) arrDate.setHours(arrDate.getHours() + 5);
+            //console.log('resultado despues',fechaConsultada,arrDate,(arrDate - fechaConsultada2) );
             //var fechaConsultada2 = removeTime(fechaConsultada);
             //var fechaConsultada2 = new Date(fechaConsultada.getFullYear(), fechaConsultada.getMonth(), fechaConsultada.getDate());
             
@@ -349,11 +353,11 @@ function QuickSearchToolbar(props) {
             //var diff = (arrDate - new Date(testDate)) / (3600 * 24 * 1000);
             var diff = (arrDate - fechaConsultada2) ;
 
-            //console.log('resultado',tar,testDate,arrDate, fechaConsultada,diff)
+            //console.log('resultado',fechaConsultada,tar,fechaConsultada.setHours(fechaConsultada.getHours() + 5),arrDate)
             if(diff > 0) {
-                before.push({diff: diff, index: i});
+                before.push({diff: diff, index: i,fecha: arrDate});
             } else {
-                after.push({diff: diff, index: i});
+                after.push({diff: diff, index: i, fecha: arrDate});
             }
         }
         before.sort(function(a, b) {
@@ -376,8 +380,10 @@ function QuickSearchToolbar(props) {
             return 0;
         });
 
+        //console.log('AFTER',after);
 
         const closest = Math.min(...after.map(o => o.index));
+
         return dates[closest];
         //return {Math.max.apply(Math, after.map(function(o) { return o.index; }))};
         //return {after.reduce((prev, current) => (prev.y > current.y) ? prev : current)};
@@ -388,13 +394,15 @@ function QuickSearchToolbar(props) {
         try {
           console.log('Fecha a Consultar', fechaConsulta);
 
-          const fechaPasada = new Date(newFindClosest(fechas,fechaConsulta));
+          const fechaPasada = new Date(newFindClosest(fechas,fechaConsulta)) ;
+
+          if(fechaPasada.getHours() > 0) fechaPasada.setHours(fechaPasada.getHours() + 5);
 
           const MyDateString = fechaPasada.getFullYear()  + '-'
           + ('0' + (fechaPasada.getMonth()+1)).slice(-2) + '-'
           + ('0' + fechaPasada.getDate()).slice(-2);
         
-
+          //console.log('Fecha Encontrada 1', fechaPasada);
           console.log('Fecha Encontrada', MyDateString);
 
           const filter = {
