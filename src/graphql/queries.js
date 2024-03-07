@@ -9,6 +9,7 @@ export const getEstadoCatalogo = /* GraphQL */ `
       nombreCorto
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -25,8 +26,10 @@ export const listEstadoCatalogos = /* GraphQL */ `
         nombreCorto
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -39,6 +42,7 @@ export const getTipoPersona = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -56,8 +60,10 @@ export const listTipoPersonas = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -71,6 +77,7 @@ export const getTipoIdentificacion = /* GraphQL */ `
       tipoPersona
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -93,8 +100,10 @@ export const listTipoIdentificacions = /* GraphQL */ `
         tipoPersona
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -106,6 +115,7 @@ export const getEstadoCivil = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -122,8 +132,10 @@ export const listEstadoCivils = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -138,6 +150,7 @@ export const getPais = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -157,8 +170,10 @@ export const listPais = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -171,6 +186,7 @@ export const getProvincia = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -188,8 +204,10 @@ export const listProvincias = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -202,6 +220,7 @@ export const getCiudad = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -219,8 +238,10 @@ export const listCiudads = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -232,6 +253,7 @@ export const getTipoMedioContacto = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -252,8 +274,10 @@ export const listTipoMedioContactos = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -266,6 +290,7 @@ export const getCuentaBancaria = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -283,8 +308,10 @@ export const listCuentaBancarias = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -298,6 +325,7 @@ export const getEstadoAccionista = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -320,8 +348,10 @@ export const listEstadoAccionistas = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -410,11 +440,14 @@ export const getAccionista = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -496,11 +529,14 @@ export const listAccionistas = /* GraphQL */ `
         fechaBeneficiario9
         titulos {
           nextToken
+          __typename
         }
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -519,6 +555,7 @@ export const getTitulo = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -542,8 +579,10 @@ export const listTitulos = /* GraphQL */ `
         hasta
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -559,6 +598,7 @@ export const getHeredero = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -579,8 +619,10 @@ export const listHerederos = /* GraphQL */ `
         estado
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -611,8 +653,10 @@ export const getOperaciones = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       cs
       cg
@@ -630,6 +674,7 @@ export const getOperaciones = /* GraphQL */ `
       fechaValor
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -655,6 +700,7 @@ export const listOperaciones = /* GraphQL */ `
         usuarioAprobador
         titulos {
           nextToken
+          __typename
         }
         cs
         cg
@@ -672,8 +718,10 @@ export const listOperaciones = /* GraphQL */ `
         fechaValor
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -690,6 +738,7 @@ export const getTituloPorOperacion = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -715,8 +764,10 @@ export const listTituloPorOperacions = /* GraphQL */ `
         hasta
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -731,6 +782,7 @@ export const getHerederoPorOperacion = /* GraphQL */ `
       cantidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -754,8 +806,10 @@ export const listHerederoPorOperacions = /* GraphQL */ `
         cantidad
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -766,6 +820,7 @@ export const getNumeroSecuencial = /* GraphQL */ `
       numerotitulo
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -785,8 +840,10 @@ export const listNumeroSecuencials = /* GraphQL */ `
         numerotitulo
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -842,6 +899,7 @@ export const getParametro = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -902,8 +960,10 @@ export const listParametros = /* GraphQL */ `
         modeloCartaInstrucciones
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -960,6 +1020,7 @@ export const getParametroArchive = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1025,8 +1086,10 @@ export const listParametroArchives = /* GraphQL */ `
         modeloCartaInstrucciones
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1117,6 +1180,7 @@ export const getAsamblea = /* GraphQL */ `
       rutaGrabacion
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1212,8 +1276,10 @@ export const listAsambleas = /* GraphQL */ `
         rutaGrabacion
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1249,6 +1315,7 @@ export const getAccionistasxJunta = /* GraphQL */ `
       votacion15
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1293,8 +1360,10 @@ export const listAccionistasxJuntas = /* GraphQL */ `
         votacion15
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1303,6 +1372,8 @@ export const getDividendos = /* GraphQL */ `
     getDividendos(id: $id) {
       id
       periodo
+      secuencial
+      concepto
       dividendo
       porcentajeRepartir
       dividendoRepartir
@@ -1317,6 +1388,7 @@ export const getDividendos = /* GraphQL */ `
       porEntregar
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1330,6 +1402,8 @@ export const listDividendos = /* GraphQL */ `
       items {
         id
         periodo
+        secuencial
+        concepto
         dividendo
         porcentajeRepartir
         dividendoRepartir
@@ -1344,8 +1418,10 @@ export const listDividendos = /* GraphQL */ `
         porEntregar
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1379,6 +1455,7 @@ export const getDividendosAccionista = /* GraphQL */ `
       fechaPago
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1421,8 +1498,10 @@ export const listDividendosAccionistas = /* GraphQL */ `
         fechaPago
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1449,6 +1528,7 @@ export const getSolicitudes = /* GraphQL */ `
       docIdentidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1480,8 +1560,10 @@ export const listSolicitudes = /* GraphQL */ `
         docIdentidad
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1507,6 +1589,7 @@ export const getAccionistaArchive = /* GraphQL */ `
       paisNacionalidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1541,8 +1624,10 @@ export const listAccionistaArchives = /* GraphQL */ `
         paisNacionalidad
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1562,6 +1647,7 @@ export const getTituloArchive = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1586,12 +1672,14 @@ export const listTituloArchives = /* GraphQL */ `
         hasta
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
-export const accionistaArchiveByFecha = /* GraphQL */ `
+export const AccionistaArchiveByFecha = /* GraphQL */ `
   query AccionistaArchiveByFecha(
     $fecha: String
     $estado: ModelStringKeyConditionInput
@@ -1628,8 +1716,10 @@ export const accionistaArchiveByFecha = /* GraphQL */ `
         paisNacionalidad
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;

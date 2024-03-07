@@ -97,7 +97,7 @@ function QuickSearchToolbar(props) {
     const [cantidadEmitido, setCantidadEmitido] = useState(1);
 
     function getParticipacion(params) {
-      return `${(params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido).toFixed(8) || ''} `;
+      return `${(params.getValue(params.id, 'cantidadAcciones') * 100 / cantidadEmitido).toFixed(15) || ''} `;
     }
 
     let columns = []
@@ -206,16 +206,16 @@ function QuickSearchToolbar(props) {
   }
 
     async function fetchAccionistas() {
-/*
+
       const filter = {
         estado: {
           //eq: estado
-          ne: "Inactivo"
+          ne: "Eliminado"
         },
       }  
-    */
+    
 //      const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 10000} });
-      const apiData = await API.graphql({ query: listAccionistas, variables: { limit: 10000} });      
+      const apiData = await API.graphql({ query: listAccionistas, variables: { filter: filter, limit: 10000} });      
       const accionistasFromAPI = apiData.data.listAccionistas.items;
 
       let numero = 1;
@@ -340,6 +340,9 @@ function QuickSearchToolbar(props) {
             //var arrDate = new Date(tar.day_year, tar.day_month, tar.day_number);
             var arrDate = new Date(tar);
             var fechaConsultada = new Date(testDate);
+            console.log('resultado antes 1',testDate);
+            console.log('resultado antes 2',fechaConsultada);
+      
             //console.log('resultado antes',fechaConsultada);
             var fechaConsultada2 = fechaConsultada.setHours(fechaConsultada.getHours() + 5);
             
@@ -410,34 +413,78 @@ function QuickSearchToolbar(props) {
               eq: MyDateString
             },            
             estado: {
-              //eq: "Activo"
-              ne: "Inactivo"
+              eq: "Activo"
+              //ne: "Inactivo"
             },
+
           }  
             
           //console.log("fecha pasada", filter);
-          const apiData3 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 10000} });
+          let apiData3 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 20000} });
           let accionistasFromAPI3 = apiData3.data.listAccionistaArchives.items;
 
-          //console.log("Buscar TOKEN", apiData3.data.listAccionistaArchives.nextToken);
+if(MyDateString == "2023-09-28")
+{
+  const filterAux = {        
+    estado: {
+      eq: "Activo"
+      //ne: "Inactivo"
+    },
 
-          console.log("Registros",accionistasFromAPI3.length);
+  }  
+  apiData3 = await API.graphql({query: listAccionistas, variables: { filter: filterAux, limit: 20000} });
+  accionistasFromAPI3 = apiData3.data.listAccionistas.items;  
 
-          if(apiData3.data.listAccionistaArchives.nextToken != null)
+  let nexttoken4 = null
+  if(apiData3.data.listAccionistas.nextToken != null)          
+  {
+  const apiData4 = await API.graphql({query: listAccionistas, variables: { filter: filter, limit: 20000, nextToken: apiData3.data.listAccionistas.nextToken} });
+  const accionistasFromAPI4 = apiData4.data.listAccionistas.items;
+  accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI4);
+  console.log("Registros 2",accionistasFromAPI3.length);
+  if(apiData4.data.listAccionistas.nextToken != null) nexttoken4 = apiData4.data.listAccionistas.nextToken
+  }
+
+  if(nexttoken4 != null)
+  {
+  const apiData5 = await API.graphql({query: listAccionistas, variables: { filter: filter, limit: 20000, nextToken: nexttoken4} });
+  const accionistasFromAPI5 = apiData5.data.listAccionistas.items;
+  accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI5);
+  console.log("Registros 3",accionistasFromAPI3.length);
+  //console.log("Buscar TOKEN 3", apiData5.data.listAccionistaArchives.nextToken);
+  //if(apiData4.data.listAccionistaArchives.nextToken != null) nexttoken4 ? true
+  }
+
+
+  
+}
+
+          //console.log("Buscar TOKEN 1", apiData3.data.listAccionistaArchives.nextToken);
+else{
+          console.log("Registros 1",accionistasFromAPI3.length);
+
+          let nexttoken4 = null
+          if(apiData3.data.listAccionistaArchives.nextToken != null)          
           {
-          const apiData4 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 10000, nextToken: apiData3.data.listAccionistaArchives.nextToken} });
+          const apiData4 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 20000, nextToken: apiData3.data.listAccionistaArchives.nextToken} });
           const accionistasFromAPI4 = apiData4.data.listAccionistaArchives.items;
           accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI4);
-          console.log("Registros",accionistasFromAPI3.length);
+          console.log("Registros 2",accionistasFromAPI3.length);
+          //console.log("Buscar TOKEN 2", apiData4.data.listAccionistaArchives.nextToken);
+          if(apiData4.data.listAccionistaArchives.nextToken != null) nexttoken4 = apiData4.data.listAccionistaArchives.nextToken
           }
-          //console.log("Buscar TOKEN", apiData4.data.listAccionistaArchives.nextToken);
 
-          //const apiData3 = await API.graphql({query: accionistaArchiveByFecha, variables: { filter: filter, limit: 10000} });
-          //const accionistasFromAPI3 = apiData3.data.accionistaArchiveByFecha;
-          
-          //console.log("Registros",accionistasFromAPI3.length);
-          //console.log("Registros",accionistasFromAPI4.length);
-    
+          if(nexttoken4 != null)
+          {
+          const apiData5 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 20000, nextToken: nexttoken4} });
+          const accionistasFromAPI5 = apiData5.data.listAccionistaArchives.items;
+          accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI5);
+          console.log("Registros 3",accionistasFromAPI3.length);
+          //console.log("Buscar TOKEN 3", apiData5.data.listAccionistaArchives.nextToken);
+          //if(apiData4.data.listAccionistaArchives.nextToken != null) nexttoken4 ? true
+          }
+
+        }
           let numero2 = 1;
           let nombre_aux2 = '';
           let cantidadTotal = 0;
@@ -464,6 +511,121 @@ function QuickSearchToolbar(props) {
       }   
     }
       
+
+      const copiarLibro = async () => {
+        try {
+
+          //console.log('Fechas', inicio, fin);
+
+          //const inicio = '2021-11-30'
+          //const FOperaciones = '30-11-2021'
+
+          const inicio = '2021-01-06'
+          const FOperaciones = '06-01-2021'
+
+          const filter = {
+            fecha: {
+              eq: inicio
+            },            
+            estado: {
+              ne: "Inactivo"
+            },            
+
+          }  
+            
+          //console.log("fecha pasada", filter);
+          const apiData3 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 10000} });
+          let accionistasFromAPI3 = apiData3.data.listAccionistaArchives.items;
+
+          //console.log("Buscar TOKEN", apiData3.data.listAccionistaArchives.nextToken);
+
+          console.log("Registros",accionistasFromAPI3.length);
+
+
+          let nexttoken4 = null
+          if(apiData3.data.listAccionistaArchives.nextToken != null)
+          {
+          const apiData4 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 20000, nextToken: apiData3.data.listAccionistaArchives.nextToken} });
+          const accionistasFromAPI4 = apiData4.data.listAccionistaArchives.items;
+          accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI4);
+          console.log("Registros 2",accionistasFromAPI3.length);
+          //console.log("Buscar TOKEN 2", apiData4.data.listAccionistaArchives.nextToken);
+          if(apiData4.data.listAccionistaArchives.nextToken != null) nexttoken4 = apiData4.data.listAccionistaArchives.nextToken
+          }
+
+          if(nexttoken4 != null)
+          {
+          const apiData5 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 20000, nextToken: nexttoken4} });
+          const accionistasFromAPI5 = apiData5.data.listAccionistaArchives.items;
+          accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI5);
+          console.log("Registros 3",accionistasFromAPI3.length);
+          //console.log("Buscar TOKEN 3", apiData5.data.listAccionistaArchives.nextToken);
+          //if(apiData4.data.listAccionistaArchives.nextToken != null) nexttoken4 ? true
+          }
+
+
+/*
+          if(apiData3.data.listAccionistaArchives.nextToken != null)
+          {
+          const apiData4 = await API.graphql({query: listAccionistaArchives, variables: { filter: filter, limit: 10000, nextToken: apiData3.data.listAccionistaArchives.nextToken} });
+          const accionistasFromAPI4 = apiData4.data.listAccionistaArchives.items;
+          accionistasFromAPI3 = accionistasFromAPI3.concat(accionistasFromAPI4);
+          //console.log("Registros",accionistasFromAPI3.length);
+          }
+*/
+          //console.log("Buscar TOKEN", apiData4.data.listAccionistaArchives.nextToken);
+
+          //const apiData3 = await API.graphql({query: accionistaArchiveByFecha, variables: { filter: filter, limit: 10000} });
+          //const accionistasFromAPI3 = apiData3.data.accionistaArchiveByFecha;
+          
+          //console.log("Registros",accionistasFromAPI3.length);
+          //console.log("Registros",accionistasFromAPI4.length);
+    
+          let numero2 = 1;
+          let nombre_aux2 = '';
+          let cantidadTotal = 0;
+          accionistasFromAPI3.forEach(function (obj) {        
+            nombre_aux2 = obj.tipoPersona == 'PN' ? obj.pn_apellidoPaterno + " " + obj.pn_apellidoMaterno + " " + obj.pn_primerNombre + " " + obj.pn_segundoNombre : obj.nombre;
+            obj.nombre2 = nombre_aux2.toUpperCase();
+            //if (obj.estado = 'Activo') cantidadTotal = cantidadTotal + obj.cantidadAcciones;
+            cantidadTotal = cantidadTotal + obj.cantidadAcciones;
+            obj.secuencial = numero2++;
+          });
+    
+          
+          const filter2 = {
+            fecha: {
+              eq: FOperaciones
+            },            
+            estado: {
+              eq: 'Aprobada'
+            }
+          }  
+          const apiData5 = await API.graphql({query: listOperaciones, variables: { filter: filter2, limit: 10000} });
+          let operacionesFromAPI5 = apiData5.data.listOperaciones.items;
+          console.log("Operaciones ",operacionesFromAPI5);
+
+          //  update por cada operaciones
+          //operacionesFromAPI5.forEach(function (obj) {        
+          //  update por cada operaciones
+          //});
+    
+          //copiar inventario a la siguiente fecha
+
+          //actualizar acciones siguiente fecha
+
+
+          console.log("Registros",accionistasFromAPI3.length);
+          console.log("Cantidad Emitida",cantidadTotal);
+         // console.log("Operaciones",operacionesFromAPI5);
+    
+
+        } catch (err) {
+          console.log('error creating transaction:', err)
+      }   
+    }
+
+
 
       const addCorteLibro = async () => {
         try {
@@ -683,6 +845,23 @@ onClick={addCorteParametro}
 >
 Grabar Parametros
 </Button>
+
+</div>
+        }
+
+
+{false &&
+<div>
+        <Button                
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              size='medium'
+              onClick={copiarLibro}
+          >
+              Copiar Libro
+          </Button>
+
 
 </div>
         }

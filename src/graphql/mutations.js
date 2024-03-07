@@ -12,6 +12,7 @@ export const createEstadoCatalogo = /* GraphQL */ `
       nombreCorto
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -26,6 +27,7 @@ export const updateEstadoCatalogo = /* GraphQL */ `
       nombreCorto
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -40,6 +42,7 @@ export const deleteEstadoCatalogo = /* GraphQL */ `
       nombreCorto
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -55,6 +58,7 @@ export const createTipoPersona = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -70,6 +74,7 @@ export const updateTipoPersona = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -85,6 +90,7 @@ export const deleteTipoPersona = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -101,6 +107,7 @@ export const createTipoIdentificacion = /* GraphQL */ `
       tipoPersona
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -117,6 +124,7 @@ export const updateTipoIdentificacion = /* GraphQL */ `
       tipoPersona
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -133,6 +141,7 @@ export const deleteTipoIdentificacion = /* GraphQL */ `
       tipoPersona
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -147,6 +156,7 @@ export const createEstadoCivil = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -161,6 +171,7 @@ export const updateEstadoCivil = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -175,6 +186,7 @@ export const deleteEstadoCivil = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -192,6 +204,7 @@ export const createPais = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -209,6 +222,7 @@ export const updatePais = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -226,6 +240,7 @@ export const deletePais = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -241,6 +256,7 @@ export const createProvincia = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -256,6 +272,7 @@ export const updateProvincia = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -271,6 +288,7 @@ export const deleteProvincia = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -286,6 +304,7 @@ export const createCiudad = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -301,6 +320,7 @@ export const updateCiudad = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -316,6 +336,7 @@ export const deleteCiudad = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -330,6 +351,7 @@ export const createTipoMedioContacto = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -344,6 +366,7 @@ export const updateTipoMedioContacto = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -358,6 +381,7 @@ export const deleteTipoMedioContacto = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -373,6 +397,7 @@ export const createCuentaBancaria = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -388,6 +413,7 @@ export const updateCuentaBancaria = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -403,6 +429,7 @@ export const deleteCuentaBancaria = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -419,6 +446,7 @@ export const createEstadoAccionista = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -435,6 +463,7 @@ export const updateEstadoAccionista = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -451,6 +480,7 @@ export const deleteEstadoAccionista = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -542,11 +572,14 @@ export const createAccionista = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -638,11 +671,14 @@ export const updateAccionista = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -734,11 +770,14 @@ export const deleteAccionista = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -760,6 +799,7 @@ export const createTitulo = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -781,6 +821,7 @@ export const updateTitulo = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -802,6 +843,7 @@ export const deleteTitulo = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -820,6 +862,7 @@ export const createHeredero = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -838,6 +881,7 @@ export const updateHeredero = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -856,6 +900,7 @@ export const deleteHeredero = /* GraphQL */ `
       estado
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -889,8 +934,10 @@ export const createOperaciones = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       cs
       cg
@@ -908,6 +955,7 @@ export const createOperaciones = /* GraphQL */ `
       fechaValor
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -941,8 +989,10 @@ export const updateOperaciones = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       cs
       cg
@@ -960,6 +1010,7 @@ export const updateOperaciones = /* GraphQL */ `
       fechaValor
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -993,8 +1044,10 @@ export const deleteOperaciones = /* GraphQL */ `
           hasta
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       cs
       cg
@@ -1012,6 +1065,7 @@ export const deleteOperaciones = /* GraphQL */ `
       fechaValor
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1031,6 +1085,7 @@ export const createTituloPorOperacion = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1050,6 +1105,7 @@ export const updateTituloPorOperacion = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1069,6 +1125,7 @@ export const deleteTituloPorOperacion = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1086,6 +1143,7 @@ export const createHerederoPorOperacion = /* GraphQL */ `
       cantidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1103,6 +1161,7 @@ export const updateHerederoPorOperacion = /* GraphQL */ `
       cantidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1120,6 +1179,7 @@ export const deleteHerederoPorOperacion = /* GraphQL */ `
       cantidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1133,6 +1193,7 @@ export const createNumeroSecuencial = /* GraphQL */ `
       numerotitulo
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1146,6 +1207,7 @@ export const updateNumeroSecuencial = /* GraphQL */ `
       numerotitulo
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1159,6 +1221,7 @@ export const deleteNumeroSecuencial = /* GraphQL */ `
       numerotitulo
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1217,6 +1280,7 @@ export const createParametro = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1275,6 +1339,7 @@ export const updateParametro = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1333,6 +1398,7 @@ export const deleteParametro = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1392,6 +1458,7 @@ export const createParametroArchive = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1451,6 +1518,7 @@ export const updateParametroArchive = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1510,6 +1578,7 @@ export const deleteParametroArchive = /* GraphQL */ `
       modeloCartaInstrucciones
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1603,6 +1672,7 @@ export const createAsamblea = /* GraphQL */ `
       rutaGrabacion
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1696,6 +1766,7 @@ export const updateAsamblea = /* GraphQL */ `
       rutaGrabacion
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1789,6 +1860,7 @@ export const deleteAsamblea = /* GraphQL */ `
       rutaGrabacion
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1827,6 +1899,7 @@ export const createAccionistasxJunta = /* GraphQL */ `
       votacion15
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1865,6 +1938,7 @@ export const updateAccionistasxJunta = /* GraphQL */ `
       votacion15
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1903,6 +1977,7 @@ export const deleteAccionistasxJunta = /* GraphQL */ `
       votacion15
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1914,6 +1989,8 @@ export const createDividendos = /* GraphQL */ `
     createDividendos(input: $input, condition: $condition) {
       id
       periodo
+      secuencial
+      concepto
       dividendo
       porcentajeRepartir
       dividendoRepartir
@@ -1928,6 +2005,7 @@ export const createDividendos = /* GraphQL */ `
       porEntregar
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1939,6 +2017,8 @@ export const updateDividendos = /* GraphQL */ `
     updateDividendos(input: $input, condition: $condition) {
       id
       periodo
+      secuencial
+      concepto
       dividendo
       porcentajeRepartir
       dividendoRepartir
@@ -1953,6 +2033,7 @@ export const updateDividendos = /* GraphQL */ `
       porEntregar
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -1964,6 +2045,8 @@ export const deleteDividendos = /* GraphQL */ `
     deleteDividendos(input: $input, condition: $condition) {
       id
       periodo
+      secuencial
+      concepto
       dividendo
       porcentajeRepartir
       dividendoRepartir
@@ -1978,6 +2061,7 @@ export const deleteDividendos = /* GraphQL */ `
       porEntregar
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2014,6 +2098,7 @@ export const createDividendosAccionista = /* GraphQL */ `
       fechaPago
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2050,6 +2135,7 @@ export const updateDividendosAccionista = /* GraphQL */ `
       fechaPago
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2086,6 +2172,7 @@ export const deleteDividendosAccionista = /* GraphQL */ `
       fechaPago
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2115,6 +2202,7 @@ export const createSolicitudes = /* GraphQL */ `
       docIdentidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2144,6 +2232,7 @@ export const updateSolicitudes = /* GraphQL */ `
       docIdentidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2173,6 +2262,7 @@ export const deleteSolicitudes = /* GraphQL */ `
       docIdentidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2201,6 +2291,7 @@ export const createAccionistaArchive = /* GraphQL */ `
       paisNacionalidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2229,6 +2320,7 @@ export const updateAccionistaArchive = /* GraphQL */ `
       paisNacionalidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2257,6 +2349,7 @@ export const deleteAccionistaArchive = /* GraphQL */ `
       paisNacionalidad
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2279,6 +2372,7 @@ export const createTituloArchive = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2301,6 +2395,7 @@ export const updateTituloArchive = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -2323,6 +2418,7 @@ export const deleteTituloArchive = /* GraphQL */ `
       hasta
       createdAt
       updatedAt
+      __typename
     }
   }
 `;

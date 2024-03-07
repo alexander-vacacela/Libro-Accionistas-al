@@ -439,6 +439,8 @@ type AccionistasxJunta @model @key(name: "byAsamblea", fields: ["asambleaID"]) {
 type Dividendos @model {
   id: ID!  
   periodo: String
+  secuencial: String
+  concepto: String
   dividendo: Float
   porcentajeRepartir: Float
   dividendoRepartir: Float
