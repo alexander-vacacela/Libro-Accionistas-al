@@ -15,7 +15,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import { secondaryListItems } from './listitems';
 import clsx from 'clsx';
 import { useHistory, useLocation } from 'react-router';
-import logo from '../images/Unacem.png';
+import logo from '../images/Unacem2.png';
  
  const drawerWidth = 240;
 
@@ -120,7 +120,7 @@ export default function Sidebar(props){
                     }}
 
             >
-            <img src={logo} alt="Logo" width='40' height='40' style={{marginLeft:15, marginTop:10, marginBottom:10}}/>
+            <img src={logo} alt="Logo" width='60' height='60' style={{marginLeft:5, marginTop:10, marginBottom:10}}/>
 
                 <List>
                     {menuItems.map(item => (

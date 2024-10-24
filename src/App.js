@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {AmplifyAuthContainer, AmplifyAuthenticator,AmplifySignIn } from '@aws-amplify/ui-react';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { Switch, Route, Redirect } from "react-router-dom";
-import logo from './images/logoUNACEMmedMarco.jpg';
+//import logo from './images/logoUNACEMmedMarco.jpg';
+import logo from './images/logoUNACEMmedMarco2.png';
 
 import Accionistas from './views/accionistas';
 import Cesion from './views/cesion'

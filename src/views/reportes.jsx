@@ -22,7 +22,8 @@ import { uuid } from 'uuidv4';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-import logo from '../images/logoUNACEMmedMarco.jpg';
+//import logo from '../images/logoUNACEMmedMarco.jpg';
+import logo from '../images/logoUNACEMmedMarco2.png';
 
 
 function Alert(props) {
